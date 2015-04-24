@@ -6,21 +6,25 @@ debug = True
 
 
 class RelationBetweenNumbers(Enum):
-    eq = '=='
-    lt = '<'
-    gt = '>'
-    lte = '<='
-    gte = '>='
-    ne = '!='
-    lor = 'or'
-    land = 'and'
-    lxor = '^'
-    lnot = 'not'
+    eq = ' == '
+    lt = ' < '
+    gt = ' > '
+    lte = ' <= '
+    gte = ' >= '
+    ne = ' != '
+    lor = ' or '
+    land = ' and '
+    lxor = ' ^ '
+    lnot = 'not '
     lntr = ' '
 
-    #@requires_int_or_bool
+    @requires_int_or_bool
     def apply_function(self, value1, value2=None):
-        expression = str(value1) + self.value
+        expression = ""
+        if self == RelationBetweenNumbers.lnot:
+            expression += self.value + str(value1)
+        else:
+            expression += str(value1) + self.value
         if value2 is not None:
             expression += str(value2)
         return eval(expression)
