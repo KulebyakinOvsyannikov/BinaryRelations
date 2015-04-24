@@ -5,7 +5,7 @@ import math
 debug = True
 
 
-class RelationBetweenNumbers(Enum):
+class Relation(Enum):
     eq = '=='
     lt = '<'
     gt = '>'
@@ -36,7 +36,7 @@ class RelationElement:
         return math.trunc(eval(expression))
 
 
-class Relation:
+class RelationTriple:
     def __init__(self, mod1, rel, mod2):
         self.mod1 = mod1
         self.relation = rel
@@ -54,28 +54,28 @@ class Task:
         self.triplets = triplets
         self.modifiers = modifiers
 
-    def print_some(self):
+    def print_results(self):
         num_of_triplets = len(self.modifiers)
         for e1 in self.elements:
             for e2 in self.elements:
-                if debug:
-                    print(self.modifiers[0].value, end='((')
-                    print(e1, end=' ')
-                    print(self.triplets[0].mod1, end=' )')
-                    print(self.triplets[0].relation.value, end='(')
-                    print(e2, end=' ')
-                    print(self.triplets[0].mod2, end=') ')
-
                 res = self.modifiers[0].apply_function(self.triplets[0].check(e1,e2))
                 for i in range(1, num_of_triplets-1):
-                    if debug:
-                        print(self.modifiers[num_of_triplets+i-2].value, end=' (')
-                        print(e1, end=' ')
-                        print(self.triplets[i].mod1, end=' )')
-                        print(self.triplets[i].relation.value, end='(')
-                        print(e2, end=' ')
-                        print(self.triplets[i].mod2, end=') ')
                     arg2 = self.modifiers[i].apply_function(self.triplets[i].check(e1,e2))
                     res = self.modifiers[num_of_triplets+i-2].apply_function(res, arg2)
-                print(')', end=' : ')
                 print(res)
+
+    def print_relation(self):
+        print(self.modifiers[0].value, end='((')
+        print('ab', end=' ')
+        print(self.triplets[0].mod1, end=' )')
+        print(self.triplets[0].relation.value, end='(')
+        print('cd', end=' ')
+        print(self.triplets[0].mod2, end=') ')
+        for i in range(1, len(self.modifiers)-1):
+            print(self.modifiers[len(self.modifiers)+i-2].value, end=' (')
+            print('ab', end=' ')
+            print(self.triplets[i].mod1, end=' )')
+            print(self.triplets[i].relation.value, end='(')
+            print('cd', end=' ')
+            print(self.triplets[i].mod2, end=') ')
+        print(')')
