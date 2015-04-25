@@ -6,8 +6,8 @@ debug = True
 
 
 class Relation(Enum):
-    eq = '=='
-    lt = '<'
+    equal = '=='
+    less_than = '<'
     gt = '>'
     lte = '<='
     gte = '>='
