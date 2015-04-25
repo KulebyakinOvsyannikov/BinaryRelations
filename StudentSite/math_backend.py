@@ -12,11 +12,11 @@ class Relation(Enum):
     lte = '<='
     gte = '>='
     ne = '!='
-    lor = 'or'
-    land = 'and'
-    lxor = '^'
-    lnot = 'not'
-    lntr = ' '
+    logic_or = 'or'
+    logic_and = 'and'
+    logic_xor = '^'
+    unary_not = 'not'
+    unary_neutral = ' '
 
     @requires_int_or_bool
     def apply_function(self, value1, value2=None):
