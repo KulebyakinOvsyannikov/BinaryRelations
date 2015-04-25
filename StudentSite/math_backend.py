@@ -8,7 +8,7 @@ debug = True
 class Relation(Enum):
     equal = '=='
     less_than = '<'
-    gt = '>'
+    greater_than = '>'
     lte = '<='
     gte = '>='
     ne = '!='
