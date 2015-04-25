@@ -36,7 +36,7 @@ class RelationElement:
         return math.trunc(eval(expression))
 
 
-class Relation:
+class RelationTriplet:
     def __init__(self, mod1, rel, mod2):
         self.mod1 = mod1
         self.relation = rel
