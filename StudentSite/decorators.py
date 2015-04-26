@@ -10,7 +10,7 @@ def requires_int_or_bool(func):
     return ints_checked
 
 
-def is_bool(func):
+def requires_bool(func):
     def bool_checked(cls, arg):
         if type(arg) != bool:
             raise ValueError("Argument is not a boolean")
