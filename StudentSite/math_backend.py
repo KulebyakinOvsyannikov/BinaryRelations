@@ -1,5 +1,5 @@
 from enum import Enum
-from .decorators import requires_int_or_bool, is_bool
+from .decorators import requires_int_or_bool, requires_bool
 import math
 
 #   Example: "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
@@ -19,7 +19,7 @@ class UnaryRelation(Enum):
     unary_not = ' not '
     unary_neutral = ' '
 
-    @is_bool
+    @requires_bool
     def apply_unary_relation(self, argument):
         """
         :rtype:
@@ -78,7 +78,6 @@ class RelationTriplet:
         self.mod2 = mod2  # String
 
     def check(self, val1, val2):
-        print("gaw")
         elem1 = RelationElement(val1, self.mod1).get_modified()
         elem2 = RelationElement(val2, self.mod2).get_modified()
         return self.relation.apply_binary_relation(elem1, elem2)
@@ -109,10 +108,10 @@ class Task:
     @classmethod
     def from_string(cls, task_string):
         """
-            :rtype : Task
-            :param task_string: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
-            :return: initialized instance of Task
-            """
+        :rtype : Task
+        :param task_string: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
+        :return: initialized instance of Task
+        """
         task_elements = task_string.split('$')
         elements = [int(int_str) for int_str in task_elements[0][1:-1].split(',')]
         triplets = [RelationTriplet(*arg_tuple)
