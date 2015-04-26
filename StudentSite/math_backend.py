@@ -115,7 +115,7 @@ class Task:
         elem_str = str(self.elements)
         str_triplets_list = []
         for tri in self.triplets:
-            trip_part = '[' + tri.mod1 + '| ' + tri.relation.value + ' |' + tri.mod2 + ']'
+            trip_part = '[' + tri.mod1 + '| ' + str(tri.relation.value) + ' |' + tri.mod2 + ']'
             str_triplets_list.append(trip_part)
         str_triplets_list = '@'.join(str_triplets_list)
         trip_mod_list = []
