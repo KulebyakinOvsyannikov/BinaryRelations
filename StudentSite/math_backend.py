@@ -75,7 +75,7 @@ class Task:
         self.triplets_triplets_rel = triplets_triplets_rel  # Array of BinaryRelation (logic)
 
     def Obj_to_str(self):
-        db
+        pass
 
 
 # "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
