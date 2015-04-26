@@ -8,3 +8,12 @@ def requires_int_or_bool(func):
             raise ValueError("Arguments are not ints or bools")
         return func(cls,arg1,arg2)
     return ints_checked
+
+
+def is_bool(func):
+    def bool_checked(cls, arg):
+        if type(arg) != bool:
+            raise ValueError("Argument is not a boolean")
+        else:
+            return func(cls, arg)
+    return bool_checked
