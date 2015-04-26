@@ -106,7 +106,7 @@ class Task:
         triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
     
-    def Obj_to_str(self):
+    def obj_to_str(self):
         """
         :rtype: str
         :param self
