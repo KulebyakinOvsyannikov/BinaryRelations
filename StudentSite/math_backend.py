@@ -107,6 +107,11 @@ class Task:
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
     
     def Obj_to_str(self):
+        """
+        :rtype: str
+        :param self
+        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
+        """
         elem_str = str(self.elements)
         str_triplets_list = []
         for tri in self.triplets:
