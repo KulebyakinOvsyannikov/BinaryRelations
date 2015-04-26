@@ -73,3 +73,24 @@ class Task:
         self.triplets = triplets  # Array of RelationTriplet
         self.triplet_modifiers = triplet_modifiers  # Array of UnaryRelation
         self.triplets_triplets_rel = triplets_triplets_rel  # Array of BinaryRelation (logic)
+
+    def Obj_to_str(self):
+        db
+
+
+# "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
+#   Elements: 12, 14, 15, 26
+#   Triplets: ab%10%3 <= cd/10%3
+#             ab/10%3 >= cd%10%3
+#   UnaryMods: not ab%10%3 <= cd/10%3; ab/10%3 >= cd%10%3
+#   BinaryRel: and
+#   $ between Elements, Triplets, UnaryMods, BinaryRels
+#   @ between elements of array of triplets, unaryMods, BinaryRels
+#   | between parts of each triplet
+#   Object to ^
+#   Object to human-readable
+#   ^ to object
+
+#db_string = str(self.elements) +'$'
+#        for tri in self.triplets:
+#            db_string=db_string+'['+tri.mod1+'| '+str(tri.rel)+' |'+
