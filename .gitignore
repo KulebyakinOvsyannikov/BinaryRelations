@@ -1,0 +1,10 @@
+
+*.xml
+
+.idea/BinaryRelations.iml
+
+.idea/.name
+
+__pycache__/manage.cpython-34.pyc
+
+*.pyc
