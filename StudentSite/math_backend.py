@@ -107,4 +107,20 @@ class Task:
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
     
     def Obj_to_str(self):
-        pass
+        elem_str = str(self.elements)
+        str_triplets_list = []
+        for tri in self.triplets:
+            trip_part = '[' + tri.mod1 + '| ' + str(tri.rel) + ' |' + tri.mod2 + ']'
+            str_triplets_list.append(trip_part)
+        str_triplets_list = '@'.join(str_triplets_list)
+        trip_mod_list = []
+        for mod in self.triplet_modifiers:
+            indent_mod = ' ' + mod + ' '
+            trip_mod_list.append(indent_mod)
+        trip_mod_list = '[' + '@'.join(trip_mod_list) + ']'
+        trip_rel_list = []
+        for rel in self.triplets_triplets_rel:
+            indent_rel = ' ' + rel + ' '
+            trip_rel_list.append(indent_rel)
+        trip_rel_list = '[' + '@'.join(trip_rel_list) + ']'
+        return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
