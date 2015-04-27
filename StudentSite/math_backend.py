@@ -2,6 +2,7 @@ from enum import Enum
 from .decorators import requires_int_or_bool, requires_bool
 import math
 
+
 #   Example: "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
 #   Elements: 12, 14, 15, 26
 #   Triplets: ab%10%3 <= cd/10%3
@@ -83,8 +84,41 @@ class RelationTriplet:
         return self.relation.apply_binary_relation(elem1, elem2)
 
     def __str__(self):
-        res = self.mod1 + self.relation.value + self.mod2
-        return res
+        """
+        :rtype: str
+        :param triplet:
+        :return: easy-to-read triplet string in "a(mod 2) < c(mod 2)" format
+        """
+        rt_string =''
+        if self.mod1.startswith('/10'):
+            rt_string+= 'a'
+            aux_str = self.mod1[3:]
+            if aux_str.startswith('%'):
+                rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+        else:
+            if self.mod1.startswith('%10'):
+                rt_string+='b'
+                aux_str = self.mod1[3:]
+                if aux_str.startswith('%'):
+                    rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+            else:
+                rt_string+='ab'
+
+        rt_string+=self.relation.value
+        if self.mod2.startswith('/10'):
+            rt_string+= 'c'
+            aux_str = self.mod2[3:]
+            if aux_str.startswith('%'):
+                rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+        else:
+            if self.mod2.startswith('%10'):
+                rt_string+='d'
+                aux_str = self.mod2[3:]
+                if aux_str.startswith('%'):
+                    rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+            else:
+                rt_string+='cd'
+        return rt_string
 
     def __repr__(self):
         return self.__str__()
