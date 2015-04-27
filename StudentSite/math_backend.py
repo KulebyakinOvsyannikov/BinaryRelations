@@ -106,26 +106,15 @@ class Task:
         triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
     
-    def obj_to_str(self):
+    def to_string(self):
         """
         :rtype: str
         :param self
         :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
         """
         elem_str = str(self.elements)
-        str_triplets_list = []
-        for tri in self.triplets:
-            trip_part = '[' + tri.mod1 + '| ' + str(tri.relation.value) + ' |' + tri.mod2 + ']'
-            str_triplets_list.append(trip_part)
-        str_triplets_list = '@'.join(str_triplets_list)
-        trip_mod_list = []
-        for mod in self.triplet_modifiers:
-            indent_mod = ' ' + mod + ' '
-            trip_mod_list.append(indent_mod)
-        trip_mod_list = '[' + '@'.join(trip_mod_list) + ']'
-        trip_rel_list = []
-        for rel in self.triplets_triplets_rel:
-            indent_rel = ' ' + rel + ' '
-            trip_rel_list.append(indent_rel)
-        trip_rel_list = '[' + '@'.join(trip_rel_list) + ']'
+        str_triplets_list = '@'.join(['[' + tri.mod1 + '|' + tri.relation.value + '|' + tri.mod2 + ']'
+                                      for tri in self.triplets])
+        trip_mod_list = '[' + '@'.join(mod.value for mod in self.triplet_modifiers) + ']'
+        trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
