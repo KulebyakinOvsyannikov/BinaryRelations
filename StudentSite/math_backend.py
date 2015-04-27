@@ -1,7 +1,7 @@
 from enum import Enum
 from .decorators import requires_int_or_bool, requires_bool
 import math
-
+import os
 #   Example: "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
 #   Elements: 12, 14, 15, 26
 #   Triplets: ab%10%3 <= cd/10%3
@@ -134,7 +134,7 @@ class Task:
         """
         :rtype: str
         :param self
-        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
+        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]$[(1, 2)]" format
         """
         elem_str = str(self.elements)
         str_triplets_list = '@'.join(['[' + tri.mod1 + '|' + tri.relation.value + '|' + tri.mod2 + ']'
@@ -146,9 +146,26 @@ class Task:
     
     def solve_for_xy(self, e1, e2):
         triplets = [self.triplet_modifiers[i].apply_unary_relation([elem.check(e1, e2) for elem in self.triplets][i])
-                    for i in range(0, len(self.triplets)-1)]
+                    for i in range(0, len(self.triplets))]
+
         def is_in_parenthesis(ind):
-            res = False
+            for parenthesis_pair in self.parenthesis:
+                if parenthesis_pair[0] <= ind < parenthesis_pair[1]:
+                    return True
+                return False
+
+        for par_pair in self.parenthesis:
+            res = triplets[par_pair[0]]
+            for i in range(par_pair[0], par_pair[1]):
+                res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i+1])
+            triplets[par_pair[0]] = res
+
+        res = triplets[0]
+        for i in range(0, len(self.triplets_triplets_rel)):
+            if not is_in_parenthesis(i):
+                res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i+1])
+
+        return res
 
     def solve(self):
         """
@@ -159,13 +176,7 @@ class Task:
         for e1 in self.elements:
             results_row = []
             for e2 in self.elements:
-                triplets = [elem.check(e1, e2) for elem in self.triplets]
-                for i in (0, len(triplets)-1):
-                    triplets[i] = self.triplet_modifiers[i].apply_unary_relation(triplets[i])
-                res = triplets[0]
-                for i in (1, len(triplets)-1):
-                    res = self.triplets_triplets_rel[i-1].apply_binary_relation(res, triplets[i])
-                results_row.append(res)
+                results_row.append(self.solve_for_xy(e1, e2))
             results.append(results_row)
         return results
 
