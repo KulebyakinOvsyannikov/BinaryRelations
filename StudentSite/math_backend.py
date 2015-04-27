@@ -141,6 +141,12 @@ class Task:
         trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
 
+    def solve_for_xy(self, e1, e2):
+        triplets = [self.triplet_modifiers[i].apply_unary_relation([elem.check(e1, e2) for elem in self.triplets][i])
+                    for i in range(0, len(self.triplets)-1)]
+        def is_in_parenthesis(ind):
+            res = False
+
     def solve(self):
         """
         :rtype: list
