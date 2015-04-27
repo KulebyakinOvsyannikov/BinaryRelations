@@ -1,7 +1,7 @@
 from enum import Enum
 from .decorators import requires_int_or_bool, requires_bool
 import math
-import os
+
 #   Example: "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
 #   Elements: 12, 14, 15, 26
 #   Triplets: ab%10%3 <= cd/10%3
@@ -91,7 +91,7 @@ class RelationTriplet:
 
 
 class Task:
-    def __init__(self, elements, triplets, triplet_modifiers, triplets_triplets_rel):
+    def __init__(self, elements, triplets, triplet_modifiers, triplets_triplets_rel, parenthesis):
         """
         :rtype: Task
         :param elements: Array of ints
@@ -104,6 +104,7 @@ class Task:
         self.triplets = triplets
         self.triplet_modifiers = triplet_modifiers
         self.triplets_triplets_rel = triplets_triplets_rel
+        self.parenthesis = parenthesis
 
     def __str__(self):
         return self.to_string()
@@ -115,7 +116,7 @@ class Task:
     def from_string(cls, task_string):
         """
         :rtype : Task
-        :param task_string: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
+        :param task_string: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]$[(1, 2)]" format
         :return: initialized instance of Task
         """
         task_elements = task_string.split('$')
@@ -126,7 +127,8 @@ class Task:
                                                            for single_rel in task_elements[1].split('@')]]]
         triplet_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
         triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
-        return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
+        parenthesis = eval(task_elements[4])
+        return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel, parenthesis)
 
     def to_string(self):
         """
@@ -139,8 +141,9 @@ class Task:
                                       for tri in self.triplets])
         trip_mod_list = '[' + '@'.join(mod.value for mod in self.triplet_modifiers) + ']'
         trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
-        return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
-
+        parenthesis = str(self.parenthesis)
+        return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list, parenthesis])
+    
     def solve_for_xy(self, e1, e2):
         triplets = [self.triplet_modifiers[i].apply_unary_relation([elem.check(e1, e2) for elem in self.triplets][i])
                     for i in range(0, len(self.triplets)-1)]
