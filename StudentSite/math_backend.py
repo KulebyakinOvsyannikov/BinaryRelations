@@ -105,6 +105,12 @@ class Task:
         self.triplet_modifiers = triplet_modifiers
         self.triplets_triplets_rel = triplets_triplets_rel
 
+    def __str__(self):
+        return self.to_string()
+
+    def __repr__(self):
+        return self.__str__()
+
     @classmethod
     def from_string(cls, task_string):
         """
@@ -121,7 +127,7 @@ class Task:
         triplet_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
         triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
-    
+
     def to_string(self):
         """
         :rtype: str
