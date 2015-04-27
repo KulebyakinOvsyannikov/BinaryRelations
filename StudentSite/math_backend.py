@@ -121,3 +121,16 @@ class Task:
         triplet_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
         triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel)
+    
+    def to_string(self):
+        """
+        :rtype: str
+        :param self
+        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]" format
+        """
+        elem_str = str(self.elements)
+        str_triplets_list = '@'.join(['[' + tri.mod1 + '|' + tri.relation.value + '|' + tri.mod2 + ']'
+                                      for tri in self.triplets])
+        trip_mod_list = '[' + '@'.join(mod.value for mod in self.triplet_modifiers) + ']'
+        trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
+        return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
