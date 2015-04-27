@@ -11,7 +11,6 @@ import math
 #   $ between Elements, Triplets, UnaryMods, BinaryRels
 #   @ between elements of array of triplets, unaryMods, BinaryRels
 #   | between parts of each triplet
-#   Object to ^
 #   Object to human-readable
 
 
@@ -140,3 +139,12 @@ class Task:
         trip_mod_list = '[' + '@'.join(mod.value for mod in self.triplet_modifiers) + ']'
         trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
+
+    def to_humans(self):
+        """
+        :rtype: str
+        :param self
+        :return: easy-to-read string in " (b(mod 3) <= a(mod 3)) and !(a(mod 3) >= b(mod 3))" format
+        """
+        trip_index = unary_index = binary_index = 0
+
