@@ -1,7 +1,7 @@
 from enum import Enum
 from .decorators import requires_int_or_bool, requires_bool
 import math
-
+import os
 #   Example: "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]"
 #   Elements: 12, 14, 15, 26
 #   Triplets: ab%10%3 <= cd/10%3
@@ -140,3 +140,38 @@ class Task:
         trip_mod_list = '[' + '@'.join(mod.value for mod in self.triplet_modifiers) + ']'
         trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list])
+
+    def solve(self):
+        """
+        :rtype: list
+        :return: two-dimensional array of booleans with answers for Adjacency matrix of current Binary relation
+        """
+        results = []
+        for e1 in self.elements:
+            results_row = []
+            for e2 in self.elements:
+                triplets = [elem.check(e1, e2) for elem in self.triplets]
+                for i in (0, len(triplets)-1):
+                    triplets[i] = self.triplet_modifiers[i].apply_unary_relation(triplets[i])
+                res = triplets[0]
+                for i in (1, len(triplets)-1):
+                    res = self.triplets_triplets_rel[i-1].apply_binary_relation(res, triplets[i])
+                results_row.append(res)
+            results.append(results_row)
+        return results
+
+    def print_solve(self):
+        """
+        :rtype: str
+        :returns: String with a matrix of answers (+/-)
+        """
+        res = ""
+        results = self.solve()
+        for row in results:
+            for item in row:
+                if item:
+                    res += '+ '
+                else:
+                    res += '- '
+            res = res[:-1] + os.linesep
+        return res
