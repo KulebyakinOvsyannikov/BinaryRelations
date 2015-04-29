@@ -43,14 +43,27 @@ class Task:
         :return: initialized instance of Task
         """
         task_elements = task_string.split('$')
-        elements = [int(int_str) for int_str in task_elements[0][1:-1].split(',')]
-        triplets = [RelationTriplet(*arg_tuple)
-                    for arg_tuple in [(rel_elements[0][1:], BinaryRelation(rel_elements[1]), rel_elements[2][:-1])
-                                      for rel_elements in [single_rel.split('|')
-                                                           for single_rel in task_elements[1].split('@')]]]
-        triplet_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
-        triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
+
+        elements = []
+        if len(task_elements[0]) > 0:
+            elements = [int(int_str) for int_str in task_elements[0][1:-1].split(',')]
+
+        triplets = []
+        if len(task_elements[1]) > 0:
+            triplets = [RelationTriplet(*arg_tuple)
+                        for arg_tuple in [(rel_elements[0][1:], BinaryRelation(rel_elements[1]), rel_elements[2][:-1])
+                                          for rel_elements in [single_rel.split('|')
+                                                               for single_rel in task_elements[1].split('@')]]]
+        triplet_modifiers = []
+        if len(triplets) > 0:
+            triplet_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
+
+        triplets_triplets_rel = []
+        if len(triplets) > 1:
+            triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
+
         parenthesis = eval(task_elements[4])
+
         return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel, parenthesis)
 
     def to_string(self):
@@ -78,6 +91,9 @@ class Task:
         triplets = [self.triplet_modifiers[i].apply_unary_relation([elem.check(e1, e2) for elem in self.triplets][i])
                     for i in range(0, len(self.triplets))]
 
+        if len(triplets) == 0:
+            return None
+
         def is_in_parenthesis(ind):
             for parenthesis_pair in self.parenthesis:
                 if parenthesis_pair[0] <= ind < parenthesis_pair[1]:
@@ -89,7 +105,6 @@ class Task:
             for i in range(par_pair[0], par_pair[1]):
                 res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i+1])
             triplets[par_pair[0]] = res
-
         res = triplets[0]
         for i in range(0, len(self.triplets_triplets_rel)):
             if not is_in_parenthesis(i):
