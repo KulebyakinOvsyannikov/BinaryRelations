@@ -5,16 +5,16 @@ import os
 
 
 class Task:
-    def __init__(self, elements, triplets, triplet_modifiers, triplets_triplets_rel, parenthesis):
+    def __init__(self, elements, triplets, block_modifiers, triplets_triplets_rel, parenthesis):
         """
         :rtype: Task
         :param elements: Array of ints
         :param triplets: Array of RelationTriplet
-        :param triplet_modifiers: Array of UnaryRelation
+        :param block_modifiers: Array of UnaryRelation
         :param triplets_triplets_rel: Array of BinaryRelation (logic)
         :type elements: list [int]
         :type triplets: list [RelationTriplet]
-        :type triplet_modifiers: list [UnaryRelation]
+        :type block_modifiers: list [UnaryRelation]
         :type triplets_triplets_rel: list [BinaryRelation]
         :type parenthesis: list [(int,int)]
         :return: instance of Task
@@ -22,7 +22,7 @@ class Task:
 
         self.elements = elements
         self.triplets = triplets
-        self.triplet_modifiers = triplet_modifiers
+        self.block_modifiers = block_modifiers
         self.triplets_triplets_rel = triplets_triplets_rel
         self.parenthesis = parenthesis
         self.results = None
@@ -54,9 +54,9 @@ class Task:
                         for arg_tuple in [(rel_elements[0][1:], BinaryRelation(rel_elements[1]), rel_elements[2][:-1])
                                           for rel_elements in [single_rel.split('|')
                                                                for single_rel in task_elements[1].split('@')]]]
-        triplet_modifiers = []
+        block_modifiers = []
         if len(triplets) > 0:
-            triplet_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
+            block_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
 
         triplets_triplets_rel = []
         if len(triplets) > 1:
@@ -64,7 +64,7 @@ class Task:
 
         parenthesis = eval(task_elements[4])
 
-        return Task(elements, triplets, triplet_modifiers, triplets_triplets_rel, parenthesis)
+        return Task(elements, triplets, block_modifiers, triplets_triplets_rel, parenthesis)
 
     def to_string(self):
         """
@@ -75,7 +75,7 @@ class Task:
         elem_str = str(self.elements)
         str_triplets_list = '@'.join(['[' + tri.mod1 + '|' + tri.relation.value + '|' + tri.mod2 + ']'
                                       for tri in self.triplets])
-        trip_mod_list = '[' + '@'.join(mod.value for mod in self.triplet_modifiers) + ']'
+        trip_mod_list = '[' + '@'.join(mod.value for mod in self.block_modifiers) + ']'
         trip_rel_list = '[' + '@'.join(rel.value for rel in self.triplets_triplets_rel) + ']'
         parenthesis = str(self.parenthesis)
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list, parenthesis])
@@ -88,8 +88,7 @@ class Task:
         :param e2: Second element of relation (cd)
         :return: abRcd (True/ False)
         """
-        triplets = [self.triplet_modifiers[i].apply_unary_relation([elem.check(e1, e2) for elem in self.triplets][i])
-                    for i in range(0, len(self.triplets))]
+        triplets = [elem.check(e1, e2) for elem in self.triplets]
 
         if len(triplets) == 0:
             return None
@@ -100,11 +99,13 @@ class Task:
                     return True
                 return False
 
-        for par_pair in self.parenthesis:
+        for i in range(0, min(len(self.block_modifiers), len(self.parenthesis))):
+            par_pair = self.parenthesis[i]
             res = triplets[par_pair[0]]
-            for i in range(par_pair[0], par_pair[1]):
-                res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i+1])
-            triplets[par_pair[0]] = res
+            for j in range(par_pair[0], par_pair[1]):
+                res = self.triplets_triplets_rel[j].apply_binary_relation(res, triplets[j+1])
+            triplets[par_pair[0]] = self.block_modifiers[i].apply_unary_relation(res)
+
         res = triplets[0]
         for i in range(0, len(self.triplets_triplets_rel)):
             if not is_in_parenthesis(i):
