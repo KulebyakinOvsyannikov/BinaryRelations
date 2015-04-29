@@ -15,6 +15,7 @@ class Task:
         :type elements: list [int]
         :type triplets: list [RelationTriplet]
         :type triplet_modifiers: list [UnaryRelation]
+        :type triplets_triplets_rel: list [BinaryRelation]
         :type parenthesis: list [(int,int)]
         :return: instance of Task
         """
@@ -25,7 +26,7 @@ class Task:
         self.triplets_triplets_rel = triplets_triplets_rel
         self.parenthesis = parenthesis
         self.results = None
-        """type : list [list [bool]] or None"""
+        """type : list [list [bool]] | None"""
 
     def __str__(self):
         return self.to_string()
@@ -38,7 +39,7 @@ class Task:
         """
         :rtype : Task
         :param task_string: String in
-                            "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]$[(1, 2)]" format
+                            "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and ]$[(0, 1)]" format
         :return: initialized instance of Task
         """
         task_elements = task_string.split('$')
@@ -56,7 +57,7 @@ class Task:
         """
         :rtype: str
         :param self
-        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]$[(1, 2)]" format
+        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and ]$[(0, 1)]" format
         """
         elem_str = str(self.elements)
         str_triplets_list = '@'.join(['[' + tri.mod1 + '|' + tri.relation.value + '|' + tri.mod2 + ']'
@@ -117,6 +118,7 @@ class Task:
         """
         res = ""
         if type(self.results) == list:
+            # noinspection PyTypeChecker
             for row in self.results:
                 for item in row:
                     if item:
