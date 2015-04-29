@@ -54,15 +54,18 @@ class Task:
                         for arg_tuple in [(rel_elements[0][1:], BinaryRelation(rel_elements[1]), rel_elements[2][:-1])
                                           for rel_elements in [single_rel.split('|')
                                                                for single_rel in task_elements[1].split('@')]]]
+
+        parenthesis = eval(task_elements[4])
+
         block_modifiers = []
-        if len(triplets) > 0:
+        if len(parenthesis) > 0:
             block_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
 
         triplets_triplets_rel = []
         if len(triplets) > 1:
             triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
 
-        parenthesis = eval(task_elements[4])
+
 
         return Task(elements, triplets, block_modifiers, triplets_triplets_rel, parenthesis)
 
