@@ -90,9 +90,8 @@ class Task:
         for trip_index in range(0, len(self.triplets)):
             if parentheses_index < len(self.parenthesis):
                 if trip_index == self.parenthesis[parentheses_index][0]:
-                    add = '!' if self.block_modifiers[block_mod_index].value == ' not ' \
+                    readable_string += '!' if self.block_modifiers[block_mod_index].value == ' not ' \
                         else self.block_modifiers[block_mod_index].value
-                    readable_string += add
                     readable_string+='('
             readable_string += self.triplets[trip_index].convert_triplet()
             if rel_index < len(self.triplets_triplets_rel):
