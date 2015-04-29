@@ -159,3 +159,16 @@ class Task:
                 if not self.results[i][i]:
                     return False
             return True
+
+    # noinspection PyTypeChecker
+    def is_antisymmetric(self):
+        if self.results is None:
+            self.solve()
+        for i in range(1, len(self.results)):
+            for j in range(i + 1, len(self.results)):
+                if i == j: continue
+                if self.results[i][j] != self.results[j][i]:
+                    return False
+        return True
+
+
