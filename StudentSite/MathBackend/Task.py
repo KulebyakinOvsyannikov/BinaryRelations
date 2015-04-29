@@ -132,7 +132,7 @@ class Task:
         :returns: String with a matrix of answers (+/-)
         """
         res = ""
-        if type(self.results) == list:
+        if self.results is not None:
             # noinspection PyTypeChecker
             for row in self.results:
                 for item in row:
@@ -142,3 +142,19 @@ class Task:
                         res += '- '
                 res = res[:-1] + os.linesep
             return res
+        else:
+            self.solve()
+            self.print_solve()
+
+    def is_reflexive(self):
+        if self.results is None:
+            for elem in self.elements:
+                if not self.solve_for_xy(elem, elem):
+                    return False
+            return True
+        else:
+            # noinspection PyTypeChecker
+            for i in range(0, len(self.results)):
+                if not self.results[i][i]:
+                    return False
+            return True
