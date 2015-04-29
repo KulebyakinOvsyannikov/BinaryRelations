@@ -17,6 +17,13 @@ class RelationTriplet:
         self.relation = rel
         self.mod2 = mod2
 
+    def __str__(self):
+        res = self.mod1 + str(self.relation) + self.mod2
+        return res
+
+    def __repr__(self):
+        return self.__str__()
+
     def check(self, val1, val2):
         """
         :rtype: bool
@@ -30,10 +37,9 @@ class RelationTriplet:
         elem2 = modify_element(val2, self.mod2)
         return self.relation.apply_binary_relation(elem1, elem2)
 
-    def convert_triplet(self):
+    def convert_triplet_to_human_readable(self):
         """
         :rtype: str
-        :param triplet:
         :return: easy-to-read triplet string in "a(mod 2) < c(mod 2)" format
         """
         rt_string = ''
@@ -70,10 +76,3 @@ class RelationTriplet:
                 if self.mod2.startswith('%'):
                     rt_string = rt_string + '( ' + self.mod2[1:] + ')'
         return rt_string
-
-    def __str__(self):
-        res = self.mod1 + str(self.relation) + self.mod2
-        return res
-
-    def __repr__(self):
-        return self.__str__()
