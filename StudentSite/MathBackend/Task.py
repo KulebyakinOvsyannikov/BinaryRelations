@@ -76,6 +76,30 @@ class Task:
         parenthesis = str(self.parenthesis)
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list, parenthesis])
 
+    def to_humans(self):
+        """
+        :rtype: str
+        :return: string in easy-to-read "!(a(mod 3) >= d(mod 3) and b(mod 5) != c(mod 5))" format
+        """
+        readable_string = ''
+        block_mod_index = rel_index = parentheses_index = 0
+        for trip_index in range(0, len(self.triplets)):
+            if parentheses_index < len(self.parenthesis):
+                if trip_index == self.parenthesis[parentheses_index][0]:
+                    readable_string += '!' if self.block_modifiers[block_mod_index].value == ' not ' \
+                        else self.block_modifiers[block_mod_index].value
+                    readable_string += '('
+            readable_string += self.triplets[trip_index].convert_triplet()
+            if rel_index < len(self.triplets_triplets_rel):
+                readable_string += self.triplets_triplets_rel[rel_index].value
+                rel_index += 1
+            if parentheses_index < len(self.parenthesis):
+                if trip_index == self.parenthesis[parentheses_index][1]:
+                    readable_string += ')'
+                    block_mod_index += 1
+                    parentheses_index += 1
+        return readable_string
+
     def solve_for_xy(self, e1, e2):
         """
         Returns True, if e1 and e2 are in a binary relation. (Nested parenthesis are not supported).

@@ -1,6 +1,5 @@
 from math import trunc
 
-
 def modify_element(element, modifier):
     """
     :rtype: int
