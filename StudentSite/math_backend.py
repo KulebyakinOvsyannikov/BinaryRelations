@@ -98,13 +98,20 @@ class Task:
         :param triplets: Array of RelationTriplet
         :param triplet_modifiers: Array of UnaryRelation
         :param triplets_triplets_rel: Array of BinaryRelation (logic)
+        :type elements: list [int]
+        :type triplets: list [RelationTriplet]
+        :type triplet_modifiers: list [UnaryRelation]
+        :type parenthesis: list [(int,int)]
         :return: instance of Task
         """
+
         self.elements = elements
         self.triplets = triplets
         self.triplet_modifiers = triplet_modifiers
         self.triplets_triplets_rel = triplets_triplets_rel
         self.parenthesis = parenthesis
+        self.results = None
+        """type : list [list [bool]] or None"""
 
     def __str__(self):
         return self.to_string()
@@ -116,7 +123,8 @@ class Task:
     def from_string(cls, task_string):
         """
         :rtype : Task
-        :param task_string: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]$[(1, 2)]" format
+        :param task_string: String in
+                            "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and @...]$[(1, 2)]" format
         :return: initialized instance of Task
         """
         task_elements = task_string.split('$')
@@ -145,6 +153,13 @@ class Task:
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list, parenthesis])
     
     def solve_for_xy(self, e1, e2):
+        """
+        Returns True, if e1 and e2 are in a binary relation. (Nested parenthesis are not supported).
+        :rtype: bool
+        :param e1: First element of relation (ab)
+        :param e2: Second element of relation (cd)
+        :return: abRcd (True/ False)
+        """
         triplets = [self.triplet_modifiers[i].apply_unary_relation([elem.check(e1, e2) for elem in self.triplets][i])
                     for i in range(0, len(self.triplets))]
 
@@ -178,6 +193,7 @@ class Task:
             for e2 in self.elements:
                 results_row.append(self.solve_for_xy(e1, e2))
             results.append(results_row)
+        self.results = results
         return results
 
     def print_solve(self):
@@ -186,12 +202,12 @@ class Task:
         :returns: String with a matrix of answers (+/-)
         """
         res = ""
-        results = self.solve()
-        for row in results:
-            for item in row:
-                if item:
-                    res += '+ '
-                else:
-                    res += '- '
-            res = res[:-1] + os.linesep
-        return res
+        if type(self.results) == list:
+            for row in self.results:
+                for item in row:
+                    if item:
+                        res += '+ '
+                    else:
+                        res += '- '
+                res = res[:-1] + os.linesep
+            return res
