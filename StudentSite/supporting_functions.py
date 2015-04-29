@@ -16,18 +16,23 @@ def convert_triplet(triplet):
         if triplet.mod1.startswith('%10'):
             rt_string+='b'
             aux_str = triplet.mod1[3:]
-        if aux_str.startswith('%'):
-            rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+            if aux_str.startswith('%'):
+                rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+        else:
+            rt_string+='ab'
+
     rt_string+=triplet.relation.value
     if triplet.mod2.startswith('/10'):
         rt_string+= 'c'
-        aux_str = triplet.mod1[3:]
+        aux_str = triplet.mod2[3:]
         if aux_str.startswith('%'):
             rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
     else:
         if triplet.mod2.startswith('%10'):
             rt_string+='d'
-            aux_str = triplet.mod1[3:]
-        if aux_str.startswith('%'):
-            rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+            aux_str = triplet.mod2[3:]
+            if aux_str.startswith('%'):
+                rt_string = rt_string + '(mod ' + aux_str[-1] + ')'
+        else:
+            rt_string+='cd'
     return rt_string
