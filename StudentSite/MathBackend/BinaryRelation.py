@@ -1,6 +1,7 @@
 from enum import Enum
 from .decorators import requires_int_or_bool
 
+
 class BinaryRelation(Enum):
     equal = ' == '
     less_than = ' < '
@@ -18,7 +19,7 @@ class BinaryRelation(Enum):
         :rtype: bool
         :return: relation between value1 and value2 via self.value
         """
-        expression = str(value1) + self.value + str(value2)
+        expression = str(value1) + self.value() + str(value2)
         return eval(expression)
 
     def __str__(self):
