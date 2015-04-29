@@ -76,7 +76,7 @@ class Task:
         parenthesis = str(self.parenthesis)
         return '$'.join([elem_str, str_triplets_list, trip_mod_list, trip_rel_list, parenthesis])
 
-    def to_humans(self):
+    def to_human_readable(self):
         """
         :rtype: str
         :return: string in easy-to-read "!(a(mod 3) >= d(mod 3) and b(mod 5) != c(mod 5))" format
@@ -89,7 +89,7 @@ class Task:
                     readable_string += '!' if self.block_modifiers[block_mod_index].value == ' not ' \
                         else self.block_modifiers[block_mod_index].value
                     readable_string += '('
-            readable_string += self.triplets[trip_index].convert_triplet()
+            readable_string += self.triplets[trip_index].convert_triplet_to_human_readable()
             if rel_index < len(self.triplets_triplets_rel):
                 readable_string += self.triplets_triplets_rel[rel_index].value
                 rel_index += 1
@@ -100,7 +100,7 @@ class Task:
                     parentheses_index += 1
         return readable_string
 
-    def solve_for_xy(self, e1, e2):
+    def solve_for_elements(self, e1, e2):
         """
         Returns True, if e1 and e2 are in a binary relation. (Nested parenthesis are not supported).
         :rtype: bool
@@ -142,7 +142,7 @@ class Task:
         for e1 in self.elements:
             results_row = []
             for e2 in self.elements:
-                results_row.append(self.solve_for_xy(e1, e2))
+                results_row.append(self.solve_for_elements(e1, e2))
             results.append(results_row)
         self.results = results
         return results
@@ -170,7 +170,7 @@ class Task:
     def is_reflexive(self):
         if self.results is None:
             for elem in self.elements:
-                if not self.solve_for_xy(elem, elem):
+                if not self.solve_for_elements(elem, elem):
                     return False
             return True
         else:
