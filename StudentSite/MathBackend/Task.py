@@ -44,28 +44,21 @@ class Task:
         """
         task_elements = task_string.split('$')
 
-        elements = []
-        if len(task_elements[0]) > 0:
-            elements = [int(int_str) for int_str in task_elements[0][1:-1].split(',')]
+        elements = [] if len(task_elements[0]) == 0 else [int(int_str) for int_str in task_elements[0][1:-1].split(',')]
 
-        triplets = []
-        if len(task_elements[1]) > 0:
-            triplets = [RelationTriplet(*arg_tuple)
-                        for arg_tuple in [(rel_elements[0][1:], BinaryRelation(rel_elements[1]), rel_elements[2][:-1])
-                                          for rel_elements in [single_rel.split('|')
-                                                               for single_rel in task_elements[1].split('@')]]]
-
+        triplets = [] if len(task_elements[1]) == 0 \
+            else [RelationTriplet(*arg_tuple)
+                  for arg_tuple in [(rel_elements[0][1:], BinaryRelation(rel_elements[1]), rel_elements[2][:-1])
+                                    for rel_elements in [single_rel.split('|')
+                                                         for single_rel in task_elements[1].split('@')]]]
+        """:type: list"""
         parenthesis = eval(task_elements[4])
 
-        block_modifiers = []
-        if len(parenthesis) > 0:
-            block_modifiers = [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
+        block_modifiers = [] if len(parenthesis) == 0 \
+            else [UnaryRelation(mod) for mod in task_elements[2][1:-1].split('@')]
 
-        triplets_triplets_rel = []
-        if len(triplets) > 1:
-            triplets_triplets_rel = [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
-
-
+        triplets_triplets_rel = [] if len(triplets) < 2 \
+            else [BinaryRelation(mod) for mod in task_elements[3][1:-1].split('@')]
 
         return Task(elements, triplets, block_modifiers, triplets_triplets_rel, parenthesis)
 
