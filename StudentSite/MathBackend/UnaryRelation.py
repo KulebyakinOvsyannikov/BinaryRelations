@@ -11,7 +11,7 @@ class UnaryRelation(Enum):
         """
         :rtype: bool
         :param argument: boolean to apply unary operation to
-        :return: argument itself
+        :return: Modified argument itself
         """
         if self == UnaryRelation.unary_not:
             return not argument
