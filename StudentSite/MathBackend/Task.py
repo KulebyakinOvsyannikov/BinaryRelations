@@ -173,5 +173,3 @@ class Task:
                 if self.results[i][j] != self.results[j][i]:
                     return False
         return True
-
-
