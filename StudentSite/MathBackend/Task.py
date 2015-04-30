@@ -153,19 +153,17 @@ class Task:
         :returns: String with a matrix of answers (+/-)
         """
         res = ""
-        if self.results is not None:
-            # noinspection PyTypeChecker
-            for row in self.results:
-                for item in row:
-                    if item:
-                        res += '+ '
-                    else:
-                        res += '- '
-                res = res[:-1] + os.linesep
-            return res
-        else:
+        if self.results is None:
             self.solve()
-            self.print_solve()
+        # noinspection PyTypeChecker
+        for row in self.results:
+            for item in row:
+                if item:
+                    res += '+ '
+                else:
+                    res += '- '
+            res = res[:-1] + os.linesep
+        return res
 
     def is_reflexive(self):
         """
