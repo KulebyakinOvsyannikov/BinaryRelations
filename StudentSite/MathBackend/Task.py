@@ -123,13 +123,13 @@ class Task:
             par_pair = self.parenthesis[i]
             res = triplets[par_pair[0]]
             for j in range(par_pair[0], par_pair[1]):
-                res = self.triplets_triplets_rel[j].apply_binary_relation(res, triplets[j+1])
+                res = self.triplets_triplets_rel[j].apply_binary_relation(res, triplets[j + 1])
             triplets[par_pair[0]] = self.block_modifiers[i].apply_unary_relation(res)
 
         res = triplets[0]
         for i in range(0, len(self.triplets_triplets_rel)):
             if not is_in_parenthesis(i):
-                res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i+1])
+                res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i + 1])
 
         return res
 
@@ -199,4 +199,56 @@ class Task:
                 for k in range(0, len(self.results)):
                     if not self.results[j][k] and (self.results[j][k] or (self.results[j][i] and self.results[i][k])):
                         return False
+        return True
+
+    def topological_sort(self):
+        """
+        :rtype: list [int] | None
+        :return: list of vertex indexes after topological (dfs) sort
+        """
+        def dfs(ind):
+            """
+            :rtype: bool
+            :type ind: int
+            """
+            if sort_tree[ind][1] == 1:
+                return True
+            if sort_tree[ind][1] == 2:
+                return False
+            sort_tree[ind][1] = 1
+            for j in range(0, len(sort_tree[ind][0])):
+                if sort_tree[ind][0][j] and j != ind:
+                    if dfs(j):
+                        return True
+            stack.append(ind)
+            sort_tree[ind][1] = 2
+            return False
+
+        if self.results is None:
+            self.solve()
+        sort_tree = [[res, 0] for res in self.results]
+        stack = []
+        for i in range(0, len(sort_tree)):
+            if dfs(i):
+                return None
+        return stack
+
+    def is_correct_topological_sort(self, sort, strict):
+        """
+        :type sort: list [int]
+        :param sort: users sort attempt
+        :return: true, is sort is a correct list of sorted indexes
+        """
+        sort_tree = [[res, False] for res in self.results]
+        for i in range(0, len(sort_tree)):
+            for k in range(0, len(sort_tree[sort[i]][0])):
+                sort_tree[sort[i]][1] = True
+                if strict and i == k:
+                    if sort_tree[sort[i]][k]:
+                        return False
+                    else:
+                        continue
+                if sort_tree[sort[i]][0][k] and not sort_tree[k][1]:
+                    print(sort[i], k)
+                    return False
         return True
