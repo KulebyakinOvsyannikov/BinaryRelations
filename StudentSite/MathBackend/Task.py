@@ -66,7 +66,7 @@ class Task:
         """
         :rtype: str
         :param self
-        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and ]$[(0, 1)]" format
+        :return: String in "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not ]$[ and ]$[(0, 1)]" format
         """
         elem_str = str(self.elements)
         str_triplets_list = '@'.join(['[' + tri.mod1 + '|' + tri.relation.value + '|' + tri.mod2 + ']'
@@ -183,6 +183,48 @@ class Task:
                 if not self.results[i][i]:
                     return False
             return True
+
+    def is_antireflexive(self):
+        """
+        :rtype: bool
+        :return: True, if the relation is antireflexive
+        """
+        if self.results is None:
+            for elem in self.elements:
+                if self.solve_for_elements(elem, elem):
+                    return False
+            return True
+        else:
+            for i in range(0,len(self.results)):
+                if self.results[i][i]:
+                    return False
+            return True
+
+    def is_symmetric(self):
+        """
+        :rtype: bool
+        :return: True, if the relation is symmetric
+        """
+        if self.results is None:
+            self.solve()
+        for i in range(0,len(self.results)):
+            for j in range(i+1,len(self.results)):
+                if self.results[i][j] != self.results[j][i]:
+                    return False
+        return True
+
+    def is_asymmetric(self):
+        """
+        :rtype: bool
+        :return: True, if the relation is asymmetric
+        """
+        if self.results is None:
+            self.solve()
+        for i in range(0, len(self.results)):
+            for j in range(i, len(self.results)):
+                if self.results[i][j] and self.results[j][i]:
+                    return False
+        return True
 
     # noinspection PyTypeChecker
     def is_antisymmetric(self):
