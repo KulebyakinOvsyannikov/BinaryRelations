@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 
 class Task(models.Model):
     str_repr = models.CharField(max_length=255)
+    difficulty = models.IntegerField(default=0)
 
 
 class Student(models.Model):
     user = models.OneToOneField(User)
+    website = models.URLField(null=True)
     tasks = models.ManyToManyField(Task, through='StudentTaskRel')
 
 
