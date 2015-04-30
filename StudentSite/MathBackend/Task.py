@@ -189,3 +189,14 @@ class Task:
                 if self.results[i][j] and self.results[j][i]:
                     return False
         return True
+
+    # noinspection PyTypeChecker
+    def is_transitive(self):
+        if self.results is None:
+            self.solve()
+        for i in range(0, len(self.results)):
+            for j in range(0, len(self.results)):
+                for k in range(0, len(self.results)):
+                    if not self.results[j][k] and (self.results[j][k] or (self.results[j][i] and self.results[i][k])):
+                        return False
+        return True
