@@ -1,6 +1,7 @@
 from .RelationTriplet import RelationTriplet
 from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
+from.relation_type import OrderType
 import os
 
 
@@ -254,6 +255,42 @@ class Task:
                     if not self.results[j][k] and (self.results[j][k] or (self.results[j][i] and self.results[i][k])):
                         return False
         return True
+
+    def is_of_equivalence(self):
+        """
+        :rtype: bool
+        :return: True, if the relation is equivalent
+        """
+        if Task.is_reflexive() and Task.is_symmetric() and Task.is_transitive():
+            return True
+        return False
+
+    def is_of_order(self):
+        """
+        :rtype: OrderType
+        :return: corresponding value of OrderType enum class, depending on the type of the relation
+        """
+
+        def is_linear(self):
+            """
+            :rtype: bool
+            :return: True, if the order is linear, otherwise False
+            """
+            for i in range(0, len(self.results)):
+                for j in range(i+1, len(self.results)):
+                    if self.results[i][j] == self.results[j][i]:
+                        return False
+            return True
+
+        if Task.is_asymmetric() and Task.is_transitive():
+            if is_linear():
+                return OrderType.strict_and_linear
+            return OrderType.strict_and_partial
+        if Task.is_reflexive() and Task.is_antisymmetric() and Task.is_transitive():
+            if is_linear():
+                return OrderType.not_strict_and_linear
+            return OrderType.not_strict_and_partial
+        return OrderType.not_of_order
 
     def topological_sort(self):
         """
