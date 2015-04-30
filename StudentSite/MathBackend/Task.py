@@ -168,6 +168,10 @@ class Task:
             self.print_solve()
 
     def is_reflexive(self):
+        """
+        :rtype: bool
+        :return: True, if binary relation is reflexive
+        """
         if self.results is None:
             for elem in self.elements:
                 if not self.solve_for_elements(elem, elem):
@@ -182,6 +186,10 @@ class Task:
 
     # noinspection PyTypeChecker
     def is_antisymmetric(self):
+        """
+        :rtype: bool
+        :return: True, is binary relation is antisymmetric
+        """
         if self.results is None:
             self.solve()
         for i in range(0, len(self.results)):
@@ -192,6 +200,10 @@ class Task:
 
     # noinspection PyTypeChecker
     def is_transitive(self):
+        """
+        :rtype: bool
+        :return: True, if binary relation is transitive (Warshall's algorithm)
+        """
         if self.results is None:
             self.solve()
         for i in range(0, len(self.results)):
