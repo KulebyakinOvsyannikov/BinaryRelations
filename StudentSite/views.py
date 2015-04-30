@@ -19,6 +19,10 @@ def test_view(request):
     return render(request, 'StudentSite/test_base.html', {'task': task_obj})
 
 
+def check_test_task(request):
+    pass
+
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('student_site:index_view'))

@@ -2,5 +2,27 @@
 {% block body %}
     <h4>{{ task.elements }}</h4>
     <h4>{{  task.to_human_readable }}</h4>
-    <form action=""></form>
+    <form action="{% url 'student_site:check_test_view' %}" method="post">
+        <table>
+            <tr>
+                <td>ab/cd</td>
+                {% for elem in task.elements %}
+                <td>{{ elem }}</td>
+                {% endfor %}
+            </tr>
+            {% for elem in task.elements %}
+                <tr>
+                    <td>{{ elem }}</td>
+                    {% for elem2 in task.elements %}
+                        <td>
+                            <input type="checkbox"
+                                   name="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                                   title="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" />
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </form>
+    {% if result is True %}
 {% endblock %}
