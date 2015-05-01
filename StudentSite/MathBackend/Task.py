@@ -343,3 +343,15 @@ class Task:
                     print(sort[i], k)
                     return False
         return True
+
+    def task_text(self):
+        """
+        :rtype: str
+        :return: string containing the text of the task
+        """
+        task_str = 'Дано множество M: '
+        task_str += str(self.elements)
+        task_str += ' и отношение R: '
+        task_str += self.to_human_readable()
+        task_str += '. Постройте матрицу смежности отношения R на множестве M и определите свойства этого отношения.'
+        return task_str
