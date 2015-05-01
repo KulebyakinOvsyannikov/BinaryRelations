@@ -148,23 +148,14 @@ class Task:
         self.results = results
         return results
 
-    def print_solve(self):
+    def solve_string(self):
         """
         :rtype: str
         :returns: String with a matrix of answers (+/-)
         """
-        res = ""
         if self.results is None:
             self.solve()
-        # noinspection PyTypeChecker
-        for row in self.results:
-            for item in row:
-                if item:
-                    res += '+ '
-                else:
-                    res += '- '
-            res = res[:-1] + os.linesep
-        return res
+        return '$'.join([" ".join(['+' if item else '-' for item in row]) for row in self.results])
 
     def is_reflexive(self):
         """

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import StudentModel, TaskModel, StudentTaskRel
 from django.core.urlresolvers import reverse
@@ -9,7 +10,7 @@ from django.views.decorators.http import require_POST
 from .MathBackend.OrderType import OrderType
 
 
-def index_view(request):
+def index(request):
     """
     'next' may be passed because of attempt to open test_view while not being logged in
     in this case we set context variable which will be included in login form
@@ -21,12 +22,12 @@ def index_view(request):
     return render(request, 'StudentSite/index.html', context)
 
 
-@login_required(login_url="student_site:index_view")
+"""
 def test_view(request):
-    """
+
 
     :return: Rendered response for a page with users test task
-    """
+
     # getting user from request
     user = request.user
     # looking for user<->task relation with isTestTask = True and isCompleted = False (should only be one at a time)
@@ -38,10 +39,11 @@ def test_view(request):
     # setting response cookie with previous progress on task
     response.set_cookie('partial_solve', task_rel.partial_solve)
     return response
+"""
 
 
 @require_POST
-def check_test_task(request):
+def control_check(request):
     """
     :return: rendered response for users attempt to solve test task
     """
@@ -54,6 +56,11 @@ def check_test_task(request):
     # getting all attributes of relation. (not effective for now, we'll probably store all of this in DB in future
     # array of triplets
     # (name of form input, correct value of input)
+    if task.answer_table is None:
+        task.answer_table = task_obj.solve_string()
+        print(task_obj.solve_string())
+        task.save()
+
     checkboxes_array = [
         ("reflexivity", "reflexive" if task_obj.is_reflexive() else "non-reflexive"),
         ("anti-reflexivity", "anti-reflexive" if task_obj.is_antireflexive() else "non-anti-reflexive"),
@@ -66,6 +73,10 @@ def check_test_task(request):
         ("order-strict", "strict" if task_obj.is_of_order().is_strict() else "not-strict"),
         ("order-linearity", "linear" if task_obj.is_of_order().is_partial() else "partial")
     ]
+
+    if task.answer_properties is None:
+        task.answer_properties = '$'.join(['='.join([item[0], item[1]]) for item in checkboxes_array])
+        task.save()
     # setting initial result to True
     result = True
     # variable for storing users progress
@@ -117,12 +128,12 @@ def check_test_task(request):
     return response
 
 
-def logout_view(request):
+def logout_action(request):
     logout(request)
-    return HttpResponseRedirect(reverse('student_site:index_view'))
+    return HttpResponseRedirect(reverse('student_site:index'))
 
 
-def login_view(request):
+def login_action(request):
     username = request.POST["username"]
     password = request.POST["password"]
     user = authenticate(username=username, password=password)
@@ -132,4 +143,60 @@ def login_view(request):
     if 'next' in request.POST:
         print(request.POST['next'])
         return HttpResponseRedirect(request.POST['next'])
-    return HttpResponseRedirect(reverse('student_site:index_view'))
+    return HttpResponseRedirect(reverse('student_site:index'))
+
+
+def registration(request):
+    return render(request, 'StudentSite/registration.html')
+
+
+def login_registration(request):
+    return render(request, 'StudentSite/registration.html')
+
+
+@require_POST
+def registration_action(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    group = request.POST['group']
+    web_site = request.POST['web_site']
+
+    User.objects.create_user(username=username, password=password)
+    user = authenticate(username=username, password=password)
+    student = StudentModel.objects.create(user=user, website=web_site)
+    student.first_name = first_name
+    student.last_name = last_name
+    student.group = group
+    student.save()
+
+    login(request, user)
+
+    return HttpResponseRedirect(reverse('student_site:index'))
+
+
+def demo(request):
+    pass
+
+
+@login_required(login_url="student_site:login_registration")
+def training(request):
+    return render(request, 'StudentSite/training.html')
+
+
+@login_required(login_url="student_site:login_registration")
+def control(request):
+    pass
+
+
+def chose_difficulty(request):
+    pass
+
+
+def training_with_difficulty(request, difficulty):
+    pass
+
+
+def check_training(request):
+    pass

@@ -1,0 +1,13 @@
+{% extends 'StudentSite/index.html' %}
+
+{% block title %}<title>Тренировка</title>{% endblock %}
+
+{% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
+
+{% block body %}
+    <ul>
+        <li><a href="{% url 'student_site:training_with_difficulty' 'easy' %}">Легко</a> </li>
+        <li><a href="{% url 'student_site:training_with_difficulty' 'medium' %}">Средне</a> </li>
+        <li><a href="{% url 'student_site:training_with_difficulty' 'hard' %}">Сложно</a> </li>
+    </ul>
+{% endblock %}

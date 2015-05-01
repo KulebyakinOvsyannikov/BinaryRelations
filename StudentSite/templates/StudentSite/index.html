@@ -5,7 +5,13 @@
     {% block title %}<title>Student site</title>{% endblock %}
 </head>
 <body>
-    {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
-    {% block body %}<h2>title</h2>{% endblock %}
+    {% block header %}{% include 'StudentSite/header_index.html' %}{% endblock %}
+    {% block body %}
+        <ul>
+            <li><a href="{% url 'student_site:demo' %}">Демо-режим</a></li>
+            <li><a href="{% url 'student_site:training' %}">Тренировка</a></li>
+            <li><a href="{% url 'student_site:control' %}">Контроль</a> </li>
+        </ul>
+    {% endblock %}
 </body>
 </html>

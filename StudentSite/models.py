@@ -5,12 +5,17 @@ from django.contrib.auth.models import User
 
 class TaskModel(models.Model):
     str_repr = models.CharField(max_length=255)
+    answer_table = models.CharField(max_length=255, null=True, default=None)
+    answer_properties = models.CharField(max_length=255, null=True, default=None)
     difficulty = models.IntegerField(default=0)
 
 
 class StudentModel(models.Model):
     user = models.OneToOneField(User)
     website = models.URLField(null=True)
+    group = models.CharField(max_length=8)
+    first_name = models.CharField(max_length=56)
+    last_name = models.CharField(max_length=56)
     tasks = models.ManyToManyField(TaskModel, through='StudentTaskRel')
 
 

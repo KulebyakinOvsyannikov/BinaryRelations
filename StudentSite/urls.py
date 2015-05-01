@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-from django.contrib import admin
 from . import views
 
 urlpatterns = [
@@ -7,9 +6,24 @@ urlpatterns = [
     # url(r'^$', 'BinaryRelations.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^login/', views.login_view, name='login_action'),
-    url(r'^logout/', views.logout_view, name='logout_action'),
-    url(r'^test/', views.test_view, name='test_view'),
-    url(r'^check_test_task/', views.check_test_task, name='check_test_view'),
-    url(r'^', views.index_view, name='index_view'),
+
+    url(r'^control/check/', views.control_check, name='check_test'),
+    url(r'^control/', views.control, name='control'),
+
+    url(r'^demo/', views.demo, name='demo'),
+
+    url(r'^training/(?P<difficulty>easy|medium|hard)',
+        views.training_with_difficulty,
+        name='training_with_difficulty'
+        ),
+    url(r'^training/check/', views.check_training, name='check_training'),
+    url(r'^training/', views.training, name='training'),
+
+    url(r'^registration/register', views.registration_action, name='registration_action'),
+    url(r'^registration/', views.registration, name='registration'),
+
+    url(r'^login/login-registration/', views.login_registration, name='login_registration'),
+    url(r'^login/log', views.login_action, name='login_action'),
+    url(r'^login/out', views.logout_action, name='logout_action'),
+    url(r'^', views.index, name='index'),
 ]

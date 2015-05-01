@@ -1,25 +1,8 @@
-<nav>
-    <div class = 'links'>
-
-    </div>
-    {% if not request.user.is_authenticated %}
-    <div class = 'login-form'>
-        <form action= "{% url 'student_site:login_action' %}" method="post">
-            {% csrf_token %}
-            <label>username: <input type="text" name="username" /></label>
-            <label>password: <input type="text" name="password" /></label>
-            {% if next %}
-                <input type="hidden" name="next" value="{{ next }}" />
-            {% endif %}
-            <input type="submit" value="Log In">
-        </form>
-    </div>
-    {% else %}
-    <div class = "logged-in-user">
-        <h4>{{ request.user }}</h4>
-        <form action="{% url 'student_site:logout_action' %}" method="get">
-            <input type="submit" value="logout">
-        </form>
-    </div>
-    {% endif %}
-</nav>
+{% extends 'StudentSite/header_index.html' %}
+{% block nav_pane %}
+    <ul>
+        <li><a href="{% url 'student_site:demo' %}">Демо-режим</a></li>
+        <li><a href="{% url 'student_site:training' %}">Тренировка</a></li>
+        <li><a href="{% url 'student_site:control' %}">Контроль</a> </li>
+    </ul>
+{% endblock %}
