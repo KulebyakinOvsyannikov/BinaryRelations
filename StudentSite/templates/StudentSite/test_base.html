@@ -1,0 +1,149 @@
+{% extends 'StudentSite/index.html' %}
+{% block body %}
+    {% load staticfiles %}
+    <h4>{{ task.elements }}</h4>
+    <h4>{{  task.to_human_readable }}</h4>
+    <form action="{% url 'student_site:check_test_view' %}" method="post" id="answers-form" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <table id="task_table">
+            <tr>
+                <td>ab/cd</td>
+                {% for elem in task.elements %}
+                <td>{{ elem }}</td>
+                {% endfor %}
+            </tr>
+            {% for elem in task.elements %}
+                <tr>
+                    <td>{{ elem }}</td>
+                    {% for elem2 in task.elements %}
+                        <td>
+                            <input type="checkbox"
+                                   name="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                                   title="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" {% if partial_solve %} checked {% endif %}/>
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="radio-input">
+            <label>
+                Рефлексивное
+                <input type="radio" name="reflexivity" value="reflexive">
+            </label>
+            <label>
+                Нерефлексивное
+                <input type="radio" name="reflexivity" value="non-reflexive">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Антирефлексивное
+                <input type="radio" name="anti-reflexivity" value="anti-reflexive">
+            </label>
+            <label>
+                Неантирефлексивное
+                <input type="radio" name="anti-reflexivity" value="non-anti-reflexive">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Симметричное
+                <input type="radio" name="symmetry" value="symmetric">
+            </label>
+            <label>
+                Несимметричное
+                <input type="radio" name="symmetry" value="non-symmetric">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Асимметричное
+                <input type="radio" name="asymmetry" value="asymmetric">
+            </label>
+            <label>
+                Неасимметричное
+                <input type="radio" name="asymmetry" value="non-asymmetric">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Антисимметричное
+                <input type="radio" name="antisymmetry" value="antisymmetric">
+            </label>
+            <label>
+                Неантисимметричное
+                <input type="radio" name="antisymmetry" value="non-antisymmetric">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Транзитивное
+                <input type="radio" name="transitivity" value="transitive">
+            </label>
+            <label>
+                Нетранзитивное
+                <input type="radio" name="transitivity" value="non-transitive">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Отношение эквиваленции
+                <input type="radio" name="equivalency" value="equivalent">
+            </label>
+            <label>
+                Не отношение эквиваленции
+                <input type="radio" name="equivalency" value="non-equivalent">
+            </label>
+        </div>
+
+        <div class="radio-input">
+            <label>
+                Отношение порядка
+                <input type="radio" name="order" value="of-order" onclick="orderChecked(true)" />
+            </label>
+            <label>
+                Не отношение порядка
+                <input type="radio" name="order" value="not-of-order" onclick="orderChecked(false)" />
+            </label>
+        </div>
+
+        <div class="radio-input" id="order-strict-block" style="display: none">
+            <label>
+                Строгого порядка
+                <input type="radio" name="order-strict" value="strict">
+            </label>
+            <label>
+                Нестрогого порядка
+                <input type="radio" name="order-strict" value="not-strict">
+            </label>
+        </div>
+
+        <div class="radio-input" id = "order-linearity-block" style="display: none">
+            <label>
+                Линейного порядка
+                <input type="radio" name="order-linearity" value="linear">
+            </label>
+            <label>
+                Частичного порядка
+                <input type="radio" name="order-linearity" value="partial">
+            </label>
+        </div>
+
+        <input type="hidden" name="task_id" value="{{ task_id }}">
+        <input type="submit" value="Проверить">
+    </form>
+    {% if result == True %}
+        <h2>Правильное решение!</h2>
+    {% elif result == False %}
+        <h2>Решено с ошибками!</h2>
+    {% endif %}
+    <script src="{% static 'StudentSite/test_scripts.js' %}" ></script>
+    <script>fillForm();</script>
+{% endblock %}
