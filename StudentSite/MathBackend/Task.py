@@ -259,7 +259,7 @@ class Task:
         :rtype: bool
         :return: True, if the relation is equivalent
         """
-        if Task.is_reflexive() and Task.is_symmetric() and Task.is_transitive():
+        if self.is_reflexive() and self.is_symmetric() and self.is_transitive():
             return True
         return False
 
@@ -269,23 +269,25 @@ class Task:
         :return: corresponding value of OrderType enum class, depending on the type of the relation
         """
 
-        def is_linear(self):
+        def is_linear(results):
             """
             :rtype: bool
             :return: True, if the order is linear, otherwise False
             """
-            for i in range(0, len(self.results)):
-                for j in range(i+1, len(self.results)):
+            for i in range(0, len(results)):
+                for j in range(i + 1, len(results)):
                     if self.results[i][j] == self.results[j][i]:
                         return False
             return True
 
-        if Task.is_asymmetric() and Task.is_transitive():
-            if is_linear():
+        if self.is_asymmetric() and self.is_transitive():
+            if self.results in None:
+                self.solve()
+            if is_linear(self.results):
                 return OrderType.strict_and_linear
             return OrderType.strict_and_partial
-        if Task.is_reflexive() and Task.is_antisymmetric() and Task.is_transitive():
-            if is_linear():
+        if self.is_reflexive() and self.is_antisymmetric() and self.is_transitive():
+            if is_linear(self.results):
                 return OrderType.not_strict_and_linear
             return OrderType.not_strict_and_partial
         return OrderType.not_of_order
