@@ -18,6 +18,7 @@ class StudentTaskRel(models.Model):
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
     isTestTask = models.BooleanField()
+    partial_solve = models.CharField(max_length=255, default='')
     isCompleted = models.BooleanField(default=False)
     numberOfAttempts = models.IntegerField(default=0)
     dateStarted = models.DateField(auto_created=True)
