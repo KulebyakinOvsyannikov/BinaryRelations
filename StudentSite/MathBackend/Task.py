@@ -1,7 +1,7 @@
 from .RelationTriplet import RelationTriplet
 from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
-from.relation_type import OrderType
+from.OrderType import OrderType
 import os
 
 
@@ -281,12 +281,14 @@ class Task:
             return True
 
         if self.is_asymmetric() and self.is_transitive():
-            if self.results in None:
+            if self.results is None:
                 self.solve()
             if is_linear(self.results):
                 return OrderType.strict_and_linear
             return OrderType.strict_and_partial
         if self.is_reflexive() and self.is_antisymmetric() and self.is_transitive():
+            if self.results is None:
+                self.solve()
             if is_linear(self.results):
                 return OrderType.not_strict_and_linear
             return OrderType.not_strict_and_partial
