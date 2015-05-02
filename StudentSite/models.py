@@ -31,21 +31,23 @@ class TaskModel(models.Model):
 
     @classmethod
     def get_training_task_with_difficulty(cls, difficulty):
+        while cls.isGettingTasks:
+                print("got here")
         difficulty_num = {'easy': 1, 'medium': 2, 'hard': 3}[difficulty]
         tasks = cls.objects.filter(
-            Q(difficulty=difficulty_num) & (
+            Q(difficulty=difficulty_num) & ((
                 Q(studenttaskrel__isTestTask=True) &
-                Q(studenttaskrel__isCompleted=True) | Q(studenttaskrel__isTestTask=False))
+                Q(studenttaskrel__isCompleted=True) |
+                Q(studenttaskrel__isTestTask=False)) | Q(studenttaskrel__isnull=True))
         )
         if len(tasks) < 5:
             cls.isGettingTasks = True
             object_items = Task.generate_tasks_with_difficulty(difficulty)
             for item in object_items:
-                cls.objects.create(str_repr=item.to_string(), difficulty=difficulty)
+                cls.objects.create(str_repr=item.to_string(), difficulty=difficulty_num)
             cls.isGettingTasks = False
-            return cls.get_training_task_with_difficulty(difficulty_num)
+            return cls.get_training_task_with_difficulty(difficulty)
         return tasks[randint(0, len(tasks) - 1)]
-
 
     def __str__(self):
         return self.str_repr

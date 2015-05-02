@@ -8,13 +8,15 @@ function getCookie(cname){
     for (var i = 0; i < ca.length; ++i) {
         var c = ca[i];
         while (c.charAt(0) == ' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length+1, c.length-1);
+        }
     }
     return ""
 }
 
 function fillTable(table_array) {
-    table_array[0] = table_array[0].substring(1);
+    //table_array[0] = table_array[0].substring(1);
     var table = document.getElementById('task_table');
     for (var i = 0; i < table_array.length; ++i) {
         table_array[i] = table_array[i].split(' ');
@@ -27,7 +29,7 @@ function fillTable(table_array) {
 }
 
 function fillRadios(radios_array) {
-    radios_array[radios_array.length - 1] = radios_array[radios_array.length - 1].substring(0,radios_array[radios_array.length - 1].length-1);
+    //radios_array[radios_array.length - 1] = radios_array[radios_array.length - 1].substring(0,radios_array[radios_array.length - 1].length-1);
     for (var i = 0; i < radios_array.length; ++i) {
         radios_array[i] = radios_array[i].split('=');
     }
@@ -64,16 +66,16 @@ function fillForm() {
 
 function orderChecked(on) {
     if (on === true){
-        document.getElementById('order-strict-block').style.display = 'block';
-        document.getElementById('order-linearity-block').style.display = 'block';
+        document.getElementById('radio-order-strict').style.display = 'block';
+        document.getElementById('radio-order-linearity').style.display = 'block';
     } else {
-        var order_block = document.getElementById('order-strict-block')
+        var order_block = document.getElementById('radio-order-strict');
         order_block.style.display = 'none';
         var inputs = order_block.getElementsByTagName('input');
         for (var i = 0; i < inputs.length; ++i) {
             inputs[i].checked = false;
         }
-        order_block = document.getElementById('order-linearity-block');
+        order_block = document.getElementById('radio-order-linearity');
         order_block.style.display = 'none';
         inputs = order_block.getElementsByTagName('input');
         for (i = 0; i < inputs.length; ++i) {
@@ -101,26 +103,37 @@ function validateForm() {
 }
 
 function highlightErrors() {
-    console.log('here');
-    var user_solve = getCookie('partial_solve').split('@')[0];
+    var user_solve_cookie = getCookie('partial_solve').split('@');
+    var user_solve_table = user_solve_cookie[0];
     var correct_table = getCookie('correct_solve_table');
-    user_solve = user_solve.split('$');
+    user_solve_table = user_solve_table.split('$');
     correct_table = correct_table.split('$');
-    user_solve[0] = user_solve[0].substring(1);
-    correct_table[0] = correct_table[0].substring(1);
-    correct_table[correct_table.length-1] = correct_table[correct_table.length-1].substring(0, correct_table[correct_table.length-1].length-1);
-    //console.log(user_solve);
-    //console.log(correct_table);
-    for (var i = 0; i < user_solve.length; ++i) {
-        user_solve[i] = user_solve[i].split(' ');
+    for (var i = 0; i < user_solve_table.length; ++i) {
+        user_solve_table[i] = user_solve_table[i].split(' ');
         correct_table[i] = correct_table[i].split(' ');
-        for (var j = 0; j < user_solve[i].length; ++j) {
-            if (user_solve[i][j] != correct_table[i][j]) {
+        for (var j = 0; j < user_solve_table[i].length; ++j) {
+            if (user_solve_table[i][j] != correct_table[i][j]) {
                 var elemId = 'checkbox'+i+'-'+j;
-                console.log(document.getElementById(elemId).style);
                 document.getElementById(elemId).style.outline = "2px dashed red"
             }
         }
     }
 
+    var user_solve_properties = user_solve_cookie[1].split('$');
+    var correct_solve_props = getCookie('correct_solve_props').split('$');
+
+    for (i = 0; i < correct_solve_props.length; ++i) {
+        //console.log(user_solve_properties[i], correct_solve_props[i]);
+        if (user_solve_properties[i] != correct_solve_props[i]) {
+            var name_value = user_solve_properties[i].split('=');
+            var radio_block = document.getElementById('radio-'+name_value[0]);
+            var inputs = radio_block.getElementsByTagName('input');
+            for (j = 0; j < inputs.length; ++j) {
+                if (inputs[j].value == name_value[1]) {
+                    inputs[j].style.outline = "2px dashed red";
+                    break;
+                }
+            }
+        }
+    }
 }

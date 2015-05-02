@@ -22,7 +22,7 @@
             {% endfor %}
         </table>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-reflexivity">
             <label>
                 Рефлексивное
                 <input type="radio" name="reflexivity" value="reflexive">
@@ -33,7 +33,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-anti-reflexivity">
             <label>
                 Антирефлексивное
                 <input type="radio" name="anti-reflexivity" value="anti-reflexive">
@@ -44,7 +44,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-symmetry">
             <label>
                 Симметричное
                 <input type="radio" name="symmetry" value="symmetric">
@@ -55,7 +55,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-asymmetry">
             <label>
                 Асимметричное
                 <input type="radio" name="asymmetry" value="asymmetric">
@@ -66,7 +66,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-antisymmetry">
             <label>
                 Антисимметричное
                 <input type="radio" name="antisymmetry" value="antisymmetric">
@@ -77,7 +77,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-transitivity">
             <label>
                 Транзитивное
                 <input type="radio" name="transitivity" value="transitive">
@@ -88,7 +88,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-equivalency">
             <label>
                 Отношение эквиваленции
                 <input type="radio" name="equivalency" value="equivalent">
@@ -99,7 +99,7 @@
             </label>
         </div>
 
-        <div class="radio-input">
+        <div class="radio-input" id="radio-order">
             <label>
                 Отношение порядка
                 <input type="radio" name="order" value="of-order" onclick="orderChecked(true)" />
@@ -110,7 +110,7 @@
             </label>
         </div>
 
-        <div class="radio-input" id="order-strict-block" style="display: none">
+        <div class="radio-input" id="radio-order-strict" style="display: none">
             <label>
                 Строгого порядка
                 <input type="radio" name="order-strict" value="strict">
@@ -121,7 +121,7 @@
             </label>
         </div>
 
-        <div class="radio-input" id = "order-linearity-block" style="display: none">
+        <div class="radio-input" id ="radio-order-linearity" style="display: none">
             <label>
                 Линейного порядка
                 <input type="radio" name="order-linearity" value="linear">

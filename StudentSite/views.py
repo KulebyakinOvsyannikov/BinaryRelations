@@ -39,7 +39,6 @@ def control_check(request):
     # (name of form input, correct value of input)
     if task.answer_table is None:
         task.answer_table = task_obj.solve_string()
-        print(task_obj.solve_string())
         task.save()
 
     checkboxes_array = [
@@ -54,6 +53,9 @@ def control_check(request):
         ("order-strict", "strict" if task_obj.is_of_order().is_strict() else "not-strict"),
         ("order-linearity", "linear" if task_obj.is_of_order().is_partial() else "partial")
     ]
+
+    if checkboxes_array[7][1] == 'not-of-order':
+        checkboxes_array = checkboxes_array[:-2]
 
     if task.answer_properties is None:
         task.answer_properties = '$'.join(['='.join([item[0], item[1]]) for item in checkboxes_array])
@@ -241,6 +243,10 @@ def check_training(request):
         ("order-strict", "strict" if task_obj.is_of_order().is_strict() else "not-strict"),
         ("order-linearity", "linear" if task_obj.is_of_order().is_partial() else "partial")
     ]
+
+    if checkboxes_array[7][1] == 'not-of-order':
+        checkboxes_array[8] = ("order-strict", "none")
+        checkboxes_array[9] = ("order-linearity", "none")
 
     if task.answer_properties is None:
         task.answer_properties = '$'.join(['='.join([item[0], item[1]]) for item in checkboxes_array])
