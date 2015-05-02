@@ -8,6 +8,7 @@ urlpatterns = [
 
 
     url(r'^control/check/', views.control_check, name='check_test'),
+    url(r'^control/warshalls/', views.warshalls, name='warshalls'),
     url(r'^control/', views.control, name='control'),
 
     url(r'^demo/', views.demo, name='demo'),
