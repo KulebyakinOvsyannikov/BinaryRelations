@@ -99,3 +99,28 @@ function validateForm() {
     }
     return true;
 }
+
+function highlightErrors() {
+    console.log('here');
+    var user_solve = getCookie('partial_solve').split('@')[0];
+    var correct_table = getCookie('correct_solve_table');
+    user_solve = user_solve.split('$');
+    correct_table = correct_table.split('$');
+    user_solve[0] = user_solve[0].substring(1);
+    correct_table[0] = correct_table[0].substring(1);
+    correct_table[correct_table.length-1] = correct_table[correct_table.length-1].substring(0, correct_table[correct_table.length-1].length-1);
+    //console.log(user_solve);
+    //console.log(correct_table);
+    for (var i = 0; i < user_solve.length; ++i) {
+        user_solve[i] = user_solve[i].split(' ');
+        correct_table[i] = correct_table[i].split(' ');
+        for (var j = 0; j < user_solve[i].length; ++j) {
+            if (user_solve[i][j] != correct_table[i][j]) {
+                var elemId = 'checkbox'+i+'-'+j;
+                console.log(document.getElementById(elemId).style);
+                document.getElementById(elemId).style.outline = "2px dashed red"
+            }
+        }
+    }
+
+}

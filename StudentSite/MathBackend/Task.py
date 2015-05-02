@@ -2,6 +2,7 @@ from .RelationTriplet import RelationTriplet
 from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
 from.OrderType import OrderType
+from time import sleep
 import os
 
 
@@ -336,3 +337,9 @@ class Task:
                     print(sort[i], k)
                     return False
         return True
+
+    @classmethod
+    def generate_tasks_with_difficulty(cls, difficulty):
+        sleep(5)
+        return [Task.from_string("[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not ]$[ and ]$[(0, 1)]")
+                for i in range(1, 10)]

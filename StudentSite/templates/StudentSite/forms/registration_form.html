@@ -1,0 +1,11 @@
+<form action="{% url 'student_site:registration_action' %}" method="post">
+    {% csrf_token %}
+    <label>Имя пользователя: <input type="text" name="username" /></label>
+    <label>Имя: <input type="text" name="first_name" /></label>
+    <label>Фамилия: <input type="text" name="last_name" /></label>
+    <label>Группа: <input type="text" name="group" /></label>
+    <label>Сайт: <input type="text" name="web_site" /></label>
+    <label>Пароль: <input type="text" name="password" /></label>
+    <label>Повторите пароль: <input type="text" id="password_repeat" /></label>
+    <input type="submit" name="Зарегистрироваться">
+</form>
