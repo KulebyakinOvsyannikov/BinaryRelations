@@ -1,0 +1,19 @@
+{% extends 'StudentSite/index.html' %}
+{% block header %}
+    {% include 'StudentSite/header_base.html' %}
+{% endblock %}
+{% block body %}
+    {% load staticfiles %}
+    {{ task.elements }}
+    {{ task.to_human_readable }}
+    {% include 'StudentSite/forms/task_form.html' %}
+    <script src="{% static 'StudentSite/demo_scripts.js' %}"></script>
+
+    <div id="demo-helper">
+        <p id="demo-text-view"></p>
+        <button onclick="previousMove()">Назад</button>
+        <button onclick="nextMove()">Вперед</button>
+    </div>
+    <script>initiate()</script>
+
+{% endblock %}

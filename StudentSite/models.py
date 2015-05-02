@@ -17,7 +17,6 @@ class TaskModel(models.Model):
     @classmethod
     def get_control_task(cls):
         while cls.isGettingTasks:
-            print("got here")
             sleep(1)
         tasks = cls.objects.exclude(studenttaskrel__isnull=False).filter(difficulty=3)
         if len(tasks) < 5:
@@ -32,7 +31,7 @@ class TaskModel(models.Model):
     @classmethod
     def get_training_task_with_difficulty(cls, difficulty):
         while cls.isGettingTasks:
-                print("got here")
+                sleep(1)
         difficulty_num = {'easy': 1, 'medium': 2, 'hard': 3}[difficulty]
         tasks = cls.objects.filter(
             Q(difficulty=difficulty_num) & ((
@@ -48,6 +47,26 @@ class TaskModel(models.Model):
             cls.isGettingTasks = False
             return cls.get_training_task_with_difficulty(difficulty)
         return tasks[randint(0, len(tasks) - 1)]
+
+    @classmethod
+    def get_demo_task(cls):
+        """
+        :rtype: TaskModel
+        :return:
+        """
+        while cls.isGettingTasks:
+            sleep(1)
+        tasks = cls.objects.exclude(
+            Q(studenttaskrel__isTestTask=True) & Q(studenttaskrel__isCompleted=False)).filter(difficulty=1)
+
+        if len(tasks) < 5:
+            cls.isGettingTasks = True
+            object_items = Task.generate_tasks_with_difficulty(1)
+            for item in object_items:
+                cls.objects.create(str_repr=item.to_string(), difficulty=1)
+            cls.isGettingTasks = False
+            return cls.get_demo_task()
+        return tasks[randint(0, len(tasks)-1)]
 
     def __str__(self):
         return self.str_repr

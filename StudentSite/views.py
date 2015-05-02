@@ -6,6 +6,7 @@ from .models import StudentModel, TaskModel, StudentTaskRel
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from .MathBackend import Task
+from .MathBackend.supporting_functions import compose_partial_solve
 from django.views.decorators.http import require_POST
 from .MathBackend.OrderType import OrderType
 import datetime
@@ -104,12 +105,26 @@ def registration_action(request):
 
     login(request, user)
 
+    if 'next' in request.POST:
+        print(request.POST['next'])
+        return HttpResponseRedirect(request.POST['next'])
+
     return HttpResponseRedirect(reverse('student_site:index'))
 
 
 def demo(request):
-    pass
+    task = TaskModel.get_demo_task()
+    task_obj = Task.from_string(task.str_repr)
 
+    if task.answer_table is None or task.answer_properties is None:
+        task.answer_table = task_obj.solve_string()
+        task.answer_properties = task_obj.solve_properties()
+        task.save()
+
+    response = render(request, 'StudentSite/demo.html', {'task': task_obj})
+    response.set_cookie('table_solve', task.answer_table)
+    response.set_cookie('props_solve', task.answer_properties)
+    return response
 
 @login_required(login_url="student_site:login_registration")
 def training(request):
@@ -175,7 +190,7 @@ def check_training(request):
 
     if task.answer_table is None or task.answer_properties is None:
         task.answer_table = task_obj.solve_string()
-        task.answer_properties = task.solve_properties()
+        task.answer_properties = task_obj.solve_properties()
         task.save()
 
     result = users_solve == '@'.join([task.answer_table, task.answer_properties])
@@ -195,29 +210,9 @@ def check_training(request):
     return response
 
 
-def compose_partial_solve(requests_POST, num_of_elements):
-    res_table = ""
-    for i in range(0, num_of_elements):
-        for j in range(0, num_of_elements):
-            res_table += '+ ' if "%s-%s" % (i,j) in requests_POST else '- '
-        res_table = res_table[:-1] + '$'
-    res_table = res_table[:-1]
-
-    property_fields = ["reflexivity",
-                       "anti-reflexivity",
-                       "symmetry",
-                       "asymmetry",
-                       "antisymmetry",
-                       "transitivity",
-                       "equivalency",
-                       "order",
-                       "order-strict",
-                       "order-linearity"]
-    res_props = ""
-    for field in property_fields:
-        res_props += field + '=' + (requests_POST[field] if field in requests_POST else 'none') + '$'
-    return '@'.join([res_table, res_props[:-1]])
+def control_warshalls(request):
+    pass
 
 
-def warshalls(request):
+def train_warshalls(request):
     pass

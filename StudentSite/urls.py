@@ -8,7 +8,7 @@ urlpatterns = [
 
 
     url(r'^control/check/', views.control_check, name='check_test'),
-    url(r'^control/warshalls/', views.warshalls, name='warshalls'),
+    url(r'^control/warshalls/', views.control_warshalls, name='test_warshalls'),
     url(r'^control/', views.control, name='control'),
 
     url(r'^demo/', views.demo, name='demo'),
@@ -18,6 +18,7 @@ urlpatterns = [
         name='training_with_difficulty'
         ),
     url(r'^training/check/', views.check_training, name='check_training'),
+    url(r'^training/warshalls/', views.train_warshalls, name='test_warshalls'),
     url(r'^training/', views.training, name='training'),
 
     url(r'^registration/register', views.registration_action, name='registration_action'),
