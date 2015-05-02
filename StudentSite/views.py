@@ -124,6 +124,9 @@ def demo(request):
     response = render(request, 'StudentSite/demo.html', {'task': task_obj})
     response.set_cookie('table_solve', task.answer_table)
     response.set_cookie('props_solve', task.answer_properties)
+    tips = task_obj.generate_demo_strings()
+    for i in range(0, len(tips)):
+        response.set_cookie('solve-tip-%s' % i, tips[i])
     return response
 
 @login_required(login_url="student_site:login_registration")

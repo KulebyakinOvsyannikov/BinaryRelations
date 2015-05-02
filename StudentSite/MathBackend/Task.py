@@ -371,3 +371,30 @@ class Task:
         sleep(5)
         return [Task.from_string("[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not ]$[ and ]$[(0, 1)]")
                 for i in range(1, 10)]
+
+    def generate_demo_strings(self):
+        res = []
+        for elem in self.elements:
+            for elem2 in self.elements:
+                res.append("%s - %s" % (elem, elem2))
+        checkboxes_array = [
+            ("reflexivity", "reflexive" if self.is_reflexive() else "non-reflexive"),
+            ("anti-reflexivity", "anti-reflexive" if self.is_antireflexive() else "non-anti-reflexive"),
+            ("symmetry", "symmetric" if self.is_symmetric() else "non-symmetric"),
+            ("asymmetry", "asymmetric" if self.is_asymmetric() else "non-asymmetric"),
+            ("antisymmetry", "antisymmetric" if self.is_antisymmetric() else "non-antisymmetric"),
+            ("transitivity", "transitive" if self.is_transitive() else "non-transitive"),
+            ("equivalency", "equivalent" if self.is_of_equivalence() else "non-equivalent"),
+            ("order", "of-order" if self.is_of_order() != OrderType.not_of_order else "not-of-order"),
+            ("order-strict", "strict" if self.is_of_order().is_strict() else "not-strict"),
+            ("order-linearity", "linear" if self.is_of_order().is_partial() else "partial")
+        ]
+
+        if checkboxes_array[7][1] == 'not-of-order':
+            checkboxes_array[8] = ("order-strict", "none")
+            checkboxes_array[9] = ("order-linearity", "none")
+
+        for item in checkboxes_array:
+            res.append("%s - %s" % (item[0], item[1]))
+
+        return res
