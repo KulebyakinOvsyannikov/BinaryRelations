@@ -86,6 +86,7 @@ class StudentTaskRel(models.Model):
     student = models.ForeignKey(StudentModel)
     isTestTask = models.BooleanField()
     partial_solve = models.TextField(null=True, default=None)
+    partial_solve_warshalls = models.TextField(null=True, default=None)
     isCompleted = models.BooleanField(default=False)
     table_and_props_completed = models.BooleanField(default=False)
     is_topological_sort_completed = models.BooleanField(default=False)

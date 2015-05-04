@@ -1,14 +1,18 @@
 {% extends 'StudentSite/index.html' %}
+{% block title %}<title>Алгоритм Уоршала</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
+    {% include 'StudentSite/forms/warshalls_control_form.html' %}
     {% load staticfiles %}
-    <h4>{{ task.task_text }}</h4>
-    {% include 'StudentSite/forms/test_form.html' %}
+
+    <script src="{% static 'StudentSite/warshalls_scripts.js' %}"></script>
+    <script>fillForm()</script>
+
     {% if result == True %}
         <h2>Правильное решение!</h2>
-        <a href="{% url 'student_site:test_warshalls' %}">Перейти к алгоритму Уоршелла</a>
     {% elif result == False %}
         <h2>Решено с ошибками!</h2>
     {% endif %}
-    <script src="{% static 'StudentSite/test_scripts.js' %}" >fillForm()</script>
+
 {% endblock %}
+

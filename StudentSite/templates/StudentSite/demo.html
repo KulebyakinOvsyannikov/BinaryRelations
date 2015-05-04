@@ -4,8 +4,7 @@
 {% endblock %}
 {% block body %}
     {% load staticfiles %}
-    {{ task.elements }}
-    {{ task.to_human_readable }}
+    <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/forms/task_form.html' %}
     <script src="{% static 'StudentSite/demo_scripts.js' %}"></script>
 

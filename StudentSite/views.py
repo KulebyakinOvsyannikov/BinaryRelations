@@ -149,6 +149,9 @@ def control(request):
         control_task = control_task[0]
         task_obj = Task.from_string(control_task.task.str_repr)
 
+    if control_task.table_and_props_completed:
+        return HttpResponseRedirect(reverse('student_site:control_warshalls'))
+
     response = render(request, 'StudentSite/test_base.html', {'task': task_obj,
                                                               'task_id': control_task.task_id})
     response.set_cookie('partial_solve', control_task.partial_solve)
@@ -214,7 +217,43 @@ def check_training(request):
 
 
 def control_warshalls(request):
-    pass
+    user = request.user
+    student = user.studentmodel
+    control_task = student.studenttaskrel_set.filter(isTestTask=True, isCompleted=False)[0]
+    task_obj = Task.from_string(control_task.task.str_repr)
+
+    response = render(request, 'StudentSite/control_warshalls.html', {'task': task_obj,
+                                                                      'task_id': control_task.task_id})
+    table_solve = control_task.task.answer_table
+    response.set_cookie('partial_solve', table_solve)
+    return response
+
+
+def control_warshalls_check(request):
+    user = request.user
+    student = user.studentmodel
+    task_id = request.POST['task_id']
+    control_task = TaskModel.objects.get(pk=task_id)
+    task_obj = Task.from_string(control_task.str_repr)
+
+    warshall_answers = task_obj.generate_warshalls_strings()
+    result = True
+    partial_solve_warshall = []
+    for i in range(0, len(task_obj.elements)):
+        users_response = request.POST['warshall_check_' + str(i)]
+        result = result and (users_response == warshall_answers[i])
+        partial_solve_warshall.append(users_response)
+
+    print(request.POST)
+    response = render(request, 'StudentSite/control_warshalls.html', {'task': task_obj,
+                                                                      'task_id': task_id,
+                                                                      'result': result})
+    response.set_cookie('partial_solve_warshall', ' '.join(partial_solve_warshall))
+    response.set_cookie('partial_solve', control_task.answer_table)
+    print('$'.join(partial_solve_warshall))
+    return response
+
+
 
 
 def train_warshalls(request):

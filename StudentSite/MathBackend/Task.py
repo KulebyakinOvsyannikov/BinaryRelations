@@ -267,12 +267,32 @@ class Task:
         """
         if self.results is None:
             self.solve()
-        for i in range(0, len(self.results)):
-            for j in range(0, len(self.results)):
-                for k in range(0, len(self.results)):
-                    if not self.results[j][k] and (self.results[j][k] or (self.results[j][i] and self.results[i][k])):
+        for w in range(0, len(self.results)):
+            for u in range(0, len(self.results)):
+                for v in range(0, len(self.results)):
+                    if not self.results[u][v] and (self.results[u][v] or (self.results[u][w] and self.results[w][v])):
                         return False
         return True
+
+    def generate_warshalls_strings(self):
+        res = []
+        if self.results is None:
+            self.solve()
+        temp_res = self.results[:]
+        print(temp_res)
+        for w in range(0, len(self.elements)):
+            step_res = ""
+            for u in range(0, len(self.elements)):
+                for v in range(0, len(self.elements)):
+                    should_modify = not temp_res[u][v] and (temp_res[u][v] or (temp_res[u][w] and temp_res[w][v]))
+
+                    step_res += '+' if should_modify else '-'
+                    if should_modify:
+                        temp_res[u][v] = True
+                    if should_modify:
+                        print('%s %s through %s' % (u, v, w))
+            res.append(step_res)
+        return res
 
     def is_of_equivalence(self):
         """

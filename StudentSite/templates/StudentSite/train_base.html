@@ -2,8 +2,7 @@
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
     {% load staticfiles %}
-    <h4>{{ task.elements }}</h4>
-    <h4>{{  task.to_human_readable }}</h4>
+    <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/forms/train_form.html' %}
     <script src="{% static 'StudentSite/test_scripts.js' %}" ></script>
     {% if result == True %}

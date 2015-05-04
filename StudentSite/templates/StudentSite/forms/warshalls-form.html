@@ -1,0 +1,55 @@
+<table id="task_table">
+    <tr>
+        <td>ab/cd</td>
+        {% for elem in task.elements %}
+            <td>{{ elem }}</td>
+        {% endfor %}
+    </tr>
+    {% for elem in task.elements %}
+        <tr>
+            <td>{{ elem }}</td>
+            {% for elem2 in task.elements %}
+                <td>
+                    <input type="checkbox"
+                           id="checkbox{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                           title="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                            disabled="disabled"/>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+<table id="warshalls_table">
+    <tr>
+        <td>ab/cd</td>
+        {% for elem in task.elements %}
+            <td>{{ elem }}</td>
+        {% endfor %}
+    </tr>
+    {% for elem in task.elements %}
+        <tr>
+            <td>{{ elem }}</td>
+            {% for elem2 in task.elements %}
+                <td>
+                    <input type="checkbox"
+                           id="warshall_checkbox_{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                           title="warshall_{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                            disabled="disabled"/>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+<button onclick="previousStep(this)" id ="previous-step-button" style="display: none;">Назад</button>
+<button onclick="nextStep()" id="start-continue-button">Начать</button>
+<form action="{% block warshall_check_action %}{% endblock %}" method="post" id="warshall_answers-form">
+    {% csrf_token %}
+    {% for elem in task.elements %}
+        <input type="hidden"
+               name="warshall_check_{{ forloop.counter0 }}"
+               value=""
+               id="warshall_check_{{ forloop.counter0 }}">
+    {% endfor %}
+    <input type="hidden" name="task_id" value="{{ task_id }}" />
+    <input type="submit" value="Проверить" />
+</form>
