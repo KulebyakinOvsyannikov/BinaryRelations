@@ -12,6 +12,7 @@ class TaskModel(models.Model):
     str_repr = models.CharField(max_length=255)
     answer_table = models.CharField(max_length=255, null=True, default=None)
     answer_properties = models.TextField(null=True, default=None)
+    answer_warshalls = models.TextField(null=True, default=None)
     difficulty = models.IntegerField(default=0)
 
     @classmethod

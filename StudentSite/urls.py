@@ -14,12 +14,13 @@ urlpatterns = [
 
     url(r'^demo/', views.demo, name='demo'),
 
+    url(r'^training/check/', views.check_training, name='check_training'),
+    url(r'^training/warshalls/check', views.train_warshalls_check, name='train_warshalls_check'),
+    url(r'^training/warshalls/', views.train_warshalls, name='train_warshalls'),
     url(r'^training/(?P<difficulty>easy|medium|hard)',
         views.training_with_difficulty,
         name='training_with_difficulty'
         ),
-    url(r'^training/check/', views.check_training, name='check_training'),
-    url(r'^training/warshalls/', views.train_warshalls, name='test_warshalls'),
     url(r'^training/', views.training, name='training'),
 
     url(r'^registration/register', views.registration_action, name='registration_action'),

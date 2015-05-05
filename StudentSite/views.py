@@ -149,8 +149,8 @@ def control(request):
         control_task = control_task[0]
         task_obj = Task.from_string(control_task.task.str_repr)
 
-    if control_task.table_and_props_completed:
-        return HttpResponseRedirect(reverse('student_site:control_warshalls'))
+    #if control_task.table_and_props_completed:
+    #    return HttpResponseRedirect(reverse('student_site:control_warshalls'))
 
     response = render(request, 'StudentSite/test_base.html', {'task': task_obj,
                                                               'task_id': control_task.task_id})
@@ -163,7 +163,8 @@ def control(request):
 def training_with_difficulty(request, difficulty):
     user = request.user
     student = user.studentmodel
-    tr_task = student.studenttaskrel_set.filter(isTestTask=False, isCompleted=False)
+    diff = {'easy':1, 'medium':2, 'hard':3}
+    tr_task = student.studenttaskrel_set.filter(isTestTask=False, isCompleted=False, task__difficulty=diff[difficulty])
 
     if len(tr_task) == 0:
         task = TaskModel.get_training_task_with_difficulty(difficulty)
@@ -175,7 +176,7 @@ def training_with_difficulty(request, difficulty):
         task_obj = Task.from_string(tr_task.task.str_repr)
 
     response = render(request, 'StudentSite/train_base.html', {'task': task_obj,
-                                                               'task_id': tr_task.task_id})
+                                                               'task_id': tr_task.id})
     response.set_cookie('partial_solve', tr_task.partial_solve)
     return response
 
@@ -185,12 +186,13 @@ def check_training(request):
     :return: rendered response for users attempt to solve test task
     """
     task_id = request.POST['task_id']
-    task = TaskModel.objects.get(pk=task_id)
-    task_obj = Task.from_string(task.str_repr)
+    rel = StudentTaskRel.objects.get(pk=task_id)
+    task = rel.task
+    task_obj = Task.from_string(rel.task.str_repr)
 
     users_solve = compose_partial_solve(request.POST, len(task_obj.elements))
 
-    rel = StudentTaskRel.objects.get(task=task, student=StudentModel.objects.get(user=request.user))
+    #rel = StudentTaskRel.objects.get(task=task, student=StudentModel.objects.get(user=request.user))
     rel.partial_solve = users_solve
     rel.save()
 
@@ -223,20 +225,28 @@ def control_warshalls(request):
     task_obj = Task.from_string(control_task.task.str_repr)
 
     response = render(request, 'StudentSite/control_warshalls.html', {'task': task_obj,
-                                                                      'task_id': control_task.task_id})
+                                                                      'task_id': control_task.id})
     table_solve = control_task.task.answer_table
     response.set_cookie('partial_solve', table_solve)
+    if control_task.partial_solve_warshalls is not None:
+        response.set_cookie('partial_solve_warshall', control_task.partial_solve_warshalls)
     return response
 
 
 def control_warshalls_check(request):
-    user = request.user
-    student = user.studentmodel
     task_id = request.POST['task_id']
-    control_task = TaskModel.objects.get(pk=task_id)
-    task_obj = Task.from_string(control_task.str_repr)
+    control_task = StudentTaskRel.objects.get(pk=task_id)
+    task_obj = Task.from_string(control_task.task.str_repr)
 
-    warshall_answers = task_obj.generate_warshalls_strings()
+    warshall_answers = control_task.task.answer_warshalls
+    if warshall_answers is None:
+        warshall_answers = task_obj.generate_warshalls_strings()
+        task = control_task.task
+        task.answer_warshalls = ' '.join(warshall_answers)
+        task.save()
+    else:
+        warshall_answers = warshall_answers.split(' ')
+
     result = True
     partial_solve_warshall = []
     for i in range(0, len(task_obj.elements)):
@@ -244,17 +254,71 @@ def control_warshalls_check(request):
         result = result and (users_response == warshall_answers[i])
         partial_solve_warshall.append(users_response)
 
-    print(request.POST)
+    control_task.partial_solve_warshalls = ' '.join(partial_solve_warshall)
+    control_task.save()
+
     response = render(request, 'StudentSite/control_warshalls.html', {'task': task_obj,
                                                                       'task_id': task_id,
                                                                       'result': result})
     response.set_cookie('partial_solve_warshall', ' '.join(partial_solve_warshall))
-    response.set_cookie('partial_solve', control_task.answer_table)
-    print('$'.join(partial_solve_warshall))
+    response.set_cookie('partial_solve', control_task.task.answer_table)
     return response
 
 
-
-
 def train_warshalls(request):
-    pass
+    task_id = request.POST['task_id']
+    rel = StudentTaskRel.objects.get(pk = task_id)
+    #control_task = student.studenttaskrel_set.filter(isTestTask=False, isCompleted=False)[0]
+    task_obj = Task.from_string(rel.task.str_repr)
+
+    response = render(request, 'StudentSite/train_warshalls.html', {'task': task_obj,
+                                                                    'task_id': rel.id})
+    table_solve = rel.task.answer_table
+    response.set_cookie('partial_solve', table_solve)
+
+    #if rel.task.answer_warshalls is None:
+    #    task = rel.task
+    #    rel.task.answer_warshalls = ' '.join(task_obj.generate_warshalls_strings())
+    #    task.save()
+
+    #response.set_cookie('correct_solve_warshall', rel.task.answer_warshalls)
+    if rel.partial_solve_warshalls is not None:
+        response.set_cookie('partial_solve_warshall', rel.partial_solve_warshalls)
+    else:
+        response.delete_cookie('partial_solve_warshall')
+
+    return response
+
+
+def train_warshalls_check(request):
+    task_id = request.POST['task_id']
+    train_task = StudentTaskRel.objects.get(pk=task_id)
+    task_obj = Task.from_string(train_task.task.str_repr)
+
+    warshall_answers = train_task.task.answer_warshalls
+    if warshall_answers is None:
+        warshall_answers = task_obj.generate_warshalls_strings()
+        task = train_task.task
+        task.answer_warshalls = ' '.join(warshall_answers)
+        task.save()
+    else:
+        warshall_answers = warshall_answers.split(' ')
+
+    result = True
+    partial_solve_warshall = []
+    for i in range(0, len(task_obj.elements)):
+        users_response = request.POST['warshall_check_' + str(i)]
+        result = result and (users_response == warshall_answers[i])
+        partial_solve_warshall.append(users_response)
+
+    train_task.partial_solve_warshalls = ' '.join(partial_solve_warshall)
+    train_task.save()
+
+    response = render(request, 'StudentSite/control_warshalls.html', {'task': task_obj,
+                                                                      'task_id': task_id,
+                                                                      'result': result})
+    response.set_cookie('partial_solve_warshall', ' '.join(partial_solve_warshall))
+    response.set_cookie('partial_solve', train_task.task.answer_table)
+    response.set_cookie('correct_solve_warshall', train_task.task.answer_warshalls)
+    return response
+

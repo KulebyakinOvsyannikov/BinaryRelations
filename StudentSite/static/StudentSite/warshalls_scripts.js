@@ -111,3 +111,7 @@ function previousStep(elem) {
         nextStep();
     }
 }
+
+function showErrors() {
+
+}
