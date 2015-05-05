@@ -274,12 +274,28 @@ class Task:
                         return False
         return True
 
-    def generate_warshalls_strings(self):
+    def generate_warshalls_answers_string(self):
+        if self.results is None:
+            self.solve()
+        temp_res = list(self.results)
+        for w in range(0, len(self.elements)):
+            for u in range(0, len(self.elements)):
+                for v in range(0, len(self.elements)):
+                    temp_res[u][v] = temp_res[u][v] or (temp_res[u][w] and temp_res[w][v])
+        res = []
+        for i in range(0, len(self.elements)):
+            res_row = []
+            for j in range(0, len(self.elements)):
+                res_row.append('+' if temp_res[i][j] else '-')
+            res.append(' '.join(res_row))
+        return '$'.join(res)
+
+
+    def generate_warshalls_strings_tables(self):
         res = []
         if self.results is None:
             self.solve()
         temp_res = self.results[:]
-        print(temp_res)
         for w in range(0, len(self.elements)):
             step_res = ""
             for u in range(0, len(self.elements)):
