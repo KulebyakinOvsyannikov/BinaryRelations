@@ -8,6 +8,18 @@
     {% include 'StudentSite/forms/task_form.html' %}
     <script src="{% static 'StudentSite/demo_scripts.js' %}"></script>
 
+    <div id="warshalls_block" style="display: none">
+        {% include 'StudentSite/forms/warshalls-form.html' %}
+        <style>
+            #warshalls_block #task_table {
+                display: none;
+            }
+            #warshall_answers-form {
+                display: none;
+            }
+        </style>
+    </div>
+
     <div id="demo-helper">
         <p id="demo-text-view"></p>
         <button onclick="previousMove()">Назад</button>

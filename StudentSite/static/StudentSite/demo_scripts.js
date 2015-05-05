@@ -28,16 +28,8 @@ for (i = 0; i < solveProps.length; ++i) {
 
 var step = 0;
 
-function nextMove() {
-    var last = false;
-    if (step == solveTable.length*solveTable.length + solveProps.length) {
-        last = true;
-    }
-    if ((step == solveTable.length*solveTable.length + solveProps.length - 2) && namedSolveProps['order'] == 'not-of-order') {
-        last = true;
-    }
-    if (step < solveTable.length * solveTable.length) {
-        var ind1 = Math.floor((step / solveTable.length));
+function nextMoveTable() {
+    var ind1 = Math.floor((step / solveTable.length));
         var ind2 = step % solveTable.length;
 
         var elem = document.getElementById('checkbox'+ind1+'-'+ind2);
@@ -56,8 +48,10 @@ function nextMove() {
             elem.disabled = true;
         }
         step++;
-    } else if (!last)  {
-        var radio_step = step - (solveTable.length * solveTable.length);
+}
+
+function nextMoveProperties() {
+    var radio_step = step - (solveTable.length * solveTable.length);
         var name_value = solveProps[radio_step];
         var elem_block = document.getElementById('radio-'+name_value[0]);
         var inputs = elem_block.getElementsByTagName('input');
@@ -80,9 +74,27 @@ function nextMove() {
         if (shouldSkip) {
             nextMove();
         }
+}
 
+function nextMove() {
+    var last = false;
+    if (step == solveTable.length*solveTable.length + solveProps.length) {
+        last = true;
     }
+    if ((step == solveTable.length*solveTable.length + solveProps.length - 2) && namedSolveProps['order'] == 'not-of-order') {
+        last = true;
+    }
+    if (step < solveTable.length * solveTable.length) {
+        nextMoveTable();
+    } else if (!last)  {
+        nextMoveProperties();
+    } else {
+        nextMoveWarshalls();
+    }
+}
 
+function nextMoveWarshalls() {
+    document.getElementById('warshalls_block').style.display = ""
 }
 
 function previousMove() {
