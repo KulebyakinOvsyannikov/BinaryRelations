@@ -1,0 +1,20 @@
+<form action="{% block formAction %}{% endblock %}" id="topological_sort_form" method="post">
+    <table>
+        <tr>
+            {% for elem in task.elements %}
+                <td>
+                    <span>{{ elem }}</span>
+                </td>
+            {% endfor %}
+        </tr>
+    </table>
+    <table>
+        <tr>
+            {% for elem in task.elements %}
+                <td>
+                    <span></span>
+                </td>
+            {% endfor %}
+        </tr>
+    </table>
+</form>
