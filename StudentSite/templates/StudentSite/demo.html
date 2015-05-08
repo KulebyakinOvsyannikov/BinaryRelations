@@ -20,6 +20,18 @@
         </style>
     </div>
 
+    <div id="topological_sort_block" style="display: none;">
+        {% include 'StudentSite/forms/topological_sort_form.html' %}
+        <style>
+            #topological_sort_block #task_table_topological {
+              display: none;
+            }
+            #topological_answers_form input {
+               display: none;
+            }
+        </style>
+    </div>
+
     <div id="demo-helper">
         <p id="demo-text-view"></p>
         <button onclick="previousMove()">Назад</button>

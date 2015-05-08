@@ -25,6 +25,18 @@ for (i = 0; i < solveProps.length; ++i) {
     solveProps[i] = nameValue;
     namedSolveProps[nameValue[0]]=nameValue[1];
 }
+var solveWarshalls = getCookie('warshalls_solve').split('$');
+for (i = 0; i < solveTable.length; ++i) {
+    solveWarshalls[i] =  solveWarshalls[i].split(' ');
+}
+if (namedSolveProps['order'] == "not-of-order") {
+    solveProps.pop();
+    solveProps.pop();
+}
+var firstStepWarshalls = solveTable.length * solveTable.length + solveProps.length;
+var firstStepTopological = firstStepWarshalls + solveTable.length * solveTable.length;
+
+var solveTopological = getCookie('solve_topological').split(' ');
 
 var step = 0;
 
@@ -51,7 +63,7 @@ function nextMoveTable() {
 }
 
 function nextMoveProperties() {
-    var radio_step = step - (solveTable.length * solveTable.length);
+        var radio_step = step - (solveTable.length * solveTable.length);
         var name_value = solveProps[radio_step];
         var elem_block = document.getElementById('radio-'+name_value[0]);
         var inputs = elem_block.getElementsByTagName('input');
@@ -76,25 +88,54 @@ function nextMoveProperties() {
         }
 }
 
+function nextMoveTopological() {
+    document.getElementById('topological_sort_block').style.display = "";
+    var topologicalStep = step - firstStepTopological;
+    if (topologicalStep < solveTable.length) {
+        var index = solveTopological[topologicalStep];
+        var labelElem = document.getElementById('elem-'+index);
+        //var inputElem = document.getElementById('submit_element-'+topologicalStep);
+        var inputLabel = document.getElementById('submit_span_label-'+topologicalStep);
+        inputLabel.innerHTML = labelElem.innerHTML;
+        //inputElem.vaue = index;
+        labelElem.style.visibility = "hidden";
+        document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+        step++;
+    }
+}
+
 function nextMove() {
-    var last = false;
-    if (step == solveTable.length*solveTable.length + solveProps.length) {
-        last = true;
-    }
-    if ((step == solveTable.length*solveTable.length + solveProps.length - 2) && namedSolveProps['order'] == 'not-of-order') {
-        last = true;
-    }
     if (step < solveTable.length * solveTable.length) {
         nextMoveTable();
-    } else if (!last)  {
+    } else if (step < solveTable.length * solveTable.length + solveProps.length)  {
         nextMoveProperties();
-    } else {
+    } else if (step < solveTable.length * solveTable.length * 2 + solveProps.length) {
         nextMoveWarshalls();
+    } else {
+        nextMoveTopological();
     }
 }
 
 function nextMoveWarshalls() {
-    document.getElementById('warshalls_block').style.display = ""
+    document.getElementById('warshalls_block').style.display = "";
+    var stepNum = step - firstStepWarshalls;
+    var indi = Math.floor(stepNum/solveTable.length);
+    var indj = stepNum % solveTable.length;
+    console.log(indi, indj);
+    document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+    var shouldSkip = false;
+    if (solveWarshalls[indi][indj] == '+') {
+        if (document.getElementById('warshall_checkbox_'+indi+'-'+indj).checked) {
+            shouldSkip = true;
+        }
+        document.getElementById('warshall_checkbox_'+indi+'-'+indj).checked = solveWarshalls[indi][indj] == '+';
+    }
+
+    document.getElementById('warshall_checkbox_'+indi+'-'+indj).disabled = true;
+    step++;
+    if (shouldSkip) {
+        nextMoveWarshalls();
+    }
 }
 
 function previousMove() {
@@ -111,7 +152,7 @@ function previousMove() {
 
                 elem.checked = false;
                 elem.disabled = false;
-            } else {
+            } else if (step < solveTable.length * solveTable.length + solveProps.length) {
                 var radio_step = step - (solveTable.length * solveTable.length);
                 var name_value = solveProps[radio_step];
                 var elem_block = document.getElementById('radio-'+name_value[0]);
@@ -123,6 +164,24 @@ function previousMove() {
                         orderChecked(false);
                     }
                 }
+            } else if (step < firstStepWarshalls + solveTable.length * solveTable.length) {
+                var warshallStep = step - (solveTable.length * solveTable.length + solveProps.length);
+                var indi = Math.floor((warshallStep / solveTable.length));
+                var indj = warshallStep % solveTable.length;
+
+                var elemw = document.getElementById('warshall_checkbox_'+indi+'-'+indj);
+                elemw.checked = false;
+                elemw.disabled = false;
+            } else {
+                console.log('Previous step topological');
+                var topologicalStep = step - firstStepTopological;
+
+                console.log(topologicalStep);
+                var inputElem = document.getElementById('submit_element-'+topologicalStep);
+                var inputLabel = document.getElementById('submit_span_label-'+topologicalStep);
+                console.log('elem-'+inputElem.value);
+                document.getElementById('elem-'+solveTopological[topologicalStep]).style.visibility = "";
+                inputLabel.innerHTML = "";
             }
             last = false;
         }
@@ -189,6 +248,39 @@ function initiate() {
 
     for (i = 0; i < table_inputs.length; ++i) {
         table_inputs[i].onchange = checkTableClick
+    }
+
+    var warshalls = document.getElementById('warshalls_table');
+    warshalls = warshalls.getElementsByTagName('input');
+    for (i = 0; i < warshalls.length; ++i) {
+        warshalls[i].onchange = checkWarshallClick
+    }
+
+    var topological_sort = document.getElementById('topological_answers_form').children[0].children[0].children[0].children;
+    for (i = 0; i < topological_sort.length; ++i) {
+        topological_sort[i].firstElementChild.onclick = undefined;
+    }
+
+
+
+}
+
+function checkWarshallClick(element){
+    var name = element.target.id;
+    var ind1 = parseInt(name.substring(name.length-3,name.length-2));
+    var ind2 = parseInt(name.substring(name.length-1,name.length));
+    console.log(ind1, ind2);
+    if (solveWarshalls[ind1][ind2] == '-') {
+        element.target.style.outline = '2px dashed red';
+        setTimeout(function () {
+            element.target.style.outline = '';
+            element.target.checked = false;
+        }, 1000);
+    } else {
+        element.target.style.outline = '2px dashed green';
+        setTimeout(function () {
+            element.target.style.outline = '';
+        }, 1000);
     }
 }
 

@@ -1,20 +1,49 @@
+<table id="task_table_topological">
+    <tr>
+        <td>ab/cd</td>
+        {% for elem in task.elements %}
+            <td>{{ elem }}</td>
+        {% endfor %}
+    </tr>
+    {% for elem in task.elements %}
+        <tr>
+            <td>{{ elem }}</td>
+            {% for elem2 in task.elements %}
+                <td>
+                    <input type="checkbox"
+                           id="checkbox{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                           title="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                            disabled="disabled"/>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+<div id="topological_answers_form">
+<table>
+    <tr>
+        {% for elem in task.elements %}
+            <td>
+                <span id="elem-{{ forloop.counter0 }}" onclick="elementClicked(this)">{{ elem }}</span>
+            </td>
+        {% endfor %}
+    </tr>
+</table>
 <form action="{% block formAction %}{% endblock %}" id="topological_sort_form" method="post">
+    {% csrf_token %}
     <table>
         <tr>
             {% for elem in task.elements %}
                 <td>
-                    <span>{{ elem }}</span>
+                    <span>
+                        <input type="hidden"id="submit_element-{{ forloop.counter0 }}" name="submit_element-{{ forloop.counter0 }}" value="">
+                        <label id="submit_span_label-{{ forloop.counter0 }}" onclick="formLabelClicked(this)"></label>
+                    </span>
                 </td>
             {% endfor %}
         </tr>
     </table>
-    <table>
-        <tr>
-            {% for elem in task.elements %}
-                <td>
-                    <span></span>
-                </td>
-            {% endfor %}
-        </tr>
-    </table>
+    <input type="hidden" name="task_id" value="{{ task_id }}">
+    <input type="submit" value="Проверить" />
 </form>
+</div>

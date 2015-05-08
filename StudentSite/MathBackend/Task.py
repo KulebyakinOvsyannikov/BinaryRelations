@@ -393,19 +393,20 @@ class Task:
             for k in range(0, len(sort_tree[sort[i]][0])):
                 sort_tree[sort[i]][1] = True
                 if strict and i == k:
-                    if sort_tree[sort[i]][k]:
-                        return False
+                    print(sort_tree, i, k)
+                    print(sort)
+                    if sort_tree[sort[i]][0][sort[k]]:
+                        return i
                     else:
                         continue
                 if sort_tree[sort[i]][0][k] and not sort_tree[k][1]:
-                    print(sort[i], k)
-                    return False
-        return True
+                    return i
+        return -1
 
     @classmethod
     def generate_tasks_with_difficulty(cls, difficulty):
         sleep(5)
-        return [Task.from_string("[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not ]$[ and ]$[(0, 1)]")
+        return [Task.from_string("[12,14,15,26]$[| < |]$[]$[]$[]")
                 for i in range(1, 10)]
 
     def generate_demo_strings(self):
@@ -427,11 +428,19 @@ class Task:
         ]
 
         if checkboxes_array[7][1] == 'not-of-order':
-            checkboxes_array[8] = ("order-strict", "none")
-            checkboxes_array[9] = ("order-linearity", "none")
+            checkboxes_array.pop()
+            checkboxes_array.pop()
+        print(checkboxes_array)
 
         for item in checkboxes_array:
             res.append("%s - %s" % (item[0], item[1]))
+
+        for elem1 in self.elements:
+            for elem2 in self.elements:
+                res.append('warshalls %s %s' % (elem1, elem2))
+
+        for item in self.elements:
+            res.append('topological sort %s' % item)
 
         return res
 

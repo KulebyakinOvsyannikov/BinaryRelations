@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^control/warshalls/check_tbls', views.control_warshalls_check_tables, name='control_warshalls_check_tables'),
     url(r'^control/warshalls/check', views.control_warshalls_check, name='control_warshalls_check'),
     url(r'^control/warshalls/', views.control_warshalls, name='control_warshalls'),
+    url(r'^control/topological_sort/check', views.control_topological_check, name='control_topological_sort_check'),
+    url(r'^control/topological_sort', views.control_topological, name='control_topological_sort'),
+
     url(r'^control/', views.control, name='control'),
 
     url(r'^demo/', views.demo, name='demo'),
@@ -21,6 +24,9 @@ urlpatterns = [
 
     url(r'^training/warshalls/check', views.train_warshalls_check, name='train_warshalls_check'),
     url(r'^training/warshalls/', views.train_warshalls, name='train_warshalls'),
+
+    url(r'^training/topological_sort/check', views.train_topological_check, name='train_topological_sort_check'),
+    url(r'^training/topological_sort', views.train_topological, name='train_topological_sort'),
 
     url(r'^training/(?P<difficulty>easy|medium|hard)',
         views.training_with_difficulty,

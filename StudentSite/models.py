@@ -88,6 +88,7 @@ class StudentTaskRel(models.Model):
     isTestTask = models.BooleanField()
     partial_solve = models.TextField(null=True, default=None)
     partial_solve_warshalls = models.TextField(null=True, default=None)
+    partial_solve_topological_sort = models.TextField(null=True, default=None)
     isCompleted = models.BooleanField(default=False)
     table_and_props_completed = models.BooleanField(default=False)
     is_topological_sort_completed = models.BooleanField(default=False)
@@ -95,3 +96,4 @@ class StudentTaskRel(models.Model):
     numberOfAttempts = models.IntegerField(default=0)
     dateStarted = models.DateField(auto_created=True)
     dateCompleted = models.DateField(null=True)
+
