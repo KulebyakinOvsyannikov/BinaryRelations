@@ -1,10 +1,11 @@
 {% extends 'StudentSite/index.html' %}
+{% block title %}<title>Тренировка</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
     {% load staticfiles %}
     <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/forms/train_form.html' %}
-    <script src="{% static 'StudentSite/test_scripts.js' %}" ></script>
+    <script src="{% static 'StudentSite/scripts/test_scripts.js' %}" ></script>
     {% if result == True %}
         <h2>Правильное решение!</h2>
         <form action="{% url 'student_site:train_warshalls' %}" method="post">

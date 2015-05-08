@@ -1,6 +1,8 @@
-<nav>
+<nav id="index_header">
     {% block nav_pane %}
-    <div>
+        {% load staticfiles %}
+    <link href="{% static 'StudentSite/stylesheets/index_header_stylesheet.css' %}" rel="stylesheet" type="text/css" />
+    <div id="site_name">
         <h1>Бинарные отношения</h1>
     </div>
     {% endblock %}
@@ -11,9 +13,9 @@
     </div>
     {% else %}
     <div class = "logged-in-user">
-        <h4>{{ request.user }}</h4>
+        <h4>Здравствуйте, {{ request.user.first_name }}</h4>
         <form action="{% url 'student_site:logout_action' %}" method="get">
-            <input type="submit" value="logout">
+            <input type="submit" value="Выйти">
         </form>
     </div>
     {% endif %}

@@ -1,4 +1,5 @@
 {% extends 'StudentSite/index.html' %}
+{% block title %}<title>Контроль</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
     {% load staticfiles %}
@@ -10,6 +11,6 @@
     {% elif result == False %}
         <h2>Решено с ошибками!</h2>
     {% endif %}
-    <script src="{% static 'StudentSite/test_scripts.js' %}" ></script>
+    <script src="{% static 'StudentSite/scripts/test_scripts.js' %}" ></script>
     <script>fillForm()</script>
 {% endblock %}

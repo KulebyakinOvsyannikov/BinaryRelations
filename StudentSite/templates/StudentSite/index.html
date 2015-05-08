@@ -2,10 +2,11 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    {% block title %}<title>Student site</title>{% endblock %}
+    {% block title %}<title>Бинарные отношения</title>{% endblock %}
 </head>
 <body>
     {% block header %}{% include 'StudentSite/header_index.html' %}{% endblock %}
+    <hr />
     {% block body %}
         <ul>
             <li><a href="{% url 'student_site:demo' %}">Демо-режим</a></li>

@@ -29,7 +29,7 @@
         {% endfor %}
     </tr>
 </table>
-<form action="{% block formAction %}{% endblock %}" id="topological_sort_form" method="post">
+<form action="{% block formAction %}{% endblock %}" id="topological_sort_form" method="post" onsubmit="return validateTopologicalSort()">
     {% csrf_token %}
     <table>
         <tr>

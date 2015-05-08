@@ -74,3 +74,13 @@ function highlightErrors(error) {
         }
     }, 4000)
 }
+
+function validateTopologicalSort() {
+    for (var i = 0; i < elementsArray.length; ++i) {
+        if (document.getElementById("submit_element-"+i).value == "") {
+            alert("Сначала необходимо выбрать все элеметны множества в нужном порядке")
+            return false;
+        }
+    }
+    return true;
+}

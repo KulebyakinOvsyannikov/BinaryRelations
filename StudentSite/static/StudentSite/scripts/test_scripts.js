@@ -95,7 +95,8 @@ function validateForm() {
                 if (radios[j].checked) checked = true;
             }
             if (!checked) {
-               return false;
+                alert("Сначала необходимо заполнить все поля");
+                return false;
             }
         }
     }

@@ -10,10 +10,11 @@ from time import sleep
 class TaskModel(models.Model):
     isGettingTasks = False
     str_repr = models.CharField(max_length=255)
+    difficulty = models.IntegerField(default=0)
     answer_table = models.CharField(max_length=255, null=True, default=None)
     answer_properties = models.TextField(null=True, default=None)
     answer_warshalls = models.TextField(null=True, default=None)
-    difficulty = models.IntegerField(default=0)
+
 
     @classmethod
     def get_control_task(cls):
@@ -77,8 +78,6 @@ class StudentModel(models.Model):
     user = models.OneToOneField(User)
     website = models.URLField(null=True)
     group = models.CharField(max_length=8)
-    first_name = models.CharField(max_length=56)
-    last_name = models.CharField(max_length=56)
     tasks = models.ManyToManyField(TaskModel, through='StudentTaskRel')
 
 
@@ -86,14 +85,19 @@ class StudentTaskRel(models.Model):
     task = models.ForeignKey(TaskModel)
     student = models.ForeignKey(StudentModel)
     isTestTask = models.BooleanField()
+    dateStarted = models.DateTimeField(auto_created=True)
+    isCompleted = models.BooleanField(default=False)
+    numberOfAttempts = models.IntegerField(default=0)
+    dateCompleted = models.DateTimeField(null=True)
+    table_and_props_completed = models.BooleanField(default=False)
+    is_warshall_completed = models.BooleanField(default=False)
+    is_topological_sort_completed = models.BooleanField(default=False)
     partial_solve = models.TextField(null=True, default=None)
     partial_solve_warshalls = models.TextField(null=True, default=None)
     partial_solve_topological_sort = models.TextField(null=True, default=None)
-    isCompleted = models.BooleanField(default=False)
-    table_and_props_completed = models.BooleanField(default=False)
-    is_topological_sort_completed = models.BooleanField(default=False)
-    is_warshall_completed = models.BooleanField(default=False)
-    numberOfAttempts = models.IntegerField(default=0)
-    dateStarted = models.DateField(auto_created=True)
-    dateCompleted = models.DateField(null=True)
+
+
+
+
+
 

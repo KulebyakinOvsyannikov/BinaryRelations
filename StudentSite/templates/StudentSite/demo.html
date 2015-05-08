@@ -1,4 +1,5 @@
 {% extends 'StudentSite/index.html' %}
+{% block title %}<title>Демо-режим</title>{% endblock %}
 {% block header %}
     {% include 'StudentSite/header_base.html' %}
 {% endblock %}
@@ -6,9 +7,9 @@
     {% load staticfiles %}
     <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/forms/task_form.html' %}
-    <script src="{% static 'StudentSite/demo_scripts.js' %}"></script>
+    <script src="{% static 'StudentSite/scripts/demo_scripts.js' %}"></script>
 
-    <div id="warshalls_block" style="display: none">
+    <div id="warshalls_block" style="display: none; clear: both">
         {% include 'StudentSite/forms/warshalls-form.html' %}
         <style>
             #warshalls_block #task_table {
@@ -32,7 +33,7 @@
         </style>
     </div>
 
-    <div id="demo-helper">
+    <div id="demo-helper" style="display: block; clear: both">
         <p id="demo-text-view"></p>
         <button onclick="previousMove()">Назад</button>
         <button onclick="nextMove()">Вперед</button>

@@ -1,0 +1,16 @@
+.radio-input label {
+    display: block;
+}
+
+.radio-input {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    border: 1px dashed black;
+}
+
+#answers-form input[type='submit'] {
+    display: block;
+    clear: both;
+}

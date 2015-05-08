@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <form method="post" action="{% url 'student_site:add_task' %}">
+        {% csrf_token %}
+        <label>Задание:<input type="text" name="task_str" /></label>
+        <label>Сложность:<input type="number" max="3" min="1" value="3" name="difficulty" /></label>
+        <input type="submit" value="Добавить задание" />
+    </form>
+
+</body>
+</html>

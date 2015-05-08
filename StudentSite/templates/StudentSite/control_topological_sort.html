@@ -4,7 +4,7 @@
 {% block body %}
     {% include 'StudentSite/forms/topological_sort_control_form.html' %}
     {% load staticfiles %}
-    <script src="{% static 'StudentSite/topological_sort_scripts.js' %}"></script>
+    <script src="{% static 'StudentSite/scripts/topological_sort_scripts.js' %}"></script>
     <script>initiateScripts({{ json_data|safe }})</script>
     {% if result == True %}
         <h2>Правильное решение!</h2>

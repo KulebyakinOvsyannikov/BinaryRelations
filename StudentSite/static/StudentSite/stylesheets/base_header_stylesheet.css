@@ -1,0 +1,20 @@
+.header_items_list {
+    float: left;
+    width: 50%;
+}
+
+.logged-in-user {
+    float: right;
+    width: 35%;
+    height: 100%;
+    position: relative;
+}
+
+.header_items_list li {
+    display: inline;
+}
+
+#index_header {
+    overflow: hidden;
+    height: 85px;
+}

@@ -1,6 +1,8 @@
 {% extends 'StudentSite/header_index.html' %}
 {% block nav_pane %}
-    <ul>
+    {% load staticfiles %}
+    <link href="{% static 'StudentSite/stylesheets/base_header_stylesheet.css' %}" type="text/css" rel="stylesheet" />
+    <ul class = 'header_items_list'>
         <li><a href="{% url 'student_site:demo' %}">Демо-режим</a></li>
         <li><a href="{% url 'student_site:training' %}">Тренировка</a></li>
         <li><a href="{% url 'student_site:control' %}">Контроль</a> </li>

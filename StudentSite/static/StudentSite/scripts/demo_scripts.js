@@ -89,15 +89,13 @@ function nextMoveProperties() {
 }
 
 function nextMoveTopological() {
-    document.getElementById('topological_sort_block').style.display = "";
+    document.getElementById('topological_sort_block').style.display = "block";
     var topologicalStep = step - firstStepTopological;
     if (topologicalStep < solveTable.length) {
         var index = solveTopological[topologicalStep];
         var labelElem = document.getElementById('elem-'+index);
-        //var inputElem = document.getElementById('submit_element-'+topologicalStep);
         var inputLabel = document.getElementById('submit_span_label-'+topologicalStep);
         inputLabel.innerHTML = labelElem.innerHTML;
-        //inputElem.vaue = index;
         labelElem.style.visibility = "hidden";
         document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
         step++;
@@ -117,7 +115,7 @@ function nextMove() {
 }
 
 function nextMoveWarshalls() {
-    document.getElementById('warshalls_block').style.display = "";
+    document.getElementById('warshalls_block').style.display = "block";
     var stepNum = step - firstStepWarshalls;
     var indi = Math.floor(stepNum/solveTable.length);
     var indj = stepNum % solveTable.length;

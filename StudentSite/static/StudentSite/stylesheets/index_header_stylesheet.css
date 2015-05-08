@@ -1,0 +1,49 @@
+#index_header {
+    overflow: hidden;
+    height: 85px;
+}
+#site_name {
+    float: left;
+    width: 59%;
+    height: 100%;
+}
+
+#site_name h1 {
+    text-align: center;
+}
+
+.login-form {
+    float: right;
+    width: 40%;
+    height: 100%;
+    position: relative;
+}
+
+.logged-in-user {
+    float: right;
+    width: 40%;
+    height: 100%;
+    position: relative;
+}
+
+.login-form label {
+    display: block;
+}
+
+.logged-in-user h4 {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.logged-in-user form {
+    position: relative;
+    width: 20%;
+    left: auto;
+    right: auto;
+}
+
+.logged-in-user input {
+    left: auto;
+    right: auto;
+}
+

@@ -5,7 +5,7 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'BinaryRelations.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-
+    url(r'^add_task/', views.add_task, name='add_task'),
 
     url(r'^control/check/', views.control_check, name='check_test'),
     url(r'^control/warshalls/check_tbls', views.control_warshalls_check_tables, name='control_warshalls_check_tables'),

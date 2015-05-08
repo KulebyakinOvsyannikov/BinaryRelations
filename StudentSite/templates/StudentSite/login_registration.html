@@ -2,15 +2,32 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Login/Register</title>
+    <title>Вход/Регистрация</title>
 </head>
 <body>
-    {% include 'StudentSite/forms/login_form.html' %}
-    {% include 'StudentSite/forms/registration_form.html' %}
+    <div id="login_section">
+        <h1>Вход</h1>
+        {% include 'StudentSite/forms/login_form.html' %}
+    </div>
+    <div id="registration_section">
+        <h1>Регистрация</h1>
+        {% include 'StudentSite/forms/registration_form.html' %}
+    </div>
+
      <style>
-        label {
-            display: block;
-        }
+         #login_section {
+             overflow: hidden;
+             float: left;
+             width: 49%;
+         }
+         #registration_section {
+             float: right;
+             overflow: hidden;
+             width: 49%;
+         }
+         label {
+             display: block;
+         }
     </style>
 </body>
 </html>

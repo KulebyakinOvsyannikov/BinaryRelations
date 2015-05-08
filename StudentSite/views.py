@@ -10,7 +10,7 @@ from .MathBackend.supporting_functions import compose_partial_solve
 from django.views.decorators.http import require_POST
 from django.core import serializers
 from .MathBackend.OrderType import OrderType
-import datetime
+from django.utils import timezone
 import json
 
 
@@ -96,12 +96,17 @@ def registration_action(request):
     last_name = request.POST['last_name']
     group = request.POST['group']
     web_site = request.POST['web_site']
+    print(request.path)
+    users = User.objects.filter(username=username)
+    if len(users) != 0:
+        return render(request, 'StudentSite/registration.html', {'used_name': True})
 
     User.objects.create_user(username=username, password=password)
     user = authenticate(username=username, password=password)
     student = StudentModel.objects.create(user=user, website=web_site)
-    student.first_name = first_name
-    student.last_name = last_name
+    user.first_name = first_name
+    user.last_name = last_name
+    user.save()
     student.group = group
     student.save()
 
@@ -151,7 +156,7 @@ def control(request):
     if len(control_task) == 0:
         task = TaskModel.get_control_task()
         task_obj = Task.from_string(task.str_repr)
-        control_task = StudentTaskRel(task=task, student=student, isTestTask=True, dateStarted=datetime.date.today())
+        control_task = StudentTaskRel(task=task, student=student, isTestTask=True, dateStarted=timezone.now())
         control_task.save()
     else:
         control_task = control_task[0]
@@ -177,7 +182,7 @@ def training_with_difficulty(request, difficulty):
     if len(tr_task) == 0:
         task = TaskModel.get_training_task_with_difficulty(difficulty)
         task_obj = Task.from_string(task.str_repr)
-        tr_task = StudentTaskRel(task=task, student=student, isTestTask=False, dateStarted=datetime.date.today())
+        tr_task = StudentTaskRel(task=task, student=student, isTestTask=False, dateStarted=timezone.now())
         tr_task.save()
     else:
         tr_task = tr_task[0]
@@ -433,7 +438,7 @@ def train_warshalls_check(request):
         rel.is_warshall_completed = True
         if not is_of_order:
             rel.isCompleted = True
-            rel.dateCompleted = datetime.date.today()
+            rel.dateCompleted = timezone.now()
 
     else:
         rel.numberOfAttempts += 1
@@ -497,7 +502,7 @@ def control_topological_check(request):
     if result:
         task_rel.is_topological_sort_completed = True
         task_rel.isCompleted = True
-        task_rel.dateCompleted = datetime.date.today()
+        task_rel.dateCompleted = timezone.now()
     else:
         task_rel.numberOfAttempts += 1
 
@@ -558,7 +563,7 @@ def train_topological_check(request):
     if result == -1:
         task_rel.is_topological_sort_completed = True
         task_rel.isCompleted = True
-        task_rel.dateCompleted = datetime.date.today()
+        task_rel.dateCompleted = timezone.now()
     else:
         task_rel.numberOfAttempts += 1
         context['error_id'] = result
@@ -567,3 +572,12 @@ def train_topological_check(request):
 
     response = render(request, 'StudentSite/train_topological_sort.html', context)
     return response
+
+
+def add_task(request):
+    if 'task_str' in request.POST:
+        task_str = request.POST['task_str']
+        diff = request.POST['difficulty']
+        TaskModel.objects.create(str_repr=task_str, difficulty=int(diff))
+        return HttpResponseRedirect(reverse('student_site:add_task'))
+    return render(request, 'StudentSite/forms/add_task_form.html')

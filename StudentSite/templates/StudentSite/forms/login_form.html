@@ -1,7 +1,7 @@
 <form action="{% url 'student_site:login_action' %}" method="post">
     {% csrf_token %}
     <label>Имя пользователя: <input type="text" name="username" /></label>
-    <label>Пароль: <input type="text" name="password" /></label>
+    <label>Пароль: <input type="password" name="password" /></label>
     {% if request.GET.next %}
         <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% endif %}

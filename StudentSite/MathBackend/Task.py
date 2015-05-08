@@ -405,9 +405,9 @@ class Task:
 
     @classmethod
     def generate_tasks_with_difficulty(cls, difficulty):
-        sleep(5)
-        return [Task.from_string("[12,14,15,26]$[| < |]$[]$[]$[]")
-                for i in range(1, 10)]
+        #return [Task.from_string("[12,14,15,26]$[| < |]$[]$[]$[]")
+        #        for i in range(1, 10)]
+        return None
 
     def generate_demo_strings(self):
         res = []
