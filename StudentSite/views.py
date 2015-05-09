@@ -135,7 +135,10 @@ def demo(request):
     response.set_cookie('table_solve', task.answer_table)
     response.set_cookie('props_solve', task.answer_properties)
     response.set_cookie('warshalls_solve', task.answer_warshalls)
-    response.set_cookie('solve_topological', ' '.join([str(elem) for elem in task_obj.topological_sort()]))
+    top_sort = task_obj.topological_sort()
+    if top_sort is not None:
+        response.set_cookie('solve_topological', ' '.join([str(elem) for elem in top_sort]))
+
     tips = task_obj.generate_demo_strings()
     for i in range(0, len(tips)):
         response.set_cookie('solve-tip-%s' % i, tips[i])
