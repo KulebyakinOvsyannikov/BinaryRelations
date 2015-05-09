@@ -21,7 +21,7 @@ class TaskModel(models.Model):
         while cls.isGettingTasks:
             sleep(1)
         tasks = cls.objects.exclude(studenttaskrel__isnull=False).filter(difficulty=3)
-        if len(tasks) < 5:
+        if len(tasks) < 1:
             cls.isGettingTasks = True
             task_objects = Task.generate_tasks_with_difficulty('hard')
             for task in task_objects:
@@ -61,7 +61,7 @@ class TaskModel(models.Model):
         tasks = cls.objects.exclude(
             Q(studenttaskrel__isTestTask=True) & Q(studenttaskrel__isCompleted=False)).filter(difficulty=1)
 
-        if len(tasks) < 5:
+        if len(tasks) < 1:
             cls.isGettingTasks = True
             object_items = Task.generate_tasks_with_difficulty(1)
             for item in object_items:
