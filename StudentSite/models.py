@@ -56,11 +56,10 @@ class TaskModel(models.Model):
         :rtype: TaskModel
         :return:
         """
-        while cls.isGettingTasks:
-            sleep(1)
         tasks = cls.objects.exclude(
             Q(studenttaskrel__isTestTask=True) & Q(studenttaskrel__isCompleted=False)).filter(difficulty=1)
 
+        print(tasks)
         if len(tasks) < 1:
             cls.isGettingTasks = True
             object_items = Task.generate_tasks_with_difficulty(1)
