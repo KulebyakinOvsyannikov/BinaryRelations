@@ -2,6 +2,7 @@
 {% block title %}<title>Алгоритм Уоршалла</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
+    {{ task.to_human_readable }}
     {% include 'StudentSite/forms/warshalls_train_form.html' %}
     {% load staticfiles %}
 

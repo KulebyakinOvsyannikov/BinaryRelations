@@ -128,8 +128,10 @@ def demo(request):
         task.answer_properties = task_obj.solve_properties()
         task.answer_warshalls = task_obj.generate_warshalls_answers_string()
         task.save()
+    json_data = json.dumps([task_obj.elements])
 
     tips = task_obj.generate_demo_strings()
+    print(tips)
     json_data = json.dumps({'elements': task_obj.elements, 'tips': tips})
 
     response = render(request, 'StudentSite/demo.html', {'task': task_obj,
