@@ -41,7 +41,7 @@ class TaskModel(models.Model):
                 Q(studenttaskrel__isCompleted=True) |
                 Q(studenttaskrel__isTestTask=False)) | Q(studenttaskrel__isnull=True))
         )
-        if len(tasks) < 5:
+        if len(tasks) < 1:
             cls.isGettingTasks = True
             object_items = Task.generate_tasks_with_difficulty(difficulty)
             for item in object_items:
