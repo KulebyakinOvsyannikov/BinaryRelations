@@ -109,7 +109,7 @@ function nextMove() {
         nextMoveProperties();
     } else if (step < solveTable.length * solveTable.length * 2 + solveProps.length) {
         nextMoveWarshalls();
-    } else {
+    } else if (namedSolveProps['order'] == 'of-order') {
         nextMoveTopological();
     }
 }
