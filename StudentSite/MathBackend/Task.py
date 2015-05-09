@@ -92,14 +92,14 @@ class Task:
                         else self.block_modifiers[block_mod_index].value
                     readable_string += '('
             readable_string += self.triplets[trip_index].convert_triplet_to_human_readable()
-            if rel_index < len(self.triplets_triplets_rel):
-                readable_string += self.triplets_triplets_rel[rel_index].value
-                rel_index += 1
             if parentheses_index < len(self.parenthesis):
                 if trip_index == self.parenthesis[parentheses_index][1]:
                     readable_string += ')'
                     block_mod_index += 1
                     parentheses_index += 1
+            if rel_index < len(self.triplets_triplets_rel):
+                readable_string += self.triplets_triplets_rel[rel_index].value
+                rel_index += 1
         return readable_string
 
     def solve_for_elements(self, e1, e2):
@@ -173,7 +173,7 @@ class Task:
             ("equivalency", "equivalent" if self.is_of_equivalence() else "non-equivalent"),
             ("order", "of-order" if self.is_of_order() != OrderType.not_of_order else "not-of-order"),
             ("order-strict", "strict" if self.is_of_order().is_strict() else "not-strict"),
-            ("order-linearity", "linear" if self.is_of_order().is_partial() else "partial")
+            ("order-linearity", "linear" if self.is_of_order().is_linear() else "partial")
         ]
 
         if checkboxes_array[7][1] == 'not-of-order':
@@ -413,27 +413,56 @@ class Task:
         res = []
         for elem in self.elements:
             for elem2 in self.elements:
-                res.append("%s - %s" % (elem, elem2))
+                if self.solve_for_elements(elem,elem2):
+                    append_str = " Видим, что они состоят в отношении R. Отмечаем соответствующий элемент матрицы."
+                else:
+                    append_str = " Видим, что они не состоят в отношении R. Оставляем соответствующий элемент " \
+                                 "матрицы нетронутым."
+                res.append("Рассмотрим элементы %s и %s." % (elem, elem2)+append_str)
         checkboxes_array = [
-            ("reflexivity", "reflexive" if self.is_reflexive() else "non-reflexive"),
-            ("anti-reflexivity", "anti-reflexive" if self.is_antireflexive() else "non-anti-reflexive"),
-            ("symmetry", "symmetric" if self.is_symmetric() else "non-symmetric"),
-            ("asymmetry", "asymmetric" if self.is_asymmetric() else "non-asymmetric"),
-            ("antisymmetry", "antisymmetric" if self.is_antisymmetric() else "non-antisymmetric"),
-            ("transitivity", "transitive" if self.is_transitive() else "non-transitive"),
-            ("equivalency", "equivalent" if self.is_of_equivalence() else "non-equivalent"),
-            ("order", "of-order" if self.is_of_order() != OrderType.not_of_order else "not-of-order"),
-            ("order-strict", "strict" if self.is_of_order().is_strict() else "not-strict"),
-            ("order-linearity", "linear" if self.is_of_order().is_partial() else "partial")
+            ("Рефлексивность", "из заполненной матрицы смежности видим, что отношение"
+                               " рефлексивно." if self.is_reflexive() else "из заполненной матрицы смежности видим, "
+                                                                           "что отношение нерефлексивно."),
+            ("Антирефлексивность", "при этом оно антирефлексивно." if self.is_antireflexive() else
+                                    "при этом оно не антирефлексивно."),
+            ("Симметричность", "из симметричности матрицы видим, что отношение симметрично."
+                    if self.is_symmetric() else "из несимметричности матрицы видим, что отношение несимметрично"),
+            ("Асимметрия", "видно, что ни одна пара элементов не входит."
+                           " в отношение с симметричной ей; значит, отношение асимметрично."
+                             if self.is_asymmetric() else "видим, что по крайней мере одна пара входит в отношение с "
+                                                        "симметричной ей, следственно, отношение не асимметрично."),
+            ("Антисимметричность", "если и выолняется условие xRy и yRx, это значит"
+                                   ", что x=y, следственно, отношение антисимметрично."
+                        if self.is_antisymmetric() else "по крайней мере одна пара состоит в отношении с "
+                                                        "симметричной ей, следственно, отношение не антисимметрично."),
+            ("Транзитивность", "выолняется условие xRy, yRc => xRc, что значит - отношение транзитивно."
+                                if self.is_transitive() else "не выолняется условие xRy, yRc => xRc, что значит - "
+                                                             "отношение не транзитивно."),
+            ("Эквивалентность", "так как выполняются условия рефлексивности, симметричности и транзитивности"
+                                ", делаем вывод, что отношение является отношением эквивалентности"
+                if self.is_of_equivalence() else "так как не выполняется по крайней мере одно из условий "
+                                        "(рефлексивность, симметричность, транзитивность), делаем вывод, что"
+                                        " отношение не является отношением эквивалентности."),
+            ("Отношение порядка", "данное отношение -- отношение порядка"
+                if self.is_of_order() != OrderType.not_of_order else "данное отношение не является отношением порядка."),
+            ("Строгость порядок", "отношение является отношением строгого порядка"
+                                ", так как выполняются условия (асимметричности и транзитивности."
+            if self.is_of_order().is_strict() else "отношение является отношением нестрогого порядка, так как "
+                                            "выполняются условия рефлексивности, антисимметричности и транзитивноси"),
+            ("Линейность порядка", "отношение является отношением линейного порядка, "
+                                   "так как для каждого xRy не выполняется yRx"
+                if self.is_of_order().is_linear() else "отношение является отношением частичного порядка, так как "
+                                                       "по крайней мере для одной пары элементов не выполняется ни "
+                                                       "xRy, ни yRx.")
         ]
 
-        if checkboxes_array[7][1] == 'not-of-order':
+        if checkboxes_array[7][1] == 'данное отношение не является отношением порядка.':
             checkboxes_array.pop()
             checkboxes_array.pop()
         print(checkboxes_array)
 
         for item in checkboxes_array:
-            res.append("%s - %s" % (item[0], item[1]))
+            res.append("%s: %s" % (item[0], item[1]))
 
         for elem1 in self.elements:
             for elem2 in self.elements:

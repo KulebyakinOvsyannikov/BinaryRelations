@@ -38,6 +38,8 @@ var firstStepTopological = firstStepWarshalls + solveTable.length * solveTable.l
 
 var solveTopological = getCookie('solve_topological').split(' ');
 
+var tips;
+
 var step = 0;
 
 function nextMoveTable() {
@@ -52,10 +54,10 @@ function nextMoveTable() {
             nextMove();
             return;
         } else if (solveTable[ind1][ind2] == '-') {
-            document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+            document.getElementById('demo-text-view').innerHTML = tips[step];
             elem.disabled = true;
         } else if (solveTable[ind1][ind2] == '+') {
-            document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+            document.getElementById('demo-text-view').innerHTML = tips[step];
             elem.checked = true;
             elem.disabled = true;
         }
@@ -68,7 +70,7 @@ function nextMoveProperties() {
         var elem_block = document.getElementById('radio-'+name_value[0]);
         var inputs = elem_block.getElementsByTagName('input');
         var shouldSkip = false;
-        document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+        document.getElementById('demo-text-view').innerHTML = tips[step];
         for (i = 0; i < inputs.length; ++i) {
             if (inputs[i].value == name_value[1]) {
                 if (inputs[i].checked == true && (name_value[1] != 'not-of-order' && name_value[0] != 'order-linearity')) {
@@ -97,7 +99,7 @@ function nextMoveTopological() {
         var inputLabel = document.getElementById('submit_span_label-'+topologicalStep);
         inputLabel.innerHTML = labelElem.innerHTML;
         labelElem.style.visibility = "hidden";
-        document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+        document.getElementById('demo-text-view').innerHTML = tips[step];
         step++;
     }
 }
@@ -120,7 +122,7 @@ function nextMoveWarshalls() {
     var indi = Math.floor(stepNum/solveTable.length);
     var indj = stepNum % solveTable.length;
     console.log(indi, indj);
-    document.getElementById('demo-text-view').innerHTML = getCookie('solve-tip-'+step);
+    document.getElementById('demo-text-view').innerHTML = tips[step];
     var shouldSkip = false;
     if (solveWarshalls[indi][indj] == '+') {
         if (document.getElementById('warshall_checkbox_'+indi+'-'+indj).checked) {
@@ -232,7 +234,11 @@ function checkPropertyClick(element) {
 
 }
 
-function initiate() {
+function initiate(json_data) {
+    console.log(json_data);
+    tips = json_data['tips'];
+
+
     var table = document.getElementById('task_table');
     var properties = document.getElementsByClassName('radio-input');
     document.getElementById('task-form-submit').parentElement.removeChild(document.getElementById('task-form-submit'));
