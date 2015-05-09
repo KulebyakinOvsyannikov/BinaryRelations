@@ -41,7 +41,7 @@ class Task:
         """
         :rtype : Task
         :param task_string: String in
-                            "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not @ ]$[ and ]$[(0, 1)]" format
+                            "[12,14,15,26]$[%10%3| <= |/10%3]@[/10%3| >= |%10%3]$[ not ]$[ and ]$[(0, 1)]" format
         :return: initialized instance of Task
         """
         task_elements = task_string.split('$')

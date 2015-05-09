@@ -128,17 +128,23 @@ def demo(request):
         task.answer_properties = task_obj.solve_properties()
         task.answer_warshalls = task_obj.generate_warshalls_answers_string()
         task.save()
-    json_data = json.dumps([task_obj.elements])
+
+    tips = task_obj.generate_demo_strings()
+    json_data = json.dumps({'elements': task_obj.elements, 'tips': tips})
 
     response = render(request, 'StudentSite/demo.html', {'task': task_obj,
                                                          'json_data': json_data})
     response.set_cookie('table_solve', task.answer_table)
     response.set_cookie('props_solve', task.answer_properties)
     response.set_cookie('warshalls_solve', task.answer_warshalls)
-    response.set_cookie('solve_topological', ' '.join([str(elem) for elem in task_obj.topological_sort()]))
-    tips = task_obj.generate_demo_strings()
-    for i in range(0, len(tips)):
-        response.set_cookie('solve-tip-%s' % i, tips[i])
+    top_sort = task_obj.topological_sort()
+    if top_sort is not None:
+        response.set_cookie('solve_topological', ' '.join([str(elem) for elem in top_sort]))
+
+
+    #for i in range(0, len(tips)):
+    #    response.set_cookie('solve-tip-%s' % i, tips[i])
+    print(response)
     return response
 
 

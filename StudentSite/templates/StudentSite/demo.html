@@ -38,6 +38,6 @@
         <button onclick="previousMove()">Назад</button>
         <button onclick="nextMove()">Вперед</button>
     </div>
-    <script>initiate()</script>
+    <script>initiate({{ json_data|safe }})</script>
 
 {% endblock %}
