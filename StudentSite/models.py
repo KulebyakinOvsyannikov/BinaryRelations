@@ -59,7 +59,6 @@ class TaskModel(models.Model):
         tasks = cls.objects.exclude(
             Q(studenttaskrel__isTestTask=True) & Q(studenttaskrel__isCompleted=False)).filter(difficulty=1)
 
-        print(tasks)
         if len(tasks) < 1:
             cls.isGettingTasks = True
             object_items = Task.generate_tasks_with_difficulty(1)
