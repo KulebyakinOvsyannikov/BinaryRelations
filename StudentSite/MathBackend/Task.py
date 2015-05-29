@@ -179,7 +179,6 @@ class Task:
         if checkboxes_array[7][1] == 'not-of-order':
             checkboxes_array[8] = ("order-strict", "none")
             checkboxes_array[9] = ("order-linearity", "none")
-        print(checkboxes_array)
 
         res = []
         for item in checkboxes_array:
@@ -270,7 +269,7 @@ class Task:
         for w in range(0, len(self.results)):
             for u in range(0, len(self.results)):
                 for v in range(0, len(self.results)):
-                    if not self.results[u][v] and (self.results[u][v] or (self.results[u][w] and self.results[w][v])):
+                    if not self.results[u][v] and self.results[u][w] and self.results[w][v]:
                         return False
         return True
 
@@ -289,7 +288,6 @@ class Task:
                 res_row.append('+' if temp_res[i][j] else '-')
             res.append(' '.join(res_row))
         return '$'.join(res)
-
 
     def generate_warshalls_strings_tables(self):
         res = []
@@ -409,6 +407,78 @@ class Task:
         #        for i in range(1, 10)]
         return None
 
+    def reflexivity_highlights(self):
+        highlights = {}
+        if self.results is None:
+            self.solve()
+        for i in range(len(self.elements)):
+            if self.results[i][i]:
+                highlights[str(i)+'-'+str(i)] = True
+            else:
+                highlights[str(i)+'-'+str(i)] = False
+        return highlights
+
+    def antireflexivity_highlights(self):
+        highlights = {}
+        if self.results is None:
+            self.solve()
+        for i in range(len(self.elements)):
+            if not self.results[i][i]:
+                highlights[str(i)+'-'+str(i)] = True
+            else:
+                highlights[str(i)+'-'+str(i)] = False
+        return highlights
+
+    def symmetry_highlights(self):
+        highlights = {}
+        if self.results is None:
+            self.solve()
+        for i in range(len(self.elements)):
+            for j in range(i,len(self.elements)):
+                if self.results[i][j] != self.results[j][i]:
+                    highlights[str(i)+'-'+str(j)] = False
+                    highlights[str(j)+'-'+str(i)] = False
+        return highlights
+
+    def asymmetry_highlights(self):
+        highlights = self.antisymmetry_highlights()
+        for i in range(len(self.elements)):
+            if self.results[i][i]:
+                highlights[str(i)+'-'+str(i)] = False
+        return highlights
+
+    def antisymmetry_highlights(self):
+        highlights = {}
+        if self.results is None:
+            self.solve()
+        for i in range(len(self.elements)):
+            for j in range(i+1, len(self.elements)):
+                if self.results[i][j] and self.results[j][i]:
+                    highlights[str(i)+'-'+str(j)] = False
+                    highlights[str(j)+'-'+str(i)] = False
+        return highlights
+
+    def transitivity_highlights(self):
+        highlights = {}
+        if self.results is None:
+            self.solve()
+        for w in range(len(self.elements)):
+            for i in range(len(self.elements)):
+                for j in range(len(self.elements)):
+                    if self.results[i][w] and self.results[w][j] and not self.results[i][j]:
+                        highlights[str(i)+'-'+str(j)] = False
+        return highlights
+
+    def generate_highlights_for_demo(self):
+        highlights = [self.reflexivity_highlights(),
+                      self.antireflexivity_highlights(),
+                      self.symmetry_highlights(),
+                      self.asymmetry_highlights(),
+                      self.antisymmetry_highlights(),
+                      self.transitivity_highlights()]
+        return highlights
+
+
     def generate_demo_strings(self):
         res = []
         for elem in self.elements:
@@ -459,7 +529,6 @@ class Task:
         if checkboxes_array[7][1] == 'данное отношение не является отношением порядка.':
             checkboxes_array.pop()
             checkboxes_array.pop()
-        print(checkboxes_array)
 
         for item in checkboxes_array:
             res.append("%s: %s" % (item[0], item[1]))
@@ -471,7 +540,7 @@ class Task:
         for item in self.elements:
             res.append('topological sort %s' % item)
 
-        return res
+        return res, self.generate_highlights_for_demo()
 
     def task_text(self):
         """

@@ -60,6 +60,7 @@ function fillRadios(radios_array) {
 function fillForm() {
 
     var content = getCookie('partial_solve').split('@');
+    partialGraph(content[0].split('$'));
     fillTable(content[0].split('$'));
     fillRadios(content[1].split('$'));
 }
