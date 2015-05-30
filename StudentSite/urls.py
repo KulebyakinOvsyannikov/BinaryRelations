@@ -19,8 +19,6 @@ urlpatterns = [
     url(r'^demo/', views.demo, name='demo'),
 
     url(r'^training/check/', views.check_training, name='check_training'),
-    url(r'^training/warshalls/check_tables', views.train_warshalls_check_tables, name='train_warshalls_check_tables'),
-    url(r'^training/warshalls_tables/', views.train_warshalls_tables, name='train_warshalls_tables'),
 
     url(r'^training/warshalls/check', views.train_warshalls_check, name='train_warshalls_check'),
     url(r'^training/warshalls/', views.train_warshalls, name='train_warshalls'),

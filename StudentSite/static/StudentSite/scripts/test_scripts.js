@@ -57,12 +57,13 @@ function fillRadios(radios_array) {
     }
 }
 
-function fillForm() {
-
-    var content = getCookie('partial_solve').split('@');
-    partialGraph(content[0].split('$'));
-    fillTable(content[0].split('$'));
-    fillRadios(content[1].split('$'));
+function fillMatrix(partial_solve) {
+    partial_solve = partial_solve.split('@');
+    partialGraph(partial_solve[0].split('$'));
+    fillTable(partial_solve[0].split('$'));
+    if (partial_solve.length > 1) {
+        fillRadios(partial_solve[1].split('$'));
+    }
 }
 
 function orderChecked(on) {
@@ -104,12 +105,10 @@ function validateForm() {
     return true;
 }
 
-function highlightErrors() {
-    var user_solve_cookie = getCookie('partial_solve').split('@');
-    var user_solve_table = user_solve_cookie[0];
-    var correct_table = getCookie('correct_solve_table');
-    user_solve_table = user_solve_table.split('$');
-    correct_table = correct_table.split('$');
+function highlightErrorsTableAndProperties(usersSolve, correctSolve) {
+
+    var user_solve_table = usersSolve.split('@')[0].split('$');
+    var correct_table = correctSolve.table.split('$');
     for (var i = 0; i < user_solve_table.length; ++i) {
         user_solve_table[i] = user_solve_table[i].split(' ');
         correct_table[i] = correct_table[i].split(' ');
@@ -121,11 +120,10 @@ function highlightErrors() {
         }
     }
 
-    var user_solve_properties = user_solve_cookie[1].split('$');
-    var correct_solve_props = getCookie('correct_solve_props').split('$');
+    var user_solve_properties = usersSolve.split('@')[1].split('$');
+    var correct_solve_props = correctSolve.properties.split('$');
 
     for (i = 0; i < correct_solve_props.length; ++i) {
-        //console.log(user_solve_properties[i], correct_solve_props[i]);
         if (user_solve_properties[i] != correct_solve_props[i]) {
             var name_value = user_solve_properties[i].split('=');
             var radio_block = document.getElementById('radio-'+name_value[0]);
@@ -138,4 +136,9 @@ function highlightErrors() {
             }
         }
     }
+}
+
+function prepareForWarshalls() {
+    document.getElementById('properties_inputs').style.display = "none";
+    document.getElementById('submit_block').style.display = "none";
 }

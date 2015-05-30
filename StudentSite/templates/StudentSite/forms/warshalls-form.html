@@ -1,24 +1,5 @@
-<table id="task_table">
-    <tr>
-        <td>ab/cd</td>
-        {% for elem in task.elements %}
-            <td>{{ elem }}</td>
-        {% endfor %}
-    </tr>
-    {% for elem in task.elements %}
-        <tr>
-            <td>{{ elem }}</td>
-            {% for elem2 in task.elements %}
-                <td>
-                    <input type="checkbox"
-                           id="checkbox{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
-                           title="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
-                            disabled="disabled"/>
-                </td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
+{% include 'StudentSite/forms/task_form.html' %}
+{% load staticfiles %}
 <h3>Составьте минимальную транзитивную матрицу, согласованную с данной</h3>
 <table id="warshalls_table">
     <tr>
@@ -40,6 +21,9 @@
         </tr>
     {% endfor %}
 </table>
+<script src="{% static 'StudentSite/scripts/warshalls_scripts.js' %}"></script>
+<script>prepareForWarshalls(); fillWarshallsMatrix({{ json_warshalls_partial|safe }})</script>
+
 <form action="{% block warshall_check_action %}{% endblock %}" method="post" id="warshall_answers-form" onsubmit="formPOST()">
     {% csrf_token %}
     <input type="hidden"

@@ -16,10 +16,7 @@
         </form>
     {% elif result == False %}
         <h2>Решено с ошибками!</h2>
-        <script>highlightErrors()</script>
+        <script>highlightErrorsTableAndProperties({{ json_table_solve|safe }},{{ json_correct_solve|safe }})</script>
     {% endif %}
-    <script>
-        initiateGraph({{ task.elements }})
-    </script>
-    <script>fillForm()</script>
+
 {% endblock %}

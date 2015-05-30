@@ -109,7 +109,7 @@ function addRelation(fromElement, toElement) {
 }
 
 function partialGraph(partSolve) {
-    console.log(partSolve);
+    noRefresh = true;
     for (var i = 0; i < partSolve.length; ++i) {
         partSolve[i] = partSolve[i].split(' ');
         for (var j = 0; j < partSolve[i].length; ++j) {
@@ -118,4 +118,6 @@ function partialGraph(partSolve) {
             }
         }
     }
+    graph.refresh();
+    noRefresh = false;
 }

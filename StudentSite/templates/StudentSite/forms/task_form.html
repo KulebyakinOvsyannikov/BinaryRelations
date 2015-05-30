@@ -1,9 +1,5 @@
 <form action="{% block check_action %}{% endblock %}" method="post" id="answers-form" onsubmit="return validateForm()">
     {% load staticfiles %}
-    <script src="{% static 'StudentSite/scripts/sigma.min.js' %}"></script>
-    <script src="{% static 'StudentSite/scripts/sigma.parsers.json.min.js' %}"></script>
-    <link href="{% static 'StudentSite/stylesheets/task_form_stylesheet.css' %}" rel="stylesheet" type="text/css" />
-    <script src="{% static 'StudentSite/scripts/graph_scripts.js' %}"></script>
     {% csrf_token %}
         <table id="task_table">
             <tr>
@@ -30,7 +26,7 @@
 
 
         <div id="graph_container" style="width: 250px;height: 200px; max-width: 250px; margin: auto"></div>
-
+        <div id="properties_inputs">
         <div class="radio-input" id="radio-reflexivity">
             <label>
                 Рефлексивное
@@ -140,7 +136,15 @@
                 <input type="radio" name="order-linearity" value="partial">
             </label>
         </div>
-
+        </div>
+        <div id = "submit_block">
         <input type="hidden" name="task_id" value="{{ task_id }}">
         <input type="submit" value="Проверить" id="task-form-submit">
-    </form>
+        </div>
+</form>
+<script src="{% static 'StudentSite/scripts/sigma.min.js' %}"></script>
+<script src="{% static 'StudentSite/scripts/sigma.parsers.json.min.js' %}"></script>
+<link href="{% static 'StudentSite/stylesheets/task_form_stylesheet.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'StudentSite/scripts/graph_scripts.js' %}"></script>
+<script src="{% static 'StudentSite/scripts/test_scripts.js' %}"></script>
+<script> initiateGraph({{ task.elements }}); fillMatrix({{ json_table_solve|safe }})</script>

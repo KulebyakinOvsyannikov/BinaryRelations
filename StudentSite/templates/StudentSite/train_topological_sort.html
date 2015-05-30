@@ -11,7 +11,7 @@
         <a href="{% url "student_site:index" %}">Завершить выполнение тренировки</a>
     {% elif result == False %}
         <h2>Решено с ошибками!</h2>
-        <script>highlightErrors({{ error_id }})</script>
+        <script>highlightErrorsTableAndProperties({{ error_id }})</script>
     {% endif %}
 
 {% endblock %}
