@@ -2,8 +2,7 @@ from .RelationTriplet import RelationTriplet
 from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
 from.OrderType import OrderType
-from time import sleep
-import os
+import random
 
 
 class Task:
@@ -403,9 +402,38 @@ class Task:
 
     @classmethod
     def generate_tasks_with_difficulty(cls, difficulty):
-        #return [Task.from_string("[12,14,15,26]$[| < |]$[]$[]$[]")
-        #        for i in range(1, 10)]
-        return None
+        digit_takers = ['', '/10', '%10']
+        modifiers = ['%3', '%4', '%5', '%6', '+1', '+2', '+3', '+4', '-1', '-2', '-3', '-4',
+                     '','','','','',]
+        relations = [' < ', ' > ', ' <= ', ' >= ', ' != ', ' == ']
+        logic_relations = [' and ', ' or ', ' ^ ']
+
+        num_of_elements = 5
+        elements = []
+
+        while len(set(elements)) < 5:
+            elements = random.sample(range(10, 100), num_of_elements)
+
+        t1 = RelationTriplet(mod1=random.choice(digit_takers) + random.choice(modifiers),
+                             mod2=random.choice(digit_takers) + random.choice(modifiers),
+                             rel=BinaryRelation(random.choice(relations)))
+
+        t2 = RelationTriplet(mod1=random.choice(digit_takers) + random.choice(modifiers),
+                             mod2=random.choice(digit_takers) + random.choice(modifiers),
+                             rel=BinaryRelation(random.choice(relations)))
+        tr_rel = BinaryRelation(random.choice(logic_relations))
+
+        task = Task(elements=elements,triplets=[t1,t2],block_modifiers=[],triplets_triplets_rel=[tr_rel],parenthesis=[])
+        task.solve()
+        num_of_plus = 0
+        for elem1 in task.results:
+            for elem2 in elem1:
+                if elem2:
+                    num_of_plus += 1
+        if 0.2 <= num_of_plus/(num_of_elements**2) <= 0.8:
+            return [task]
+
+        return Task.generate_tasks_with_difficulty(difficulty)
 
     def reflexivity_highlights(self):
         highlights = {}
