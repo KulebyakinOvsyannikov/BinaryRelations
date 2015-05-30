@@ -23,9 +23,11 @@ function validateRegistration(elem) {
         alert("Длина пароля должна быть минимум 5 символов");
         return false;
     }
+
     if (pass.value != repPass.value) {
         alert("Пароли не совпадают");
         return false;
     }
+
     return true;
 }

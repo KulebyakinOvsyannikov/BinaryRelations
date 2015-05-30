@@ -289,7 +289,6 @@ function checkWarshallClick(element){
         element.target.style.outline = '2px dashed red';
         setTimeout(function () {
             element.target.style.outline = '';
-            remove
         }, 1000);
     } else {
         element.target.style.outline = '2px dashed green';
