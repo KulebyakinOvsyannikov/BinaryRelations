@@ -1,0 +1,9 @@
+.property_container {
+    border: 1px dashed black;
+    margin: 10px;
+    float: left;
+}
+
+.property_container label {
+    display: block;
+}

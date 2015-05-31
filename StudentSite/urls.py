@@ -1,42 +1,39 @@
 from django.conf.urls import include, url
-from . import views
+from .views import views, control_views, training_views, demo_views, registration_login_views
 
 urlpatterns = [
     # Examples:
     # url(r'^$', 'BinaryRelations.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^add_task/', views.add_task, name='add_task'),
+    url(r'^control/check/', control_views.control_check, name='check_test'),
+    url(r'^control/warshalls/check', control_views.control_warshalls_check, name='control_warshalls_check'),
+    url(r'^control/warshalls/', control_views.control_warshalls, name='control_warshalls'),
+    url(r'^control/topological_sort/check', control_views.control_topological_check, name='control_topological_sort_check'),
+    url(r'^control/topological_sort', control_views.control_topological, name='control_topological_sort'),
 
-    url(r'^control/check/', views.control_check, name='check_test'),
-    url(r'^control/warshalls/check_tbls', views.control_warshalls_check_tables, name='control_warshalls_check_tables'),
-    url(r'^control/warshalls/check', views.control_warshalls_check, name='control_warshalls_check'),
-    url(r'^control/warshalls/', views.control_warshalls, name='control_warshalls'),
-    url(r'^control/topological_sort/check', views.control_topological_check, name='control_topological_sort_check'),
-    url(r'^control/topological_sort', views.control_topological, name='control_topological_sort'),
+    url(r'^control/', control_views.control, name='control'),
 
-    url(r'^control/', views.control, name='control'),
+    url(r'^demo/', demo_views.demo, name='demo'),
 
-    url(r'^demo/', views.demo, name='demo'),
+    url(r'^training/check/', training_views.check_training, name='check_training'),
 
-    url(r'^training/check/', views.check_training, name='check_training'),
+    url(r'^training/warshalls/check', training_views.train_warshalls_check, name='train_warshalls_check'),
+    url(r'^training/warshalls/', training_views.train_warshalls, name='train_warshalls'),
 
-    url(r'^training/warshalls/check', views.train_warshalls_check, name='train_warshalls_check'),
-    url(r'^training/warshalls/', views.train_warshalls, name='train_warshalls'),
-
-    url(r'^training/topological_sort/check', views.train_topological_check, name='train_topological_sort_check'),
-    url(r'^training/topological_sort', views.train_topological, name='train_topological_sort'),
+    url(r'^training/topological_sort/check', training_views.train_topological_check, name='train_topological_sort_check'),
+    url(r'^training/topological_sort', training_views.train_topological, name='train_topological_sort'),
 
     url(r'^training/(?P<difficulty>easy|medium|hard)',
-        views.training_with_difficulty,
+        training_views.training_with_difficulty,
         name='training_with_difficulty'
         ),
-    url(r'^training/', views.training, name='training'),
+    url(r'^training/', training_views.training, name='training'),
 
-    url(r'^registration/register', views.registration_action, name='registration_action'),
-    url(r'^registration/', views.registration, name='registration'),
+    url(r'^registration/register', registration_login_views.registration_action, name='registration_action'),
+    url(r'^registration/', registration_login_views.registration, name='registration'),
 
-    url(r'^login/login-registration/', views.login_registration, name='login_registration'),
-    url(r'^login/log', views.login_action, name='login_action'),
-    url(r'^login/out', views.logout_action, name='logout_action'),
+    url(r'^login/login-registration/', registration_login_views.login_registration, name='login_registration'),
+    url(r'^login/log', registration_login_views.login_action, name='login_action'),
+    url(r'^login/out', registration_login_views.logout_action, name='logout_action'),
     url(r'^', views.index, name='index'),
 ]

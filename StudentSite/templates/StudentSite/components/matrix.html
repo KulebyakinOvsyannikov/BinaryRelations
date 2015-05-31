@@ -1,0 +1,31 @@
+<table id="matrix_table">
+        <tr>
+            <td>ab/cd</td>
+            {% for elem in task.elements %}
+                <td>{{ elem }}</td>
+            {% endfor %}
+        </tr>
+        {% for elem in task.elements %}
+            <tr>
+            <td>{{ elem }}</td>
+            {% for elem in task.elements %}
+                <td>
+                    <input class="matrix_element"
+                           type="text"
+                           value="0"
+                           title=""
+                           onclick="matrixElementClicked(this)"
+                           name="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                           id="matrix_element_{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                           readonly/>
+
+                </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+{% load staticfiles %}
+<link href="{% static 'StudentSite/stylesheets/components/matrix_stylesheet.css' %}" rel="stylesheet" type="text/css" >
+<script src="{% static 'StudentSite/scripts/components/matrix_scripts.js' %}"></script>
+<script>matrixInitiateScripts("matrix_table")</script>

@@ -10,7 +10,7 @@ function validateRegistration(elem) {
     var name = document.getElementById('first_name_field');
 
     if (username.value.length < 3) {
-        alert("Длина имени пользователя должна быть минимум 3 символа")
+        alert("Длина имени пользователя должна быть минимум 3 символа");
         return false;
     }
 

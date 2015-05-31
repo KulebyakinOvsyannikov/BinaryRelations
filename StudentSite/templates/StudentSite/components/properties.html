@@ -1,0 +1,117 @@
+<div id="properties_inputs">
+    <div class="property_container" id="properties-reflexivity">
+        <label>
+            Рефлексивное
+            <input type="radio" name="reflexivity" value="reflexive">
+        </label>
+        <label>
+            Нерефлексивное
+            <input type="radio" name="reflexivity" value="non-reflexive">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-anti-reflexivity">
+        <label>
+            Антирефлексивное
+            <input type="radio" name="anti-reflexivity" value="anti-reflexive">
+        </label>
+        <label>
+            Неантирефлексивное
+            <input type="radio" name="anti-reflexivity" value="non-anti-reflexive">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-symmetry">
+        <label>
+            Симметричное
+            <input type="radio" name="symmetry" value="symmetric">
+        </label>
+        <label>
+            Несимметричное
+            <input type="radio" name="symmetry" value="non-symmetric">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-asymmetry">
+        <label>
+            Асимметричное
+            <input type="radio" name="asymmetry" value="asymmetric">
+            </label>
+        <label>
+            Неасимметричное
+            <input type="radio" name="asymmetry" value="non-asymmetric">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-antisymmetry">
+        <label>
+            Антисимметричное
+            <input type="radio" name="antisymmetry" value="antisymmetric">
+        </label>
+        <label>
+            Неантисимметричное
+            <input type="radio" name="antisymmetry" value="non-antisymmetric">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-transitivity">
+        <label>
+            Транзитивное
+            <input type="radio" name="transitivity" value="transitive">
+        </label>
+        <label>
+            Нетранзитивное
+            <input type="radio" name="transitivity" value="non-transitive">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-equivalency">
+        <label>
+            Отношение эквиваленции
+            <input type="radio" name="equivalency" value="equivalent">
+        </label>
+        <label>
+            Не отношение эквиваленции
+            <input type="radio" name="equivalency" value="non-equivalent">
+        </label>
+    </div>
+
+    <div class="property_container" id="properties-order">
+        <label>
+            Отношение порядка
+            <input type="radio" name="order" value="of-order" onclick="propertiesOrderChanged(true)" />
+        </label>
+        <label>
+            Не отношение порядка
+            <input type="radio" name="order" value="not-of-order" onclick="propertiesOrderChanged(false)" />
+        </label>
+    </div>
+
+    <div id="optional_order_properties" style="display: none">
+        <div class="property_container" id="properties-order-strict">
+            <label>
+                Строгого порядка
+                <input type="radio" name="order-strict" value="strict">
+            </label>
+            <label>
+                Нестрогого порядка
+                <input type="radio" name="order-strict" value="not-strict">
+            </label>
+        </div>
+
+        <div class="property_container" id ="properties-order-linearity">
+            <label>
+                Линейного порядка
+                <input type="radio" name="order-linearity" value="linear">
+            </label>
+            <label>
+                Частичного порядка
+                <input type="radio" name="order-linearity" value="partial">
+            </label>
+        </div>
+    </div>
+</div>
+{% load staticfiles %}
+<link href="{% static 'StudentSite/stylesheets/components/properties_stylesheet.css' %}" rel="stylesheet" type="text/css" >
+<script src="{% static 'StudentSite/scripts/components/properties_scripts.min.js' %}"></script>
+<script>propertiesInitiateScripts("properties_inputs")</script>

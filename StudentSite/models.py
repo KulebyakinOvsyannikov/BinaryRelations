@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
+import random
 from random import randint
 from .MathBackend import Task
 from time import sleep
@@ -11,10 +12,9 @@ class TaskModel(models.Model):
     isGettingTasks = False
     str_repr = models.CharField(max_length=255)
     difficulty = models.IntegerField(default=0)
-    answer_table = models.CharField(max_length=255, null=True, default=None)
+    answer_matrix = models.CharField(max_length=255, null=True, default=None)
     answer_properties = models.TextField(null=True, default=None)
     answer_warshalls = models.TextField(null=True, default=None)
-
 
     @classmethod
     def get_control_task(cls):
@@ -56,8 +56,7 @@ class TaskModel(models.Model):
         :rtype: TaskModel
         :return:
         """
-        tasks = cls.objects.exclude(
-            Q(studenttaskrel__isTestTask=True) & Q(studenttaskrel__isCompleted=False)).filter(difficulty=1)
+        tasks = cls.objects.filter(difficulty=1)
 
         if len(tasks) < 1:
             cls.isGettingTasks = True
@@ -66,7 +65,7 @@ class TaskModel(models.Model):
                 cls.objects.create(str_repr=item.to_string(), difficulty=1)
             cls.isGettingTasks = False
             return cls.get_demo_task()
-        return tasks[randint(0, len(tasks)-1)]
+        return random.choice(tasks)
 
     def __str__(self):
         return self.str_repr
