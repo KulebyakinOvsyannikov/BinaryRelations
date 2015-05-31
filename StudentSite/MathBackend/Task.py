@@ -557,6 +557,7 @@ class Task:
                     nice_count += 1
 
         if not 0.2 <= nice_count/(len(self.results)**2) <= 0.8:
+            print('Failed matrix')
             return False
 
         nice_count = 0
@@ -580,4 +581,5 @@ class Task:
 
         if nice_count >= 3:
             return True
+        print("Failed properties")
         return False

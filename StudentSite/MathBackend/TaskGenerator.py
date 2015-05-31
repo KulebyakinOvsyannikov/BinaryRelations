@@ -51,8 +51,11 @@ class TaskGenerator:
                     block_modifiers=block_modifiers,
                     triplets_triplets_rel=tr_tr_rels,
                     parenthesis=parenthesis)
-        if task.is_interesting_task() and len(TaskModel.objects.filter(str_repr=task.to_string())) == 0:
-            return task
+        if task.is_interesting_task():
+            if len(TaskModel.objects.filter(str_repr=task.to_string())) == 0:
+                return task
+            else:
+                print("DUPLICATE")
         return TaskGenerator.generate_task_with_difficulty(difficulty)
 
     @classmethod
