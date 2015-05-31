@@ -145,6 +145,6 @@
 <script src="{% static 'StudentSite/scripts/sigma.min.js' %}"></script>
 <script src="{% static 'StudentSite/scripts/sigma.parsers.json.min.js' %}"></script>
 <link href="{% static 'StudentSite/stylesheets/task_form_stylesheet.css' %}" rel="stylesheet" type="text/css" />
-<script src="{% static 'StudentSite/scripts/graph_scripts.js' %}"></script>
-<script src="{% static 'StudentSite/scripts/test_scripts.js' %}"></script>
+<script src="{% static 'StudentSite/scripts/graph_scripts.min.js' %}"></script>
+<script src="{% static 'StudentSite/scripts/test_scripts.min.js' %}"></script>
 <script> initiateGraph({{ task.elements }}); fillMatrix({{ json_table_solve|safe }})</script>

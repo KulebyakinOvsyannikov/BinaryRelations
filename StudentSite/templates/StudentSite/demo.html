@@ -7,7 +7,7 @@
     {% load staticfiles %}
     <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/forms/task_form.html' %}
-    <script src="{% static 'StudentSite/scripts/demo_scripts.js' %}"></script>
+    <script src="{% static 'StudentSite/scripts/demo_scripts.min.js' %}"></script>
 
     <div id="warshalls_block" style="display: none; clear: both">
         {% include 'StudentSite/forms/warshalls-form.html' %}

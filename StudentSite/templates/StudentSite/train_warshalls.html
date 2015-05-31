@@ -6,8 +6,8 @@
     {% include 'StudentSite/forms/warshalls_train_form.html' %}
     {% load staticfiles %}
 
-    <script src="{% static 'StudentSite/scripts/warshalls_scripts.js' %}"></script>
-
+    <script src="{% static 'StudentSite/scripts/warshalls_scripts.min.js' %}"></script>
+    
     {% if result == True %}
         <h2>Правильное решение!</h2>
         {% if is_of_order == True %}

@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<script src="{% static 'StudentSite/scripts/registration_scripts.js' %}" ></script>
+<script src="{% static 'StudentSite/scripts/registration_scripts.min.js' %}" ></script>
 <form action="{% url 'student_site:registration_action' %}" method="post" onsubmit="return validateRegistration(this)">
     {% csrf_token %}
     {% if used_name == True %}

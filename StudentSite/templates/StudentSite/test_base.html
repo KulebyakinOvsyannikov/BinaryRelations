@@ -12,6 +12,6 @@
     {% elif result == False %}
         <h2>Решено с ошибками!</h2>
     {% endif %}
-    <script src="{% static 'StudentSite/scripts/test_scripts.js' %}" ></script>
+    <script src="{% static 'StudentSite/scripts/test_scripts.min.js' %}" ></script>
     <script>fillMatrix(); initiateGraph({{ task.elements }})</script>
 {% endblock %}
