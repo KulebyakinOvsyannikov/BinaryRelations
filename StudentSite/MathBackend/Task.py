@@ -400,41 +400,6 @@ class Task:
                     return i
         return -1
 
-    @classmethod
-    def generate_tasks_with_difficulty(cls, difficulty):
-        digit_takers = ['', '/10', '%10']
-        modifiers = ['%3', '%4', '%5', '%6', '+1', '+2', '+3', '+4', '-1', '-2', '-3', '-4',
-                     '','','','','',]
-        relations = [' < ', ' > ', ' <= ', ' >= ', ' != ', ' == ']
-        logic_relations = [' and ', ' or ', ' ^ ']
-
-        num_of_elements = 5
-        elements = []
-
-        while len(set(elements)) < 5:
-            elements = random.sample(range(10, 100), num_of_elements)
-
-        t1 = RelationTriplet(mod1=random.choice(digit_takers) + random.choice(modifiers),
-                             mod2=random.choice(digit_takers) + random.choice(modifiers),
-                             rel=BinaryRelation(random.choice(relations)))
-
-        t2 = RelationTriplet(mod1=random.choice(digit_takers) + random.choice(modifiers),
-                             mod2=random.choice(digit_takers) + random.choice(modifiers),
-                             rel=BinaryRelation(random.choice(relations)))
-        tr_rel = BinaryRelation(random.choice(logic_relations))
-
-        task = Task(elements=elements,triplets=[t1,t2],block_modifiers=[],triplets_triplets_rel=[tr_rel],parenthesis=[])
-        task.solve()
-        num_of_plus = 0
-        for elem1 in task.results:
-            for elem2 in elem1:
-                if elem2:
-                    num_of_plus += 1
-        if 0.2 <= num_of_plus/(num_of_elements**2) <= 0.8:
-            return [task]
-
-        return Task.generate_tasks_with_difficulty(difficulty)
-
     def reflexivity_highlights(self):
         highlights = {}
         if self.results is None:
@@ -581,3 +546,38 @@ class Task:
         task_str += self.to_human_readable()
         task_str += '. Постройте матрицу смежности отношения R на множестве M и определите свойства этого отношения.'
         return task_str
+
+    def is_interesting_task(self):
+        if self.results is None:
+            self.solve()
+        nice_count = 0
+        for row in self.results:
+            for item in row:
+                if item:
+                    nice_count += 1
+
+        if not 0.2 <= nice_count/(len(self.results)**2) <= 0.8:
+            return False
+
+        nice_count = 0
+
+        if self.is_reflexive():
+            nice_count += 1
+        if self.is_antireflexive():
+            nice_count += 1
+        if self.is_symmetric():
+            nice_count += 1
+        if self.is_asymmetric():
+            nice_count += 1
+        if self.is_antisymmetric():
+            nice_count += 1
+        if self.is_transitive():
+            nice_count += 1
+        if self.is_of_equivalence():
+            nice_count += 1
+        if self.is_of_order() != OrderType.not_of_order:
+            nice_count += 1
+
+        if nice_count >= 3:
+            return True
+        return False

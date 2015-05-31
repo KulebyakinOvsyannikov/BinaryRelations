@@ -3,13 +3,11 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 import random
 from random import randint
-from .MathBackend import Task
-from time import sleep
+
 # Create your models here.
 
 
 class TaskModel(models.Model):
-    isGettingTasks = False
     str_repr = models.CharField(max_length=255)
     difficulty = models.IntegerField(default=0)
     answer_matrix = models.CharField(max_length=255, null=True, default=None)
@@ -18,12 +16,11 @@ class TaskModel(models.Model):
 
     @classmethod
     def get_control_task(cls):
-        while cls.isGettingTasks:
-            sleep(1)
         tasks = cls.objects.exclude(studenttaskrel__isnull=False).filter(difficulty=3)
         if len(tasks) < 1:
             cls.isGettingTasks = True
-            task_objects = Task.generate_tasks_with_difficulty('hard')
+            from .MathBackend.TaskGenerator import TaskGenerator
+            task_objects = TaskGenerator.generate_tasks_with_difficulty('hard')
             for task in task_objects:
                 cls.objects.create(str_repr=task.to_string(), difficulty=3)
             cls.isGettingTasks = False
@@ -32,8 +29,6 @@ class TaskModel(models.Model):
 
     @classmethod
     def get_training_task_with_difficulty(cls, difficulty):
-        while cls.isGettingTasks:
-                sleep(1)
         difficulty_num = {'easy': 1, 'medium': 2, 'hard': 3}[difficulty]
         tasks = cls.objects.filter(
             Q(difficulty=difficulty_num) & ((
@@ -43,7 +38,8 @@ class TaskModel(models.Model):
         )
         if len(tasks) < 1:
             cls.isGettingTasks = True
-            object_items = Task.generate_tasks_with_difficulty(difficulty)
+            from .MathBackend.TaskGenerator import TaskGenerator
+            object_items = TaskGenerator.generate_tasks_with_difficulty(difficulty)
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=difficulty_num)
             cls.isGettingTasks = False
@@ -60,7 +56,8 @@ class TaskModel(models.Model):
 
         if len(tasks) < 1:
             cls.isGettingTasks = True
-            object_items = Task.generate_tasks_with_difficulty(1)
+            from .MathBackend.TaskGenerator import TaskGenerator
+            object_items = TaskGenerator.generate_tasks_with_difficulty('easy')
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=1)
             cls.isGettingTasks = False

@@ -34,3 +34,4 @@ def compose_partial_solve(requests_POST, num_of_elements):
     for field in property_fields:
         res_props += field + '=' + (requests_POST[field] if field in requests_POST else 'none') + '$'
     return '@'.join([res_table, res_props[:-1]])
+
