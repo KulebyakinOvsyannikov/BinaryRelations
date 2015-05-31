@@ -3,6 +3,7 @@ from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
 from.OrderType import OrderType
 import random
+import json
 
 
 class Task:
@@ -27,7 +28,6 @@ class Task:
         self.triplets_triplets_rel = triplets_triplets_rel
         self.parenthesis = parenthesis
         self.results = None
-        """type : list [list [bool]] | None"""
 
     def __str__(self):
         return self.to_string()
@@ -155,7 +155,7 @@ class Task:
         """
         if self.results is None:
             self.solve()
-        return '$'.join([" ".join(['+' if item else '-' for item in row]) for row in self.results])
+        return '$'.join(["".join(['1' if item else '0' for item in row]) for row in self.results])
 
     def solve_properties(self):
         """
