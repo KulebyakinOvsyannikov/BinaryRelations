@@ -198,7 +198,6 @@ def training_with_difficulty(request, difficulty):
     tr_task.save()
 
     context['json_table_solve'] = json.dumps(tr_task.partial_solve)
-    print(context['json_table_solve'])
 
     response = render(request, 'StudentSite/train_base.html', context)
 
