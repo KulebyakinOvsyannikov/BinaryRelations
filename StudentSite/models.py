@@ -83,10 +83,14 @@ class StudentTaskRel(models.Model):
     isCompleted = models.BooleanField(default=False)
     numberOfAttempts = models.IntegerField(default=0)
     dateCompleted = models.DateTimeField(null=True)
-    table_and_props_completed = models.BooleanField(default=False)
+
+    matrix_completed = models.BooleanField(default=False)
+    properties_completed = models.BooleanField(default=False)
     is_warshall_completed = models.BooleanField(default=False)
     is_topological_sort_completed = models.BooleanField(default=False)
-    partial_solve = models.TextField(null=True, default=None)
+
+    partial_solve_matrix = models.TextField(null=True, default=None)
+    partial_solve_properties = models.TextField(null=True, default=None)
     partial_solve_warshalls = models.TextField(null=True, default=None)
     partial_solve_topological_sort = models.TextField(null=True, default=None)
 

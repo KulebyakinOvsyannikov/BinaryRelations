@@ -71,7 +71,7 @@ function demoPreviousStep() {
 function demoPreviousStepMatrix() {
     var row = Math.floor(demoStep/demoMatrixSolve.length);
     var column = demoStep % demoMatrixSolve.length;
-    matrixSetCell(row, column, '0');
+    matrixSetCell(row, column, '0', false);
 }
 
 function demoPreviousStepProperties() {
@@ -81,7 +81,7 @@ function demoPreviousStepProperties() {
 function nextStepMatrix() {
     var row = Math.floor(demoStep/demoMatrixSolve.length);
     var column = demoStep % demoMatrixSolve.length;
-    matrixSetCell(row, column, demoMatrixSolve[row][column]);
+    matrixSetCell(row, column, demoMatrixSolve[row][column], true);
 }
 
 function nextStepProperties() {

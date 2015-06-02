@@ -22,6 +22,9 @@ urlpatterns = [
 
     url(r'^training/topological_sort/check', training_views.train_topological_check, name='train_topological_sort_check'),
     url(r'^training/topological_sort', training_views.train_topological, name='train_topological_sort'),
+    url(r'^training/properties/check', training_views.check_properties, name='training_check_properties'),
+    url(r'^training/properties', training_views.properties, name='training_properties'),
+    url(r'^training/matrix/check', training_views.check_matrix, name='training_check_matrix'),
 
     url(r'^training/(?P<difficulty>easy|medium|hard)',
         training_views.training_with_difficulty,

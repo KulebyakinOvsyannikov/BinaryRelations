@@ -68,8 +68,14 @@ function graphAddRelation(relationName) {
 }
 
 function graphRemoveRelation(relationName) {
-    graphHandle.graph.dropEdge(relationName);
-    graphHandle.refresh();
+    try {
+        graphHandle.graph.dropEdge(relationName);
+        graphHandle.refresh();
+    } catch (except) {
+        console.log(except);
+    }
+
+
 }
 
 function graphRelationChanged(element) {

@@ -16,29 +16,73 @@ def training_with_difficulty(request, difficulty):
     user = request.user
     student = user.studentmodel
     diff = {'easy': 1, 'medium': 2, 'hard': 3}
-    tr_task = student.studenttaskrel_set.filter(isTestTask=False, isCompleted=False, task__difficulty=diff[difficulty])
+    st_task_rel = student.studenttaskrel_set.filter(isTestTask=False, isCompleted=False, task__difficulty=diff[difficulty])
 
-    if len(tr_task) == 0:
+    if len(st_task_rel) == 0:
         task = TaskModel.get_training_task_with_difficulty(difficulty)
         task_obj = Task.from_string(task.str_repr)
-        tr_task = StudentTaskRel(task=task, student=student, isTestTask=False, dateStarted=timezone.now())
-        tr_task.save()
+        st_task_rel = StudentTaskRel(task=task, student=student, isTestTask=False, dateStarted=timezone.now())
+        st_task_rel.save()
     else:
-        tr_task = tr_task[0]
-        task_obj = Task.from_string(tr_task.task.str_repr)
+        st_task_rel = st_task_rel[0]
+        task_obj = Task.from_string(st_task_rel.task.str_repr)
 
-    context = {'task': task_obj, 'task_id': tr_task.id}
-    if tr_task.table_and_props_completed:
+    context = {'task': task_obj, 'relation_id': st_task_rel.id, 'is_control': False}
+
+    if st_task_rel.matrix_completed:
         context['result'] = True
+
+    context['partial_solve'] = json.dumps(st_task_rel.partial_solve_matrix)
+
+    return render(request, 'StudentSite/site_pages/matrix.html', context)
+
+def check_matrix(request):
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
+    task = st_task_rel.task
+    task_obj = Task.from_string(task.str_repr)
+
+    if task.answer_matrix is None:
+        task.answer_matrix = task_obj.solve_string()
+        task.save()
+
+    st_task_rel.partial_solve_matrix = request.POST['answers_string']
+    st_task_rel.save()
+
+    print(st_task_rel.partial_solve_matrix)
+    print(task.answer_matrix)
+
+    if st_task_rel.partial_solve_matrix == task.answer_matrix:
+        result = True
+        st_task_rel.matrix_completed = True
+        st_task_rel.save()
     else:
-        tr_task.numberOfAttempts += 1
-    tr_task.save()
+        result = False
 
-    context['json_table_solve'] = json.dumps(tr_task.partial_solve)
+    context = {'task': task_obj,
+               'result': result,
+               'relation_id': st_task_rel.id,
+               'is_control': False,
+               'partial_solve': json.dumps(st_task_rel.partial_solve_matrix),
+               'correct_solve': json.dumps(task.answer_matrix)}
 
-    response = render(request, 'StudentSite/train_base.html', context)
+    return render(request, 'StudentSite/site_pages/matrix.html', context)
 
-    return response
+def properties(request):
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
+
+    context = {"relation_id": st_task_rel.id,
+               "result": True if st_task_rel.properties_completed else None,
+               "task": Task.from_string(st_task_rel.task.str_repr),
+               "is_control": False,
+               "partial_solve": json.dumps(st_task_rel.partial_solve_properties),
+               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)}
+
+    return render(request, 'StudentSite/site_pages/properties.html', context)
+
+def check_properties(request):
+    return None
+
+
 
 def check_training(request):
     """

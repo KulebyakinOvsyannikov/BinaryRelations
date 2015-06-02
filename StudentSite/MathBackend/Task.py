@@ -155,7 +155,7 @@ class Task:
         """
         if self.results is None:
             self.solve()
-        return '$'.join(["".join(['1' if item else '0' for item in row]) for row in self.results])
+        return ' '.join(["".join(['1' if item else '0' for item in row]) for row in self.results])
 
     def solve_properties(self):
         """
@@ -182,7 +182,7 @@ class Task:
         res = []
         for item in checkboxes_array:
             res.append(item[0] + '=' + item[1])
-        return '$'.join(res)
+        return ' '.join(res)
 
     def is_reflexive(self):
         """

@@ -1,0 +1,49 @@
+{% extends 'StudentSite/index.html' %}
+{% block title %}<title>Тренировка</title>{% endblock %}
+{% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
+{% block body %}
+    {% include 'StudentSite/components/matrix.html' %}
+    {% include 'StudentSite/components/graph.html' %}
+    <script>graphInitiate({{ task.elements }})</script>
+    {% if partial_solve != None %}
+        <script>matrixFromAnswersString({{ partial_solve|safe }})</script>
+    {% endif %}
+
+    <hr style="clear: both" />
+
+    {% if result == True %}
+        <h3>Верное решение</h3>
+        <script>matrixDeactivate()</script>
+        <form {% if is_control == True %}
+                action="{% url 'student_site:control_properties' %}"
+                {% elif is_control == False %}
+                action="{% url 'student_site:training_properties' %}"
+                {% endif %}
+                method="post">
+            {% csrf_token %}
+            <input type="hidden" name="relation_id" value="{{ relation_id }}" />
+            <input type="submit" value="Перейти к заполнению свойств" />
+        </form>
+    {% else %}
+        <form {% if is_control == True %}
+                action="{% url 'student_site:control_check_matrix' %}"
+                {% elif is_control == False %}
+                action="{% url 'student_site:training_check_matrix' %}"
+                {% endif %}
+                onsubmit="return matrixPageGetReadyToSubmit(this)"
+                method="post">
+            {% csrf_token %}
+            <input type="hidden" name="answers_string" value="" />
+            <input type="hidden" name="relation_id" value="{{ relation_id }}" />
+            <input type="submit" value="Проверить" />
+        </form>
+        {% load staticfiles %}
+        <script src="{% static 'StudentSite/scripts/matrix_page_scripts.js' %}"></script>
+        {% if result == False %}
+            <h3>Решено с ошибками</h3>
+            {% if is_control == False %}
+                <script>matrixHighlightErrors({{ correct_solve|safe }})</script>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

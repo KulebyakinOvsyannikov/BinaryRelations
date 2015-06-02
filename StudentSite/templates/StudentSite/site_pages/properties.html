@@ -1,0 +1,51 @@
+{% extends 'StudentSite/index.html' %}
+{% block title %}<title>Свойства отношения</title>{% endblock %}
+{% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
+{% block body %}
+    {% include 'StudentSite/components/matrix.html' %}
+    {% include 'StudentSite/components/graph.html' %}
+    <hr style="clear: both" />
+    {% include 'StudentSite/components/properties.html' %}
+    <hr style="clear: both" />
+    <script>matrixDeactivate()</script>
+    <script>graphInitiate({{ task.elements }})</script>
+    <script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
+
+    {% if partial_solve != None %}
+        <script>propertiesFromAnswersString({{ partial_solve|safe }})</script>
+    {% endif %}
+
+    {% if result == True %}
+        <form {% if is_control == True %}
+                action="{% url 'student_site:train_warshalls' %}"
+                {% elif is_control == False %}
+                action="{% url 'student_site:control_warshalls' %}"
+                {% endif %}
+                method="post">
+            {% csrf_token %}
+            <input type="hidden" name="relation_id" value="{{ relation_id }}" />
+            <input type="submit" value="Перейти к алгоритму Уоршалла" />
+        </form>
+    {% else %}
+        <form {% if is_control == True %}
+                action="{% url 'student_site:control_check_properties' %}"
+                {% elif is_control == False %}
+                action="{% url 'student_site:training_check_properties' %}"
+                {% endif %}
+                onsubmit="return propertiesPageIsReadyToSubmit(this)"
+                method="post">
+            {% csrf_token %}
+            <input type="hidden" name="answers_string" value="" />
+            <input type="hidden" name="relation_id" value="{{ relation_id }}" />
+            <input type="submit" value="Проверить" />
+        </form>
+        {% if result == False %}
+            <h3>Решено с ошибками</h3>
+            {% if is_control == False %}
+                <script>propertiesHighlightErrors({{ correct_solve|safe }})</script>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    {% load staticfiles %}
+    <script src="{% static 'StudentSite/scripts/properties_page_scripts.js' %}"></script>
+{% endblock %}
