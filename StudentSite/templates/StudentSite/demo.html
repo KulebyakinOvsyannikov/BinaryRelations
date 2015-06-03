@@ -2,7 +2,7 @@
 {% block title %}<title>Демо-режим</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
-    <h4>{{ task.to_human_readable }}</h4>
+    <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/components/matrix.html' %}
     {% include 'StudentSite/components/graph.html' %}
     {% include 'StudentSite/components/properties.html' %}
@@ -12,7 +12,7 @@
         <input type="button" value="Дальше" onclick="demoNextStep()">
     </div>
     {% load staticfiles %}
-    <script src="{% static 'StudentSite/scripts/demo_scripts.min.js' %}"></script>
+    <script src="{% static 'StudentSite/scripts/demo_scripts.js' %}"></script>
     <script>demoInitiateScripts({{ json_demo_data|safe }})</script>
     <script>graphInitiate({{ json_elements|safe }})</script>
     <script>propertiesChangeVisibility(false)</script>

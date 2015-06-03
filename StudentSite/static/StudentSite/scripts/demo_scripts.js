@@ -13,8 +13,8 @@ var demoPropertiesSteps = 0;
 
 
 function demoInitiateScripts(jsonData) {
-    demoMatrixSolve = jsonData['matrixAnswers'].split('$');
-    demoPropertiesSolve = jsonData['propertiesAnswers'].split('$');
+    demoMatrixSolve = jsonData['matrixAnswers'].split(' ');
+    demoPropertiesSolve = jsonData['propertiesAnswers'].split(' ');
 
     demoMatrixSteps = demoMatrixSolve.length * demoMatrixSolve.length;
     demoPropertiesSteps = demoMatrixSteps + (demoPropertiesSolve[7].split('=')[1] == 'of-order' ? 10 : 8);
@@ -35,7 +35,7 @@ function demoNextStep() {
         if (demoStep == demoMatrixSteps) {
             propertiesChangeVisibility(true);
         }
-        nextStepProperties();
+        demoNextStepProperties();
     } else {
         demoStep--;
     }
@@ -84,6 +84,12 @@ function nextStepMatrix() {
     matrixSetCell(row, column, demoMatrixSolve[row][column], true);
 }
 
-function nextStepProperties() {
-    propertiesSetValue(demoPropertiesSolve[demoStep-demoMatrixSteps]);
+function demoNextStepProperties() {
+    propertiesSetValue(demoPropertiesSolve[demoStep - demoMatrixSteps]);
+    if ((demoStep - demoMatrixSteps) < demoHighlights.length) {
+        matrixHighlightProperties(demoHighlights[demoStep - demoMatrixSteps]);
+    }
+    else {
+        matrixHighlightProperties(undefined);
+    }
 }
