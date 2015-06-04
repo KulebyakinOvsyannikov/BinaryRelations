@@ -111,3 +111,17 @@ function matrixDemoClick(event) {
         }
     }
 }
+
+function matrixHighlightProperties(highlight){
+    if (typeof(highlight)=="undefined"){
+
+    }
+    else {
+        var keys = Object.keys(highlight);
+        for (var key in keys){
+            var i = parseInt(key.substr(0,1));
+            var j = parseInt(key.substr(2,1));
+            matrixGetInputFor(i,j).style.backgroundColor=(highlight[key] ? "green" : "red");
+        }
+    }
+}

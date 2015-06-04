@@ -41,7 +41,7 @@ function demoNextStep() {
         if (demoStep == demoMatrixSteps) {
             propertiesChangeVisibility(true);
         }
-        nextStepProperties();
+        demoNextStepProperties();
     } else if (demoStep < demoWarshallsSteps ) {
         if (demoStep == demoPropertiesSteps) {
             matrixSetPrimaryMatrix("warshalls_primary_matrix");
@@ -101,8 +101,14 @@ function nextStepMatrix() {
     matrixSetCell(row, column, demoMatrixSolve[row][column], true);
 }
 
-function nextStepProperties() {
-    propertiesSetValue(demoPropertiesSolve[demoStep-demoMatrixSteps]);
+function demoNextStepProperties() {
+    propertiesSetValue(demoPropertiesSolve[demoStep - demoMatrixSteps]);
+    if ((demoStep - demoMatrixSteps) < demoHighlights.length) {
+        matrixHighlightProperties(demoHighlights[demoStep - demoMatrixSteps]);
+    }
+    else {
+        matrixHighlightProperties(undefined);
+    }
 }
 
 function nextStepWarshalls() {
