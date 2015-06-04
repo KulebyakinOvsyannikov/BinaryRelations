@@ -6,15 +6,20 @@
     {% include 'StudentSite/components/matrix.html' %}
     {% include 'StudentSite/components/graph.html' %}
     {% include 'StudentSite/components/properties.html' %}
+    <div id="warshalls_block" style="display: none; clear: both">
+        {% include 'StudentSite/components/warshalls.html' %}
+    </div>
     <div id="demo_tips_control_block" style="clear: both">
         <div id="tips_container"></div>
         <input type="button" value="Назад" onclick="demoPreviousStep()">
         <input type="button" value="Дальше" onclick="demoNextStep()">
     </div>
     {% load staticfiles %}
-    <script src="{% static 'StudentSite/scripts/demo_scripts.min.js' %}"></script>
+    <script src="{% static 'StudentSite/scripts/demo_scripts.js' %}"></script>
     <script>demoInitiateScripts({{ json_demo_data|safe }})</script>
     <script>graphInitiate({{ json_elements|safe }})</script>
     <script>propertiesChangeVisibility(false)</script>
     <script>matrixPrepareForDemo()</script>
+    <script>warshallsInitiateScripts({{ task.elements }}, undefined)</script>
+    <script>warshallsPrepareForDemo()</script>
 {% endblock %}

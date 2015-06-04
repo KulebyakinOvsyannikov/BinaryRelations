@@ -17,15 +17,12 @@ class TaskModel(models.Model):
     @classmethod
     def get_control_task(cls):
         tasks = cls.objects.exclude(studenttaskrel__isnull=False).filter(difficulty=3)
-        if len(tasks) < 1:
-            cls.isGettingTasks = True
+        if len(tasks) < 20:
             from .MathBackend.TaskGenerator import TaskGenerator
             task_objects = TaskGenerator.generate_tasks_with_difficulty('hard')
             for task in task_objects:
                 cls.objects.create(str_repr=task.to_string(), difficulty=3)
-            cls.isGettingTasks = False
-            return cls.get_control_task()
-        return tasks[randint(0, len(tasks) - 1)]
+        return random.choice(tasks)
 
     @classmethod
     def get_training_task_with_difficulty(cls, difficulty):
@@ -36,15 +33,12 @@ class TaskModel(models.Model):
                 Q(studenttaskrel__isCompleted=True) |
                 Q(studenttaskrel__isTestTask=False)) | Q(studenttaskrel__isnull=True))
         )
-        if len(tasks) < 1:
-            cls.isGettingTasks = True
+        if len(tasks) < 20:
             from .MathBackend.TaskGenerator import TaskGenerator
             object_items = TaskGenerator.generate_tasks_with_difficulty(difficulty)
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=difficulty_num)
-            cls.isGettingTasks = False
-            return cls.get_training_task_with_difficulty(difficulty)
-        return tasks[randint(0, len(tasks) - 1)]
+        return random.choice(tasks)
 
     @classmethod
     def get_demo_task(cls):
@@ -54,14 +48,12 @@ class TaskModel(models.Model):
         """
         tasks = cls.objects.filter(difficulty=1)
 
-        if len(tasks) < 1:
-            cls.isGettingTasks = True
+        if len(tasks) < 20:
             from .MathBackend.TaskGenerator import TaskGenerator
             object_items = TaskGenerator.generate_tasks_with_difficulty('easy')
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=1)
-            cls.isGettingTasks = False
-            return cls.get_demo_task()
+
         return random.choice(tasks)
 
     def __str__(self):

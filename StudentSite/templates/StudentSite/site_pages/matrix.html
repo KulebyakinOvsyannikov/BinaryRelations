@@ -2,6 +2,7 @@
 {% block title %}<title>Тренировка</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
+    <h4>{{ task.task_text }}</h4>
     {% include 'StudentSite/components/matrix.html' %}
     {% include 'StudentSite/components/graph.html' %}
     <script>graphInitiate({{ task.elements }})</script>
@@ -17,7 +18,7 @@
         <form {% if is_control == True %}
                 action="{% url 'student_site:control_properties' %}"
                 {% elif is_control == False %}
-                action="{% url 'student_site:training_properties' %}"
+                action="{% url 'student_site:training_warshalls' %}"
                 {% endif %}
                 method="post">
             {% csrf_token %}

@@ -4,6 +4,7 @@
 
 var matrixElement;
 var matrixElementsCount;
+var matrixGraphHandle = undefined;
 
 function matrixInitiateScripts() {
     matrixElement = document.getElementById("matrix_table");
@@ -12,8 +13,8 @@ function matrixInitiateScripts() {
 
 function matrixElementClicked(element) {
     element.value = (element.value == '1' ? '0' : '1');
-    if (typeof (graphRelationChanged) == "function" ) {
-        graphRelationChanged(element);
+    if (typeof (matrixGraphHandle) == "function" ) {
+        matrixGraphHandle(element);
     }
 }
 
@@ -34,9 +35,12 @@ function matrixDeactivate() {
     for (var i = 0; i < matrixElementsCount; ++i) {
         for (var j = 0; j < matrixElementsCount; ++j) {
             matrixGetInputFor(i,j).disabled = true;
-            console.log(matrixGetInputFor(i,j));
         }
     }
+}
+
+function matrixSetPrimaryMatrix(containerName) {
+    matrixElement = document.getElementById(containerName).children[0];
 }
 
 function matrixGetInputFor(i,j) {
@@ -44,7 +48,6 @@ function matrixGetInputFor(i,j) {
 }
 
 function matrixHighlightErrors(correctSolve) {
-    console.log(correctSolve);
     correctSolve = correctSolve.split(' ');
     for (var i = 0; i < correctSolve.length; ++i) {
         for (var j = 0; j < correctSolve[i].length; ++j) {
@@ -58,26 +61,24 @@ function matrixHighlightErrors(correctSolve) {
 
 function matrixFromAnswersString(answers) {
     answers = answers.split(' ');
-    console.log(answers);
     for (var i = 0; i < answers.length; ++i) {
         for (var j = 0; j < answers[i].length; ++j) {
             var elem = matrixGetInputFor(i,j);
             elem.value = (answers[i][j] == '1' ? '1' : '0');
             if (elem.value == '1') {
-                graphRelationChanged(elem);
+                if (typeof(matrixGraphHandle) == "function"){
+                    matrixGraphHandle(elem);
+                }
             }
         }
     }
 }
 
 function matrixPrepareForDemo() {
-    console.log('Preparing');
     var children = matrixElement.children[0].children;
     for (var i = 1; i < children.length; ++i) {
-        console.log(children[i].children);
         for (var j =1; j < children[i].childElementCount; ++j) {
             children[i].children[j].children[0].onclick = matrixDemoClick;
-            console.log(children[i].children[j].children[0]);
         }
     }
 }

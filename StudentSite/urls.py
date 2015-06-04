@@ -3,8 +3,6 @@ from .views import views, control_views, training_views, demo_views, registratio
 
 urlpatterns = [
     # Examples:
-    # url(r'^$', 'BinaryRelations.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
     url(r'^control/check/', control_views.control_check, name='check_test'),
     url(r'^control/warshalls/check', control_views.control_warshalls_check, name='control_warshalls_check'),
     url(r'^control/warshalls/', control_views.control_warshalls, name='control_warshalls'),
@@ -17,11 +15,11 @@ urlpatterns = [
 
     url(r'^training/check/', training_views.check_training, name='check_training'),
 
-    url(r'^training/warshalls/check', training_views.train_warshalls_check, name='train_warshalls_check'),
-    url(r'^training/warshalls/', training_views.train_warshalls, name='train_warshalls'),
+    url(r'^training/warshalls/check', training_views.check_warshalls, name='training_check_warshalls'),
+    url(r'^training/warshalls/', training_views.warshalls, name='training_warshalls'),
 
     url(r'^training/topological_sort/check', training_views.train_topological_check, name='train_topological_sort_check'),
-    url(r'^training/topological_sort', training_views.train_topological, name='train_topological_sort'),
+    url(r'^training/topological_sort', training_views.topological, name='training_topological'),
     url(r'^training/properties/check', training_views.check_properties, name='training_check_properties'),
     url(r'^training/properties', training_views.properties, name='training_properties'),
     url(r'^training/matrix/check', training_views.check_matrix, name='training_check_matrix'),

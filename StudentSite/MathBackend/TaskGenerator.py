@@ -21,7 +21,7 @@ class TaskGenerator:
         elements = []
 
         while len(set(elements)) < 5:
-            elements = random.sample(range(10, 100), num_of_elements)
+            elements = sorted(random.sample(range(10, 100), num_of_elements))
 
         triplets = []
         if difficulty == 'easy':
@@ -81,7 +81,7 @@ class TaskGenerator:
 
     @classmethod
     def generate_tasks_with_difficulty(cls, difficulty):
-        return [cls.generate_task_with_difficulty(difficulty)]
+        return [cls.generate_task_with_difficulty(difficulty) for _ in range(0, 40)]
 
     @classmethod
     def stress_test_tasks_generator(cls):
@@ -89,9 +89,6 @@ class TaskGenerator:
         total_time_easy = 0
         total_time_medium = 0
         total_time_hard = 0
-        last_easy = 0
-        last_medium = 0
-        last_hard = 0
         while True:
             st_time = time.time()
             TaskModel.objects.create(str_repr=cls.generate_task_with_difficulty('easy').to_string(), difficulty=1)
@@ -103,7 +100,7 @@ class TaskGenerator:
             last_medium = time.time() - st_time
             total_time_medium += last_medium
 
-            easy_st_time = time.time()
+            st_time = time.time()
             TaskModel.objects.create(str_repr=cls.generate_task_with_difficulty('hard').to_string(), difficulty=3)
             last_hard = time.time() - st_time
             total_time_hard += last_hard

@@ -1,0 +1,46 @@
+<div id="warshalls_primary_matrix">
+{% include 'StudentSite/components/matrix.html' %}
+</div>
+{% include 'StudentSite/components/graph.html' %}
+<script>graphInitiate({{ task.elements }})</script>
+{# <script>matrixSetPrimaryMatrix("warshalls_primary_matrix")</script> #}
+<script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
+
+<table id="warhsalls_operated_matrix">
+    <tr>
+    <td>ab/cd</td>
+    {% for elem in task.elements %}
+        <td onclick="warshallsRowSelected({{ forloop.counter0 }})">{{ elem }}</td>
+    {% endfor %}
+    </tr>
+    {% for elem in task.elements %}
+    <tr>
+        <td>{{ elem }}</td>
+        {% for elem2 in task.elements %}
+        <td>
+            <input type="text"
+                   class="warshalls_element"
+                   id="w{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                   title="warshall_input"
+                   value="0"
+                   onclick="warshallsElementClicked(this)"
+                   disabled
+                   readonly/>
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+<br style="clear: both">
+
+<input type="button" id="warhsalls_prev_button" value="Предыдущий элемент" onclick="warshallsPreviousElement(this)" />
+<input type="button" id="warhsalls_next_button" value="Следующий элемент" onclick="warshallsNextElement(this)" />
+
+
+{% load staticfiles %}
+<script src="{% static 'StudentSite/scripts/warshalls_page_scripts.js' %}"></script>
+<link href="{% static 'StudentSite/stylesheets/components/warshalls_stylesheet.css' %}" type="text/css" rel="stylesheet">
+<script src="{% static 'StudentSite/scripts/components/warshalls_scripts.js' %}"></script>

@@ -1,39 +1,41 @@
 {% extends 'StudentSite/index.html' %}
-{% block title %}<title>Свойства отношения</title>{% endblock %}
+{% block title %}<title>Алгоритм Уоршалла</title>{% endblock %}
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
-    <h4>{{ task.properties_text }}</h4>
+    <h4>{{ task.warshalls_text }}</h4>
     {% include 'StudentSite/components/matrix.html' %}
-    {% include 'StudentSite/components/graph.html' %}
-    <hr style="clear: both" />
-    {% include 'StudentSite/components/properties.html' %}
-    <hr style="clear: both" />
-    <script>matrixDeactivate()</script>
-    <script>graphInitiate({{ task.elements }})</script>
     <script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
+{#    {% include 'StudentSite/components/graph.html' %}#}
+    <script>matrixDeactivate()</script>
+    <hr style="clear: both" />
+    {% include 'StudentSite/components/warshalls.html' %}
+    <hr style="clear: both" />
+    <script>warshallsInitiateScripts({{ task.elements }}, {{ matrix_solve|safe }})</script>
+    <script>matrixSetPrimaryMatrix("warshalls_primary_matrix")</script>
 
     {% if partial_solve != None %}
-        <script>propertiesFromAnswersString({{ partial_solve|safe }})</script>
+        <script>warshallsFromAnswersString({{ partial_solve|safe }})</script>
     {% endif %}
 
     {% if result == True %}
+        <h4>Верное решение</h4>
         <form {% if is_control == True %}
-                action="{% url 'student_site:control_warshalls' %}"
+                action="{% url 'student_site:control_topological' %}"
                 {% elif is_control == False %}
-                action="{% url 'student_site:training_warshalls' %}"
+                action="{% url 'student_site:training_topological' %}"
                 {% endif %}
                 method="post">
             {% csrf_token %}
             <input type="hidden" name="relation_id" value="{{ relation_id }}" />
-            <input type="submit" value="Перейти к алгоритму Уоршалла" />
+            <input type="submit" value="Перейти к топологической сортировке" />
         </form>
     {% else %}
         <form {% if is_control == True %}
-                action="{% url 'student_site:control_check_properties' %}"
+                action="{% url 'student_site:control_check_warshalls' %}"
                 {% elif is_control == False %}
-                action="{% url 'student_site:training_check_properties' %}"
+                action="{% url 'student_site:training_check_warshalls' %}"
                 {% endif %}
-                onsubmit="return propertiesPageIsReadyToSubmit(this)"
+                onsubmit="return warshallsGetReadyToSubmit(this)"
                 method="post">
             {% csrf_token %}
             <input type="hidden" name="answers_string" value="" />
@@ -43,7 +45,7 @@
         {% if result == False %}
             <h3>Решено с ошибками</h3>
             {% if is_control == False %}
-                <script>propertiesHighlightErrors({{ correct_solve|safe }})</script>
+                <script>warshallsHighlightErrors({{ correct_warshalls|safe }})</script>
             {% endif %}
         {% endif %}
     {% endif %}

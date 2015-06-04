@@ -90,7 +90,7 @@ class Task:
                     readable_string += '!' if self.block_modifiers[block_mod_index].value == ' not ' \
                         else self.block_modifiers[block_mod_index].value
                     readable_string += '('
-            readable_string += self.triplets[trip_index].convert_triplet_to_human_readable()
+            readable_string += '(' + self.triplets[trip_index].convert_triplet_to_human_readable() + ')'
             if parentheses_index < len(self.parenthesis):
                 if trip_index == self.parenthesis[parentheses_index][1]:
                     readable_string += ')'
@@ -139,14 +139,8 @@ class Task:
         :rtype: list
         :return: two-dimensional array of booleans with answers for Adjacency matrix of current Binary relation
         """
-        results = []
-        for e1 in self.elements:
-            results_row = []
-            for e2 in self.elements:
-                results_row.append(self.solve_for_elements(e1, e2))
-            results.append(results_row)
-        self.results = results
-        return results
+        self.results = self.check_using_human_readable()
+        return self.results
 
     def solve_string(self):
         """
@@ -288,7 +282,7 @@ class Task:
             res.append(' '.join(res_row))
         return '$'.join(res)
 
-    def generate_warshalls_strings_tables(self):
+    def generate_warshalls_strings(self):
         res = []
         if self.results is None:
             self.solve()
@@ -297,15 +291,12 @@ class Task:
             step_res = ""
             for u in range(0, len(self.elements)):
                 for v in range(0, len(self.elements)):
-                    should_modify = not temp_res[u][v] and (temp_res[u][v] or (temp_res[u][w] and temp_res[w][v]))
+                    temp_res[u][v] = temp_res[u][v] or (temp_res[u][w] and temp_res[w][v])
 
-                    step_res += '+' if should_modify else '-'
-                    if should_modify:
-                        temp_res[u][v] = True
-                    if should_modify:
-                        print('%s %s through %s' % (u, v, w))
-            res.append(step_res)
-        return res
+                    step_res += '1' if temp_res[u][v] else '0'
+                step_res += ' '
+            res.append(step_res[0:-1])
+        return '@'.join(res)
 
     def is_of_equivalence(self):
         """
@@ -474,14 +465,19 @@ class Task:
 
     def generate_demo_strings(self):
         res = []
+        human_readable = self.to_human_readable()
         for elem in self.elements:
             for elem2 in self.elements:
                 if self.solve_for_elements(elem,elem2):
-                    append_str = " Видим, что они состоят в отношении R. Отмечаем соответствующий элемент матрицы."
+                    #append_str = self.string_for_elements(human_readable, elem, elem2)
+                    append_str = "\nВидим, что они состоят в отношении R. Отмечаем соответствующий элемент матрицы."
                 else:
-                    append_str = " Видим, что они не состоят в отношении R. Оставляем соответствующий элемент " \
+                    #append_str = self.string_for_elements(human_readable, elem, elem2)
+                    append_str = "\nВидим, что они не состоят в отношении R. Оставляем соответствующий элемент " \
                                  "матрицы нетронутым."
-                res.append("Рассмотрим элементы %s и %s." % (elem, elem2)+append_str)
+                res.append("Подставляем элементы {} и {} в отношение.\n {} \n {}".format(
+                    elem, elem2, self.string_for_elements(human_readable, elem, elem2), append_str
+                ))
         checkboxes_array = [
             ("Рефлексивность", "из заполненной матрицы смежности видим, что отношение"
                                " рефлексивно." if self.is_reflexive() else "из заполненной матрицы смежности видим, "
@@ -544,8 +540,22 @@ class Task:
         task_str += str(self.elements)
         task_str += ' и отношение R: '
         task_str += self.to_human_readable()
-        task_str += '. Постройте матрицу смежности отношения R на множестве M и определите свойства этого отношения.'
+        task_str += '. Постройте матрицу смежности отношения R на множестве M.'
         return task_str
+
+    def properties_text(self):
+        return 'Отметьте свойсва, присущеие отношению {} на множетстве {}'.format(self.to_human_readable(),
+                                                                                  self.elements)
+
+    def warshalls_text(self):
+        return 'Произведите транзитивное замыкание отношения {} на множестве {}'.format(self.to_human_readable(),
+                                                                                        self.elements)
+
+    def topological_text(self):
+        return 'Проследуйте по шагам топологической сортировки для отношения {} на множетсве {}'.format(
+            self.to_human_readable(),
+            self.elements
+        )
 
     def is_interesting_task(self):
         if self.results is None:
@@ -556,8 +566,7 @@ class Task:
                 if item:
                     nice_count += 1
 
-        if not 0.2 <= nice_count/(len(self.results)**2) <= 0.8:
-            print('Failed matrix')
+        if not 0.2 <= nice_count / (len(self.results) ** 2) <= 0.8:
             return False
 
         nice_count = 0
@@ -581,5 +590,28 @@ class Task:
 
         if nice_count >= 3:
             return True
-        print("Failed properties")
         return False
+
+    def check_using_human_readable(self):
+        strin = self.to_human_readable()
+        result = []
+        for elem1 in self.elements:
+            row_result = []
+            for elem2 in self.elements:
+                row_result.append(eval(self.string_for_elements(strin, elem1, elem2)))
+            result.append(row_result)
+        return result
+
+    @staticmethod
+    def string_for_elements(used_str, e1, e2):
+        used_str = used_str.replace('ab', e1.__str__())
+        used_str = used_str.replace('cd', e2.__str__())
+        used_str = used_str.replace('mod', '%')
+        used_str = used_str.replace('b', (e1 % 10).__str__())
+        used_str = used_str.replace('c', (e2 // 10).__str__())
+        for i in range(1, len(used_str) - 1):
+            if used_str[i] == 'a' and used_str[i+1] != 'n':
+                used_str = used_str[0:i] + (e1 // 10).__str__() + used_str[i+1:]
+            if used_str[i] == 'd' and used_str[i-1] != 'n':
+                used_str = used_str[0:i] + (e2 % 10).__str__() + used_str[i+1:]
+        return used_str

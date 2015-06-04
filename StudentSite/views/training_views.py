@@ -75,11 +75,55 @@ def properties(request):
                "task": Task.from_string(st_task_rel.task.str_repr),
                "is_control": False,
                "partial_solve": json.dumps(st_task_rel.partial_solve_properties),
-               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)}
+               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
+               }
 
     return render(request, 'StudentSite/site_pages/properties.html', context)
 
 def check_properties(request):
+    return None
+
+def warshalls(request):
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
+
+    context = {"relation_id": st_task_rel.id,
+               "result": True if st_task_rel.is_warshall_completed else None,
+               "task": Task.from_string(st_task_rel.task.str_repr),
+               "is_control": False,
+               "partial_solve": json.dumps(st_task_rel.partial_solve_warshalls),
+               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
+               }
+
+    return render(request, 'StudentSite/site_pages/warshalls.html', context)
+
+def check_warshalls(request):
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
+
+    st_task_rel.partial_solve_warshalls = request.POST['answers_string']
+    task_obj = Task.from_string(st_task_rel.task.str_repr)
+    st_task_rel.save()
+
+    if st_task_rel.task.answer_warshalls is None:
+        st_task_rel.task.answer_warshalls = task_obj.generate_warshalls_strings()
+        st_task_rel.task.save()
+
+    result = st_task_rel.task.answer_warshalls == st_task_rel.partial_solve_warshalls
+
+    if result:
+        st_task_rel.is_warshall_completed = True
+        st_task_rel.save()
+
+    context = {"relation_id": st_task_rel.id,
+               "result": result,
+               "task": task_obj,
+               "is_control": False,
+               "partial_solve": json.dumps(st_task_rel.partial_solve_warshalls),
+               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix),
+               "correct_warshalls": json.dumps(st_task_rel.task.answer_warshalls)}
+
+    return render(request, 'StudentSite/site_pages/warshalls.html', context)
+
+def topological(request):
     return None
 
 

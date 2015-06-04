@@ -10,19 +10,25 @@ var demoTopologicalAnswers;
 
 var demoMatrixSteps = 0;
 var demoPropertiesSteps = 0;
+var demoWarshallsSteps = 0;
 
 
 function demoInitiateScripts(jsonData) {
-    demoMatrixSolve = jsonData['matrixAnswers'].split('$');
-    demoPropertiesSolve = jsonData['propertiesAnswers'].split('$');
+    console.log(jsonData);
+    demoMatrixSolve = jsonData['matrixAnswers'].split(' ');
+    warshallsInitialAnswers = demoMatrixSolve;
+    demoPropertiesSolve = jsonData['propertiesAnswers'].split(' ');
 
     demoMatrixSteps = demoMatrixSolve.length * demoMatrixSolve.length;
     demoPropertiesSteps = demoMatrixSteps + (demoPropertiesSolve[7].split('=')[1] == 'of-order' ? 10 : 8);
-
+    demoWarshallsSteps = demoPropertiesSteps + demoMatrixSolve.length;
 
     demoTips = jsonData['tips'];
     demoHighlights = jsonData['tipsHighlights'];
-    demoWarshallAnswers = jsonData['warshallAnswers'];
+
+    demoWarshallAnswers = jsonData['warshallAnswers'].split('@');
+    console.log(demoWarshallAnswers);
+
     demoTopologicalAnswers = jsonData['topologicalAnswers'];
 
     demoTipsContainer = document.getElementById('tips_container');
@@ -36,6 +42,12 @@ function demoNextStep() {
             propertiesChangeVisibility(true);
         }
         nextStepProperties();
+    } else if (demoStep < demoWarshallsSteps ) {
+        if (demoStep == demoPropertiesSteps) {
+            matrixSetPrimaryMatrix("warshalls_primary_matrix");
+            document.getElementById("warshalls_block").style.display = "block";
+        }
+        nextStepWarshalls()
     } else {
         demoStep--;
     }
@@ -52,6 +64,8 @@ function demoPreviousStep() {
                 demoPreviousStepMatrix();
             } else if (demoStep < demoPropertiesSteps) {
                 demoPreviousStepProperties();
+            } else if (demoStep < demoWarshallsSteps) {
+                demoPreviousStepWarshalls();
             }
         } else {
             shouldNotGoForward = true;
@@ -75,6 +89,9 @@ function demoPreviousStepMatrix() {
 }
 
 function demoPreviousStepProperties() {
+    if (demoStep == demoMatrixSteps) {
+        propertiesChangeVisibility(false);
+    }
     propertiesUnsetValue(demoPropertiesSolve[demoStep-demoMatrixSteps]);
 }
 
@@ -86,4 +103,19 @@ function nextStepMatrix() {
 
 function nextStepProperties() {
     propertiesSetValue(demoPropertiesSolve[demoStep-demoMatrixSteps]);
+}
+
+function nextStepWarshalls() {
+    var step = demoStep - demoPropertiesSteps;
+    console.log(step);
+    console.log(demoWarshallAnswers);
+    warshallsRowFromAnswersString(step, demoWarshallAnswers[step]);
+}
+
+function demoPreviousStepWarshalls(){
+    if (demoStep == demoPropertiesSteps) {
+        matrixElement = document.getElementById("matrix_table");
+        document.getElementById("warshalls_block").style.display = "none";
+    }
+
 }

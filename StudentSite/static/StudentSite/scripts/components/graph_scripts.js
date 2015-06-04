@@ -49,6 +49,8 @@ function graphInitiate(json_data) {
         ratio: 1.25
     });
 
+    matrixGraphHandle = graphRelationChanged;
+
 }
 
 function graphAddRelation(relationName) {
@@ -74,8 +76,6 @@ function graphRemoveRelation(relationName) {
     } catch (except) {
         console.log(except);
     }
-
-
 }
 
 function graphRelationChanged(element) {

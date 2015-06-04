@@ -11,7 +11,7 @@ def demo(request):
     if task.answer_matrix is None or task.answer_properties is None:
         task.answer_matrix = task_obj.solve_string()
         task.answer_properties = task_obj.solve_properties()
-        task.answer_warshalls = task_obj.generate_warshalls_answers_string()
+        task.answer_warshalls = task_obj.generate_warshalls_strings()
         task.save()
 
     tips = task_obj.generate_demo_strings()
