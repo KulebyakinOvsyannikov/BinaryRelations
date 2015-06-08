@@ -78,7 +78,7 @@ function matrixPrepareForDemo() {
     var children = matrixElement.children[0].children;
     for (var i = 1; i < children.length; ++i) {
         for (var j =1; j < children[i].childElementCount; ++j) {
-            children[i].children[j].children[0].onclick = matrixDemoClick;
+            children[i].children[j].children[0].onclick = undefined;
         }
     }
 }
@@ -93,32 +93,37 @@ function matrixSetCell(row, column, value, disabled) {
     elem.disabled = disabled;
 }
 
-function matrixDemoClick(event) {
-    var elem = event.target;
-    if (elem.value == '0') {
-        elem.value = '1';
-        if (demoMatrixSolve[elem.name.substr(0,1)][elem.name.substr(2,1)] == '0') {
-            elem.style.backgroundColor = 'red';
-            setTimeout(function(){
-                elem.value = '0';
-                elem.style.backgroundColor = '';
-            }, 1000)
-        } else {
-            elem.style.backgroundColor = 'green';
-            setTimeout(function(){
-                elem.style.backgroundColor = '';
-            }, 1000)
+//function matrixDemoClick(event) {
+//    var elem = event.target;
+//    if (elem.value == '0') {
+//        elem.value = '1';
+//        if (demoMatrixSolve[elem.name.substr(0,1)][elem.name.substr(2,1)] == '0') {
+//            elem.style.backgroundColor = 'red';
+//            setTimeout(function(){
+//                elem.value = '0';
+//                elem.style.backgroundColor = '';
+//            }, 1000)
+//        } else {
+//            elem.style.backgroundColor = 'green';
+//            setTimeout(function(){
+//                elem.style.backgroundColor = '';
+//            }, 1000)
+//        }
+//    }
+//}
+
+function matrixClearHighlights() {
+    for (var i = 0; i < matrixElementsCount; ++i) {
+        for (var j = 0; j < matrixElementsCount; ++j) {
+            matrixGetInputFor(i,j).style.backgroundColor = "";
         }
     }
 }
 
 function matrixHighlightProperties(highlight){
-    if (typeof(highlight)=="undefined"){
-
-    }
-    else {
-        var keys = Object.keys(highlight);
-        for (var key in keys){
+    matrixClearHighlights();
+    if (highlight !== undefined) {
+        for (var key in highlight){
             var i = parseInt(key.substr(0,1));
             var j = parseInt(key.substr(2,1));
             matrixGetInputFor(i,j).style.backgroundColor=(highlight[key] ? "green" : "red");

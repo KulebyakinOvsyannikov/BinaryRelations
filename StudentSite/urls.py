@@ -3,22 +3,24 @@ from .views import views, control_views, training_views, demo_views, registratio
 
 urlpatterns = [
     # Examples:
-    url(r'^control/check/', control_views.control_check, name='check_test'),
-    url(r'^control/warshalls/check', control_views.control_warshalls_check, name='control_warshalls_check'),
-    url(r'^control/warshalls/', control_views.control_warshalls, name='control_warshalls'),
-    url(r'^control/topological_sort/check', control_views.control_topological_check, name='control_topological_sort_check'),
-    url(r'^control/topological_sort', control_views.control_topological, name='control_topological_sort'),
+    url(r'^control/properties/check', control_views.check_properties, name='control_check_properties'),
+    url(r'^control/properties', control_views.properties, name='control_properties'),
+    url(r'^control/matrix/check', control_views.matrix_check, name='control_check_matrix'),
+    url(r'^control/matrix', control_views.matrix, name='control'),
+    url(r'^control/warshalls/check', control_views.check_warshalls, name='control_warshalls_check'),
+    url(r'^control/warshall', control_views.warshalls, name='control_warshalls'),
+    url(r'^control/topological_sort/check', control_views.check_topological, name='control_topological_sort_check'),
+    url(r'^control/topological_sort', control_views.topological, name='control_topological_sort'),
 
-    url(r'^control/', control_views.control, name='control'),
+
 
     url(r'^demo/', demo_views.demo, name='demo'),
 
-    url(r'^training/check/', training_views.check_training, name='check_training'),
 
     url(r'^training/warshalls/check', training_views.check_warshalls, name='training_check_warshalls'),
     url(r'^training/warshalls/', training_views.warshalls, name='training_warshalls'),
 
-    url(r'^training/topological_sort/check', training_views.train_topological_check, name='train_topological_sort_check'),
+    url(r'^training/topological_sort/check', training_views.check_topological, name='train_topological_sort_check'),
     url(r'^training/topological_sort', training_views.topological, name='training_topological'),
     url(r'^training/properties/check', training_views.check_properties, name='training_check_properties'),
     url(r'^training/properties', training_views.properties, name='training_properties'),
