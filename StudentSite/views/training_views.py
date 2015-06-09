@@ -127,6 +127,7 @@ def check_properties(request):
                "task": task_obj,
                "is_control": False,
                "partial_solve": json.dumps(st_task_rel.partial_solve_properties),
+               "correct_solve": json.dumps(st_task_rel.task.answer_properties),
                "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
                }
 

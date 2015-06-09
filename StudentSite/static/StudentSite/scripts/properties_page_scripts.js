@@ -8,6 +8,7 @@ function propertiesPageIsReadyToSubmit(form) {
         alert("Все свойства должны быть заполнены.");
         return false;
     }
-    form.getElementById("properties_to_server").value=answer_str;
+    document.getElementById("properties_to_server").value=answer_str;
+    console.log(answer_str);
     return true;
 }

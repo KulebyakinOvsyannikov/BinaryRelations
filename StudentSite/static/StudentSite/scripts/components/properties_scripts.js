@@ -17,10 +17,17 @@ function propertiesOrderChanged(isOfOrder) {
     } else {
         propertiesOptionalOrderBlock.style.display = 'none';
     }
+    propertiesOptionalOrderBlock.children[0].children[0].children[0].checked = false;
+    propertiesOptionalOrderBlock.children[0].children[1].children[0].checked = false;
+
+    propertiesOptionalOrderBlock.children[1].children[0].children[0].checked = false;
+    propertiesOptionalOrderBlock.children[1].children[1].children[0].checked = false;
+
 }
 
 function propertiesChangeVisibility(setVisible) {
-    propertiesBlock.style.visibility = (setVisible ? '' : 'collapse')
+    propertiesBlock.style.visibility = (setVisible ? '' : 'collapse');
+
 }
 
 function propertiesSetValue(valueString) {
@@ -62,11 +69,12 @@ function propertiesHighlightErrors(correctSolve) {
     correctSolve = correctSolve.split(" ");
     var propParts,userProps;
     for (var i=0;i<correctSolve.length;++i){
-        propParts=correctSolve.split("=");
-        userProps=propertiesBlock.getElementsByName(propParts[0]);
-        for (var j=0;j<userProps.length;++j){
-            if (userProps[j].checked && userProps[j].value!=propParts[1]){
-                propertiesBlock.getElementById("properties-"+propParts[0]).style.backgroundColor = "red";
+        propParts=correctSolve[i].split("=");
+        console.log(propParts);
+        userProps=document.getElementById("properties-"+propParts[0]);
+        for (var j=0;j<userProps.childElementCount;++j){
+            if (userProps.children[j].children[0].checked && userProps.children[j].children[0].value!=propParts[1]){
+                document.getElementById("properties-"+propParts[0]).style.backgroundColor = "red";
             }
         }
     }
@@ -78,10 +86,14 @@ function propertiesFromAnswersString(partialSolve) {
     var propParts, propToChange;
     for (var i=0;i<partialSolve.length;++i){
         propParts = partialSolve[i].split("=");
-        propToChange = propertiesBlock.getElementsByName(propParts[0]);
-        for (var j=0;j<propToChange.length;++j){
-            if (propToChange[j].value==propParts[1]){
-                propToChange[j].checked = true;
+        propToChange = document.getElementById("properties-"+propParts[0]);
+        console.log(propToChange);
+        for (var j=0;j<propToChange.childElementCount;++j){
+            if (propToChange.children[j].children[0].value==propParts[1]){
+                if (i == 7 && j == 0) {
+                    propertiesOrderChanged(true);
+                }
+                propToChange.children[j].children[0].checked = true;
             }
         }
     }
@@ -99,19 +111,20 @@ function propertiesToAnswersString() {
                     "properties-order-strict",
                     "properties-order-linearity"];
     for (var i=0;i<propNames.length;++i){
-        var input = propertiesBlock.getElementById(propNames[i]);
+        var input = document.getElementById(propNames[i]);
         if (input.children[0].children[0].checked){
-            propNames[i]=[propNames[i],input.children[0].children[0].value];
+            propNames[i]=[input.children[0].children[0].name,input.children[0].children[0].value];
         }
         else if (input.children[1].children[0].checked){
-            propNames[i]=[propNames[i],input.children[1].children[0].value];
+            propNames[i]=[input.children[1].children[0].name,input.children[1].children[0].value];
         }
         else if (i<=7){return undefined}
-        else if (propNames[7]!="properties-order=of-order"){
-            propNames[i]=[propNames[i],"none"];
+        else if (propNames[7]!="order=of-order"){
+            propNames[i]=[input.children[1].children[0].name,"none"];
         }
         else {return undefined}
-        propNames[i].join("=");
+        propNames[i] = propNames[i].join("=");
     }
+    console.log(propNames);
     return propNames.join(" ");
 }
