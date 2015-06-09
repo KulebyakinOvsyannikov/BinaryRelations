@@ -8,11 +8,15 @@
     {% block header %}{% include 'StudentSite/header_index.html' %}{% endblock %}
     <hr />
     {% block body %}
+        {% if request.user.is_superuser %}
+            <a href="{% url 'student_site:results_table' %}">Результаты</a>
+        {% else %}
         <ul>
             <li><a href="{% url 'student_site:demo' %}">Демо-режим</a></li>
             <li><a href="{% url 'student_site:training' %}">Тренировка</a></li>
             <li><a href="{% url 'student_site:control' %}">Контроль</a> </li>
         </ul>
+        {% endif %}
     {% endblock %}
 </body>
 </html>

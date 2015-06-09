@@ -97,7 +97,4 @@ class StudentTaskRel(models.Model):
     partial_solve_topological_sort = models.TextField(null=True, default=None)
 
 
-# Импортируем модули, необходимые для демонстрации
-
-
 
