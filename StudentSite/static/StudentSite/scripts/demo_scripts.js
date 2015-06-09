@@ -91,6 +91,7 @@ function demoPreviousStepMatrix() {
 function demoPreviousStepProperties() {
     if (demoStep == demoMatrixSteps) {
         propertiesChangeVisibility(false);
+        matrixClearHighlights();
     }
     propertiesUnsetValue(demoPropertiesSolve[demoStep-demoMatrixSteps]);
 }

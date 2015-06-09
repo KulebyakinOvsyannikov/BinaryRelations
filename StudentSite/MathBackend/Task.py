@@ -598,7 +598,8 @@ class Task:
         for elem1 in self.elements:
             row_result = []
             for elem2 in self.elements:
-                row_result.append(eval(self.string_for_elements(strin, elem1, elem2)))
+                st = self.string_for_elements(strin, elem1, elem2)
+                row_result.append(eval(st))
             result.append(row_result)
         return result
 
@@ -609,9 +610,14 @@ class Task:
         used_str = used_str.replace('mod', '%')
         used_str = used_str.replace('b', (e1 % 10).__str__())
         used_str = used_str.replace('c', (e2 // 10).__str__())
-        for i in range(1, len(used_str) - 1):
+        i = 0
+        while i < len(used_str) - 1:
             if used_str[i] == 'a' and used_str[i+1] != 'n':
                 used_str = used_str[0:i] + (e1 // 10).__str__() + used_str[i+1:]
             if used_str[i] == 'd' and used_str[i-1] != 'n':
                 used_str = used_str[0:i] + (e2 % 10).__str__() + used_str[i+1:]
+            if used_str[i] == '!' and used_str[i+1] != '=':
+                used_str = used_str[0:i] + 'not ' + used_str[i+1:]
+            i += 1
+
         return used_str

@@ -1,9 +1,14 @@
 var propertiesBlock;
 var propertiesOptionalOrderBlock;
+var propertiesIsNotDemo = true;
 
 function propertiesInitiateScripts(name) {
     propertiesBlock = document.getElementById(name);
     propertiesOptionalOrderBlock = document.getElementById("optional_order_properties")
+}
+
+function propertiesPrepareForDemo() {
+    propertiesIsNotDemo = false;
 }
 
 function propertiesOrderChanged(isOfOrder) {
@@ -24,6 +29,9 @@ function propertiesSetValue(valueString) {
     //Необходимо установить соответсвтующее значение у блока с этим свойством.
     var inputs =  propertiesBlock.getElementsByTagName("input");
     valueString=valueString.split("=");
+    if (valueString[0] == 'order') {
+        propertiesOrderChanged(valueString[1] == "of-order");
+    }
     for (var i = 0;i<inputs.length;++i)
     {
         if (inputs[i].name==valueString[0]&&inputs[i].value==valueString[1])
@@ -36,9 +44,11 @@ function propertiesSetValue(valueString) {
 
 function propertiesUnsetValue(valueString) {
     console.log("unsetting" + valueString);
-    //То же, что и сверху, но необходимо убрать отметку, где бы она ни стояла.
     valueString=valueString.split("=");
     var inputs = propertiesBlock.getElementsByTagName("input");
+    if (valueString[0] == "order") {
+        propertiesOrderChanged(false);
+    }
     for (var i = 0;i < inputs.length;++i)
     {
         if (valueString[0]==inputs[i].name) {

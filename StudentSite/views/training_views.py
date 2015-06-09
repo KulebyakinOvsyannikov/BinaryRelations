@@ -37,34 +37,58 @@ def training_with_difficulty(request, difficulty):
     return render(request, 'StudentSite/site_pages/matrix.html', context)
 
 def check_matrix(request):
+    # Получаем объект отношения из базы данных с id, соответствующим тому,
+    # что было передано пользователем в POST запросе
     st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
+    # Создаем объект задания из его строкового представления
     task = st_task_rel.task
     task_obj = Task.from_string(task.str_repr)
 
+    # Проверяем, имеет ли записать задания в базе данных решение
     if task.answer_matrix is None:
+        # Если нет, то "просим" объект задания сформировать это решение и сохраняем его в базу
         task.answer_matrix = task_obj.solve_string()
         task.save()
 
+    # Получаем результат выполнения, отправленный пользователем и сохраняем его в базе
     st_task_rel.partial_solve_matrix = request.POST['answers_string']
     st_task_rel.save()
 
-    print(st_task_rel.partial_solve_matrix)
-    print(task.answer_matrix)
-
+    # Сверяем ответ пользователя с верным решением
     if st_task_rel.partial_solve_matrix == task.answer_matrix:
+        # Если они совпадают, то переменной с результатом, которая попадет в контекст
+        # присваиваем значение True
         result = True
+        # В записи отношения отмечаем, что пользователь справился с матрицей и сохраняем изменения в базе данных
         st_task_rel.matrix_completed = True
         st_task_rel.save()
     else:
+        # Если не совпадают, то переменной с результатом присваиваем False
         result = False
 
-    context = {'task': task_obj,
-               'result': result,
-               'relation_id': st_task_rel.id,
-               'is_control': False,
-               'partial_solve': json.dumps(st_task_rel.partial_solve_matrix),
-               'correct_solve': json.dumps(task.answer_matrix)}
+    # Формируем контекст, который будет передан шаблону для формирования HTML кода
 
+    context = {
+        # Под ключем task передаем объект задания. Будет использоваться для
+        # заполнения шапки матрицы правильными элементами, а так же для формирования
+        # описания задачи
+        'task': task_obj,
+        # Справился ли пользователем с задачей
+        'result': result,
+        # id отношения между студентом и заданием
+        'relation_id': st_task_rel.id,
+        # Так как страницы для режима контроля и тренировки практически идентичны, за
+        # исключением подсветки неверных решений, для них используется один и тот же шаблон,
+        # и с помощью переменной контекста is_control происходит разграничение контента, который
+        # должен быть представлен только в одном из режимов
+        'is_control': False,
+        # JSON объект с частичным решением задачи, с которого пользователь будет продолжать выполнение
+        'partial_solve': json.dumps(st_task_rel.partial_solve_matrix),
+        # JSON объект с правильными решением задачи.
+        # Передается в JavaScript функцию, которая подсветит элементы матрицы с неверным содержанием
+        'correct_solve': json.dumps(task.answer_matrix)
+    }
+    # Возвращаем результат выполнения render() с запросом пользователя, адресом нужного шаблона и контекстом
     return render(request, 'StudentSite/site_pages/matrix.html', context)
 
 def properties(request):
@@ -81,7 +105,33 @@ def properties(request):
     return render(request, 'StudentSite/site_pages/properties.html', context)
 
 def check_properties(request):
-    return None
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
+    task_obj = Task.from_string(st_task_rel.task.str_repr)
+
+    st_task_rel.partial_solve_properties = request.POST['answers_string']
+    st_task_rel.save()
+
+    if st_task_rel.task.answer_properties is None:
+        st_task_rel.task.answer_properties = task_obj.solve_properties()
+        st_task_rel.task.save()
+
+    if st_task_rel.partial_solve_properties == st_task_rel.task.answer_properties:
+        result = True
+        st_task_rel.properties_completed = True
+        st_task_rel.save()
+    else:
+        result = False
+
+    context = {"relation_id": st_task_rel.id,
+               "result": result,
+               "task": task_obj,
+               "is_control": False,
+               "partial_solve": json.dumps(st_task_rel.partial_solve_properties),
+               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
+               }
+
+    return render(request, 'StudentSite/site_pages/properties.html', context)
+
 
 def warshalls(request):
     st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
@@ -124,152 +174,31 @@ def check_warshalls(request):
     return render(request, 'StudentSite/site_pages/warshalls.html', context)
 
 def topological(request):
-    return None
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
 
+    context = {"relation_id": st_task_rel.id,
+               "result": True if st_task_rel.is_topological_sort_completed else None,
+               "task": Task.from_string(st_task_rel.task.str_repr),
+               "is_control": False,
+               "partial_solve": json.dumps(st_task_rel.partial_solve_warshalls),
+               "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
+               }
 
+    return render(request, 'StudentSite/site_pages/warshalls.html', context)
 
-def check_training(request):
-    """
-    :return: rendered response for users attempt to solve test task
-    """
-    task_id = request.POST['task_id']
-    rel = StudentTaskRel.objects.get(pk=task_id)
-    task = rel.task
-    task_obj = Task.from_string(rel.task.str_repr)
+def check_topological(request):
+    st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
 
-    users_solve = compose_partial_solve(request.POST, len(task_obj.elements))
+    st_task_rel.partial_solve_topological_sort = request.POST['users_solve']
+    task_obj = Task.from_string(st_task_rel.partial_solve_topological_sort)
 
-    # rel = StudentTaskRel.objects.get(task=task, student=StudentModel.objects.get(user=request.user))
-    rel.partial_solve = users_solve
-    rel.save()
+    context = {
+        "relation_id": st_task_rel.id,
+        "result": False,
+        "task": task_obj,
+        "is_control": False,
+        "partial_solve": json.dumps(st_task_rel.partial_solve_topological_sort),
+        "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
+    }
 
-    if task.answer_matrix is None or task.answer_properties is None:
-        task.answer_matrix = task_obj.solve_string()
-        task.answer_properties = task_obj.solve_properties()
-        task.save()
-
-    result = users_solve == '@'.join([task.answer_matrix, task.answer_properties])
-
-    if result:
-        rel.table_and_props_completed = True
-    else:
-        rel.numberOfAttempts += 1
-    rel.save()
-
-    context = {'json_table_solve': json.dumps(users_solve),
-               'json_correct_solve': json.dumps({'table': task.answer_matrix,
-                                                 'properties': task.answer_properties}),
-               'task': task_obj,
-               'task_id': task_id,
-               'result': result}
-
-    response = render(request, 'StudentSite/train_base.html', context)
-
-    return response
-
-def train_warshalls(request):
-    task_id = request.POST['task_id']
-    rel = StudentTaskRel.objects.get(pk=task_id)
-    task_obj = Task.from_string(rel.task.str_repr)
-    context = {'task': task_obj,
-               'task_id': rel.id,
-               'json_table_solve': json.dumps(rel.task.answer_matrix),
-               'json_warshalls_partial': json.dumps(rel.partial_solve_warshalls)}
-
-    return render(request, 'StudentSite/train_warshalls.html', context)
-
-
-def train_warshalls_check(request):
-    task_id = request.POST['task_id']
-    rel = StudentTaskRel.objects.get(pk=task_id)
-    task_obj = Task.from_string(rel.task.str_repr)
-
-    warshall_answers = rel.task.answer_warshalls
-    if warshall_answers is None:
-        warshall_answers = task_obj.generate_warshalls_answers_string()
-        task = rel.task
-        task.answer_warshalls = warshall_answers
-        task.save()
-
-    users_solve = request.POST['warshall_check']
-    result = warshall_answers == users_solve
-
-    rel.partial_solve_warshalls = users_solve
-    is_of_order = (task_obj.is_of_order() != OrderType.not_of_order)
-
-    if result:
-        rel.is_warshall_completed = True
-        if not is_of_order:
-            rel.isCompleted = True
-            rel.dateCompleted = timezone.now()
-
-    else:
-        rel.numberOfAttempts += 1
-    rel.save()
-
-    response = render(request, 'StudentSite/train_warshalls.html', {'task': task_obj,
-                                                                    'task_id': task_id,
-                                                                    'result': result,
-                                                                    'is_of_order': is_of_order})
-    response.set_cookie('partial_solve_warshall', users_solve)
-    response.set_cookie('partial_solve', rel.task.answer_matrix)
-    response.set_cookie('correct_solve_warshall', warshall_answers)
-    return response
-
-def train_topological(request):
-    task_id = request.POST['task_id']
-    task_rel = StudentTaskRel.objects.get(pk=task_id)
-    task_obj = Task.from_string(task_rel.task.str_repr)
-
-    json_data = {'elements': task_obj.elements,
-                 'table_solve': task_rel.task.answer_matrix}
-
-    if task_rel.partial_solve_topological_sort is not None:
-        json_data['partial_solve_sort'] = task_rel.partial_solve_topological_sort
-
-    json_data = json.dumps(json_data)
-
-    response = render(request, 'StudentSite/train_topological_sort.html', {'task': task_obj,
-                                                                           'task_id': task_rel.id,
-                                                                           'json_data': json_data})
-
-    return response
-
-
-def train_topological_check(request):
-    task_id = request.POST['task_id']
-    task_rel = StudentTaskRel.objects.get(pk=task_id)
-    task_obj = Task.from_string(task_rel.task.str_repr)
-
-    students_answers = []
-    for i in range(0, len(task_obj.elements)):
-        students_answers.append(int(request.POST['submit_element-%s' % i]))
-
-
-    task_rel.partial_solve_topological_sort = ' '.join([str(elem) for elem in students_answers])
-
-    json_data = json.dumps({'elements': task_obj.elements,
-                            'table_solve': task_rel.task.answer_matrix,
-                            'partial_solve_sort': task_rel.partial_solve_topological_sort})
-
-    order = task_obj.is_of_order()
-
-    result = task_obj.is_correct_topological_sort(students_answers, order.is_strict())
-
-    context = {'task': task_obj,
-               'task_id': task_rel.id,
-               'result': result == -1,
-               'json_data': json_data }
-
-    if result == -1:
-        task_rel.is_topological_sort_completed = True
-        task_rel.isCompleted = True
-        task_rel.dateCompleted = timezone.now()
-    else:
-        task_rel.numberOfAttempts += 1
-        context['error_id'] = result
-
-    task_rel.save()
-
-    response = render(request, 'StudentSite/train_topological_sort.html', context)
-    return response
+    return render(request, 'StudentSite/site_pages/topological.html', context)

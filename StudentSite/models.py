@@ -8,8 +8,12 @@ from random import randint
 
 
 class TaskModel(models.Model):
+    # В скобках после типа поля указываеются различные ограничения и свойства поля
+    # max_length - ограничение максимальной длины поля типа CharField
     str_repr = models.CharField(max_length=255)
+    # default - стандартное значение поля, если не указано при создании
     difficulty = models.IntegerField(default=0)
+    # null - допускает, что значение поля может быть не установлено. NULL в SQLite
     answer_matrix = models.CharField(max_length=255, null=True, default=None)
     answer_properties = models.TextField(null=True, default=None)
     answer_warshalls = models.TextField(null=True, default=None)
@@ -22,6 +26,7 @@ class TaskModel(models.Model):
             task_objects = TaskGenerator.generate_tasks_with_difficulty('hard')
             for task in task_objects:
                 cls.objects.create(str_repr=task.to_string(), difficulty=3)
+            return cls.get_control_task()
         return random.choice(tasks)
 
     @classmethod
@@ -38,6 +43,7 @@ class TaskModel(models.Model):
             object_items = TaskGenerator.generate_tasks_with_difficulty(difficulty)
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=difficulty_num)
+            return cls.get_training_task_with_difficulty(difficulty)
         return random.choice(tasks)
 
     @classmethod
@@ -53,7 +59,7 @@ class TaskModel(models.Model):
             object_items = TaskGenerator.generate_tasks_with_difficulty('easy')
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=1)
-
+            return cls.get_demo_task()
         return random.choice(tasks)
 
     def __str__(self):
@@ -63,14 +69,18 @@ class TaskModel(models.Model):
 class StudentModel(models.Model):
     user = models.OneToOneField(User)
     website = models.URLField(null=True)
-    group = models.CharField(max_length=8)
+    group = models.CharField(max_length=4)
+    # through - таблица, через которую осуществляется отношение с TaskModel
     tasks = models.ManyToManyField(TaskModel, through='StudentTaskRel')
 
 
 class StudentTaskRel(models.Model):
+    # ForeignKey - Один-к-одному отношение.
+    # Различие с OneToOneField в том, что не обязательно должно быть уникальным
     task = models.ForeignKey(TaskModel)
     student = models.ForeignKey(StudentModel)
     isTestTask = models.BooleanField()
+    # auto_created - автоматически устанавливает дату в момент создания элемента в таблице
     dateStarted = models.DateTimeField(auto_created=True)
     isCompleted = models.BooleanField(default=False)
     numberOfAttempts = models.IntegerField(default=0)
@@ -87,7 +97,7 @@ class StudentTaskRel(models.Model):
     partial_solve_topological_sort = models.TextField(null=True, default=None)
 
 
-
+# Импортируем модули, необходимые для демонстрации
 
 
 
