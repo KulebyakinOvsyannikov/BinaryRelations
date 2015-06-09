@@ -49,17 +49,59 @@ function propertiesUnsetValue(valueString) {
 
 function propertiesHighlightErrors(correctSolve) {
     console.log("correct:" + correctSolve);
-
+    correctSolve = correctSolve.split(" ");
+    var propParts,userProps;
+    for (var i=0;i<correctSolve.length;++i){
+        propParts=correctSolve.split("=");
+        userProps=propertiesBlock.getElementsByName(propParts[0]);
+        for (var j=0;j<userProps.length;++j){
+            if (userProps[j].checked && userProps[j].value!=propParts[1]){
+                propertiesBlock.getElementById("properties-"+propParts[0]).style.backgroundColor = "red";
+            }
+        }
+    }
 }
 
 function propertiesFromAnswersString(partialSolve) {
-    // поступает строка вида
-    // reflexivity=non-reflexive anti-reflexivity=anti-reflexive symmetry=non-symmetric asymmetry=asymmetric antisymmetry=antisymmetric transitivity=transitive equivalency=non-equivalent order=of-order order-strict=strict order-linearity=partial
-    // на основании этой строки заполнить все свойства
-
     console.log("partial:" + partialSolve);
+    partialSolve = partialSolve.split(" ");
+    var propParts, propToChange;
+    for (var i=0;i<partialSolve.length;++i){
+        propParts = partialSolve[i].split("=");
+        propToChange = propertiesBlock.getElementsByName(propParts[0]);
+        for (var j=0;j<propToChange.length;++j){
+            if (propToChange[j].value==propParts[1]){
+                propToChange[j].checked = true;
+            }
+        }
+    }
 }
 
 function propertiesToAnswersString() {
-    // Составить строку вида, как в предыдущей функции, на основе заполненных элементов со свойствами.
+    var propNames = ["properties-reflexivity",
+                    "properties-anti-reflexivity",
+                    "properties-symmetry",
+                    "properties-asymmetry",
+                    "properties-antisymmetry",
+                    "properties-transitivity",
+                    "properties-equivalency",
+                    "properties-order",
+                    "properties-order-strict",
+                    "properties-order-linearity"];
+    for (var i=0;i<propNames.length;++i){
+        var input = propertiesBlock.getElementById(propNames[i]);
+        if (input.children[0].children[0].checked){
+            propNames[i]=[propNames[i],input.children[0].children[0].value];
+        }
+        else if (input.children[1].children[0].checked){
+            propNames[i]=[propNames[i],input.children[1].children[0].value];
+        }
+        else if (i<=7){return undefined}
+        else if (propNames[7]!="properties-order=of-order"){
+            propNames[i]=[propNames[i],"none"];
+        }
+        else {return undefined}
+        propNames[i].join("=");
+    }
+    return propNames.join(" ");
 }

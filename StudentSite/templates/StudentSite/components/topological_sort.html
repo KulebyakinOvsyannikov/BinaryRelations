@@ -1,0 +1,42 @@
+<div id="ts_primary_matrix">
+{% include "StudentSite/components/matrix.html" %}
+</div>
+{% include "StudentSite/components/graph.html" %}
+<script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
+<script>graphInitiate({{ task.elements }})</script>
+
+<table id="ts_operating_matrix">
+    <tr>
+        <td>ab/cd</td>
+        {% for elem in task.elements %}
+            <td>{{ elem }}</td>
+        {% endfor %}
+    </tr>
+    {% for elem in task.elements %}
+        <tr>
+            <td>{{ elem }}</td>
+            {% for elem2 in task.elements %}
+                <td>
+                    <input type="text"
+                           class="ts_element"
+                           id="ts{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"
+                           title="ts_input"
+                           value="0"
+                           onclick="tsElementClicked(this)"
+                           disabled
+                           readonly/>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<br style="...">
+
+<input type="button" id="ts_prev_button" value="Предыдущий элемент" onclick="tsPreviousElement(this)"/>
+<input type="button" id="ts_next_button" value="Следующий элемент" onclick="tsNextElemenet(this)"/>
+
+{% load staticfiles %}
+<script src="{% static "StudentSite/scripts/topological_sort_page_scripts.js" %}"></script>
+<script href="{% static "StudentSite/stylesheets/components/topological_sort_stylesheet.css" %}"></script>
+<script src="{% static "StudentSite/scripts/components/topological_sort_scripts.js" %}"></script>

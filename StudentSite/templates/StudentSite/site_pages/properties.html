@@ -36,7 +36,7 @@
                 onsubmit="return propertiesPageIsReadyToSubmit(this)"
                 method="post">
             {% csrf_token %}
-            <input type="hidden" name="answers_string" value="" />
+            <input type="hidden" name="answers_string" value="" id="properties_to_server" />
             <input type="hidden" name="relation_id" value="{{ relation_id }}" />
             <input type="submit" value="Проверить" />
         </form>
