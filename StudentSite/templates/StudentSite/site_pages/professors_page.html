@@ -1,0 +1,27 @@
+{% extends 'StudentSite/index.html' %}
+{% block title %}<title>Результаты</title>{% endblock %}
+{% block body %}
+    <table>
+        <tr>
+            <td>Номер группы</td>
+            <td>Фамилия</td>
+            <td>Имя</td>
+            <td>Сайт</td>
+            <td>Начало выполнения</td>
+            <td>Количество попыток</td>
+            <td>Дата окончания</td>
+        </tr>
+    {% for result in results %}
+        <tr>
+            <td>{{ result.student.group }}</td>
+            <td>{{ result.student.user.last_name }}</td>
+            <td>{{ result.student.user.first_name }}</td>
+            <td><a href="{{ result.student.website }}">Ссылка</a></td>
+            <td>{{ result.dateStarted }}</td>
+            <td>{{ result.numberOfAttempts }}</td>
+            <td>{{ result.dateCompleted }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
