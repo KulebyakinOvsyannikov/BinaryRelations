@@ -1,8 +1,11 @@
 {% extends 'StudentSite/index.html' %}
 {% block title %}<title>Результаты</title>{% endblock %}
 {% block body %}
+    <form method="post" action="{% url 'student_site:results_table_save' %}">
+    {% csrf_token %}
     <table>
         <tr>
+            <td>Учтено</td>
             <td>Номер группы</td>
             <td>Фамилия</td>
             <td>Имя</td>
@@ -13,15 +16,20 @@
         </tr>
     {% for result in results %}
         <tr>
+            <td>
+                <input type="hidden" name="pr-{{ result.id }}" value="{% if result.professor_marked %}1{% else %}0{% endif %}" /><input type="checkbox" onclick="this.previousSibling.value=(this.checked ? '1' : '0')" {% if result.professor_marked %}checked{% endif %} />
+            </td>
             <td>{{ result.student.group }}</td>
             <td>{{ result.student.user.last_name }}</td>
             <td>{{ result.student.user.first_name }}</td>
             <td><a href="{{ result.student.website }}">Ссылка</a></td>
-            <td>{{ result.dateStarted }}</td>
+            <td>{{ result.dateStarted|date:"D d M Y" }} {{ result.dateStarted|time:"H:i" }}</td>
             <td>{{ result.numberOfAttempts }}</td>
-            <td>{{ result.dateCompleted }}</td>
+            <td>{{ result.dateStarted|date:"D d M Y" }} {{ result.dateStarted|time:"H:i" }}</td>
         </tr>
     {% endfor %}
     </table>
+    <input type="submit" value="Сохранить">
+    </form>
 
 {% endblock %}

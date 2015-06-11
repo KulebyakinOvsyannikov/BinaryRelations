@@ -3,7 +3,9 @@ from .views import views, control_views, training_views, demo_views, registratio
 
 urlpatterns = [
     # Examples:
+    url(r'^results/save/', views.teachers_view_save, name='results_table_save'),
     url(r'^results/', views.teachers_view, name='results_table'),
+
 
     url(r'^control/properties/check', control_views.check_properties, name='control_check_properties'),
     url(r'^control/properties', control_views.properties, name='control_properties'),

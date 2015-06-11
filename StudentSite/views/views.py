@@ -30,7 +30,16 @@ def teachers_view(request):
         return Http404(request)
 
     context = {
-        "results": StudentTaskRel.objects.filter(isTestTask=True).order_by('student__group', 'student__user__last_name')
+        "results": StudentTaskRel.objects.filter(isTestTask=True).filter(isCompleted=True).order_by('professor_marked', 'student__group', 'student__user__last_name')
     }
 
     return render(request, 'StudentSite/site_pages/professors_page.html', context)
+
+def teachers_view_save(request):
+    for item in request.POST:
+        if item.startswith('pr-'):
+            rel = StudentTaskRel.objects.get(id=item[3:])
+            rel.professor_marked = request.POST[item] == '1'
+            rel.save()
+
+    return teachers_view(request)

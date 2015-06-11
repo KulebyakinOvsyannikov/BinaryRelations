@@ -96,5 +96,5 @@ class StudentTaskRel(models.Model):
     partial_solve_warshalls = models.TextField(null=True, default=None)
     partial_solve_topological_sort = models.TextField(null=True, default=None)
 
-
+    professor_marked = models.BooleanField(default=False)
 
