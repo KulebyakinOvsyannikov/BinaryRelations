@@ -27,7 +27,7 @@ class TaskModel(models.Model):
             for task in task_objects:
                 cls.objects.create(str_repr=task.to_string(), difficulty=3)
             return cls.get_control_task()
-        return random.choice(tasks)
+        return tasks[random.randint(0,tasks.count())]
 
     @classmethod
     def get_training_task_with_difficulty(cls, difficulty):
@@ -44,7 +44,7 @@ class TaskModel(models.Model):
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=difficulty_num)
             return cls.get_training_task_with_difficulty(difficulty)
-        return random.choice(tasks)
+        return tasks[random.randint(0,tasks.count())]
 
     @classmethod
     def get_demo_task(cls):
@@ -60,7 +60,7 @@ class TaskModel(models.Model):
             for item in object_items:
                 cls.objects.create(str_repr=item.to_string(), difficulty=1)
             return cls.get_demo_task()
-        return random.choice(tasks)
+        return tasks[random.randint(0,tasks.count())]
 
     def __str__(self):
         return self.str_repr
