@@ -5,7 +5,6 @@ from StudentSite.MathBackend.Task import Task
 from StudentSite.MathBackend.OrderType import OrderType
 import json
 from django.utils import timezone
-from StudentSite.MathBackend.supporting_functions import compose_partial_solve
 
 
 @login_required(login_url="student_site:login_registration")
@@ -63,6 +62,8 @@ def check_matrix(request):
         st_task_rel.matrix_completed = True
         st_task_rel.save()
     else:
+        st_task_rel.numberOfAttempts += 1
+        st_task_rel.save()
         # Если не совпадают, то переменной с результатом присваиваем False
         result = False
 
@@ -120,6 +121,8 @@ def check_properties(request):
         st_task_rel.properties_completed = True
         st_task_rel.save()
     else:
+        st_task_rel.numberOfAttempts += 1
+        st_task_rel.save()
         result = False
 
     context = {"relation_id": st_task_rel.id,
@@ -162,6 +165,14 @@ def check_warshalls(request):
 
     if result:
         st_task_rel.is_warshall_completed = True
+        if task_obj.is_of_order() == OrderType.not_of_order:
+            st_task_rel.isCompleted = True
+            st_task_rel.save()
+            from .views import result
+            return result(request)
+        st_task_rel.save()
+    else:
+        st_task_rel.numberOfAttempts += 1
         st_task_rel.save()
 
     context = {"relation_id": st_task_rel.id,

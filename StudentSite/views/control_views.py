@@ -3,6 +3,7 @@ from StudentSite.models import TaskModel, StudentTaskRel
 from StudentSite.MathBackend.Task import Task
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from StudentSite.MathBackend.OrderType import OrderType
 import json
 
 @login_required(login_url="student_site:login_registration")
@@ -48,6 +49,8 @@ def matrix_check(request):
         st_task_rel.matrix_completed = True
         st_task_rel.save()
     else:
+        st_task_rel.numberOfAttempts += 1
+        st_task_rel.save()
         result = False
 
     context = {'task': task_obj,
@@ -87,6 +90,8 @@ def check_properties(request):
         st_task_rel.properties_completed = True
         st_task_rel.save()
     else:
+        st_task_rel.numberOfAttempts += 1
+        st_task_rel.save()
         result = False
 
     context = {"relation_id": st_task_rel.id,
@@ -126,8 +131,15 @@ def check_warshalls(request):
     if st_task_rel.task.answer_warshalls == st_task_rel.partial_solve_warshalls:
         st_task_rel.is_warshall_completed = True
         st_task_rel.save()
+        if task_obj.is_of_order() == OrderType.not_of_order:
+            st_task_rel.isCompleted = True
+            st_task_rel.save()
+            from .views import result
+            return result(request)
         result = True
     else:
+        st_task_rel.numberOfAttempts += 1
+        st_task_rel.save()
         result = False
 
     context = {"relation_id": st_task_rel.id,
@@ -158,6 +170,9 @@ def check_topological(request):
 
     st_task_rel.partial_solve_topological_sort = request.POST['users_solve']
     task_obj = Task.from_string(st_task_rel.partial_solve_topological_sort)
+
+    st_task_rel.numberOfAttempts += 1
+    st_task_rel.save()
 
     context = {
         "relation_id": st_task_rel.id,

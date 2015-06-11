@@ -523,8 +523,7 @@ class Task:
             res.append("%s: %s" % (item[0], item[1]))
 
         for elem1 in self.elements:
-            for elem2 in self.elements:
-                res.append('warshalls %s %s' % (elem1, elem2))
+            res.append('warshalls %s' % (elem1))
 
         for item in self.elements:
             res.append('topological sort %s' % item)
@@ -566,7 +565,7 @@ class Task:
                 if item:
                     nice_count += 1
 
-        if not 0.2 <= nice_count / (len(self.results) ** 2) <= 0.8:
+        if not 0.15 <= nice_count / (len(self.results) ** 2) <= 0.8:
             return False
 
         nice_count = 0
@@ -588,7 +587,7 @@ class Task:
         if self.is_of_order() != OrderType.not_of_order:
             nice_count += 1
 
-        if nice_count >= 3:
+        if nice_count >= 2:
             return True
         return False
 
