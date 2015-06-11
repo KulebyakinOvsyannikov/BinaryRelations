@@ -453,14 +453,44 @@ class Task:
                         highlights[str(i)+'-'+str(j)] = False
         return highlights
 
+    def order_linear_highlights(self):
+        highlights = {}
+        if self.results is None:
+            self.solve()
+        for e1 in range(len(self.elements)):
+            for e2 in range(e1+1,len(self.elements)):
+                if not self.results[e1][e2] and not self.results[e2][e1]:
+                    highlights[str(e1)+'-'+str(e2)] = False
+                    highlights[str(e2)+'-'+str(e1)] = False
+        return highlights
+
     def generate_highlights_for_demo(self):
         highlights = [self.reflexivity_highlights(),
                       self.antireflexivity_highlights(),
                       self.symmetry_highlights(),
                       self.asymmetry_highlights(),
                       self.antisymmetry_highlights(),
-                      self.transitivity_highlights()]
+                      self.transitivity_highlights(),
+                      [],
+                      [],
+                      [],
+                      self.order_linear_highlights()]
+
         return highlights
+
+    def warshalls_demo_strings(self):
+        if self.results is None:
+            self.solve()
+
+        strings = []
+
+        for w in range(len(self.elements)):
+            step_elements = []
+            for i in range(len(self.elements)):
+                for j in range(len(self.elements)):
+                    if not self.results[i][j] and (self.results[i][w] and self.results[w][j]):
+                        step_elements.append((i,j))
+            strings.append("Существует отношение между элементами ")
 
 
     def generate_demo_strings(self):
