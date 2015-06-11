@@ -270,6 +270,9 @@ class Task:
         if self.results is None:
             self.solve()
         temp_res = list(self.results)
+        for i in range(len(temp_res)):
+            temp_res[i] = temp_res[i][:]
+
         for w in range(0, len(self.elements)):
             for u in range(0, len(self.elements)):
                 for v in range(0, len(self.elements)):
@@ -287,6 +290,9 @@ class Task:
         if self.results is None:
             self.solve()
         temp_res = self.results[:]
+        for i in range(len(self.results)):
+            temp_res[i] = temp_res[i][:]
+
         for w in range(0, len(self.elements)):
             step_res = ""
             for u in range(0, len(self.elements)):
@@ -482,16 +488,32 @@ class Task:
         if self.results is None:
             self.solve()
 
+        used_res = self.results[:]
+
+        for i in range(len(used_res)):
+            used_res[i] = used_res[i][:]
+
         strings = []
 
         for w in range(len(self.elements)):
-            step_elements = []
+            step_strings = []
+            step = False
             for i in range(len(self.elements)):
                 for j in range(len(self.elements)):
-                    if not self.results[i][j] and (self.results[i][w] and self.results[w][j]):
-                        step_elements.append((i,j))
-            strings.append("Существует отношение между элементами ")
-
+                    new_val = used_res[i][j] or (used_res[i][w] and used_res[w][j])
+                    if new_val != used_res[i][j]:
+                        used_res[i][j] = new_val
+                        step = True
+                        step_strings.append("<div style='block'>Существует отношение между элементами {e1} и {through}, {through} и {e2}, "
+                                       "но не существует отношения между элементами {e1} и {e2}, поэтому ставим 1 в "
+                                       "матрице смежности между этими элементами</div>".format(e1=self.elements[i],
+                                                                                         e2=self.elements[j],
+                                                                                         through=self.elements[w]))
+            if not step:
+                step_strings.append("<div style='block'>Нет таких элементов, отношение между которыми существовало бы через элемент {}, но не"
+                               "существовало бы прямого отношения.</div>".format(self.elements[w]))
+            strings.append(''.join(step_strings))
+        return strings
 
     def generate_demo_strings(self):
         res = []
@@ -549,11 +571,11 @@ class Task:
             checkboxes_array.pop()
             checkboxes_array.pop()
 
-        for item in checkboxes_array:
-            res.append("%s: %s" % (item[0], item[1]))
+        for elem in checkboxes_array:
+            res.append(elem[0]+' : '+elem[1])
 
-        for elem1 in self.elements:
-            res.append('warshalls %s' % (elem1))
+        for elem in self.warshalls_demo_strings():
+            res.append(elem)
 
         for item in self.elements:
             res.append('topological sort %s' % item)
