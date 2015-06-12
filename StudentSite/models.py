@@ -1,8 +1,9 @@
+import random
+
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
-import random
-from random import randint
+
 
 # Create your models here.
 

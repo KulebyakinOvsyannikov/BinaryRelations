@@ -1,4 +1,3 @@
-from .supporting_functions import modify_element
 from .BinaryRelation import BinaryRelation
 
 
@@ -24,18 +23,6 @@ class RelationTriplet:
     def __repr__(self):
         return self.__str__()
 
-    def check(self, val1, val2):
-        """
-        :rtype: bool
-        :type val1: int
-        :type val2: int
-        :param val1: first element of relation
-        :param val2: second argument of relation
-        :return: True, if relation between modified elements exists
-        """
-        elem1 = modify_element(val1, self.mod1)
-        elem2 = modify_element(val2, self.mod2)
-        return self.relation.apply_binary_relation(elem1, elem2)
 
     def convert_triplet_to_human_readable(self):
         """

@@ -2,8 +2,6 @@ from .RelationTriplet import RelationTriplet
 from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
 from.OrderType import OrderType
-import random
-import json
 
 
 class Task:
@@ -101,39 +99,6 @@ class Task:
                 rel_index += 1
         return readable_string
 
-    def solve_for_elements(self, e1, e2):
-        """
-        Returns True, if e1 and e2 are in a binary relation. (Nested parenthesis are not supported).
-        :rtype: bool
-        :param e1: First element of relation (ab)
-        :param e2: Second element of relation (cd)
-        :return: abRcd (True/ False)
-        """
-        triplets = [elem.check(e1, e2) for elem in self.triplets]
-
-        if len(triplets) == 0:
-            return None
-
-        def is_in_parenthesis(ind):
-            for parenthesis_pair in self.parenthesis:
-                if parenthesis_pair[0] <= ind < parenthesis_pair[1]:
-                    return True
-                return False
-
-        for i in range(0, min(len(self.block_modifiers), len(self.parenthesis))):
-            par_pair = self.parenthesis[i]
-            res = triplets[par_pair[0]]
-            for j in range(par_pair[0], par_pair[1]):
-                res = self.triplets_triplets_rel[j].apply_binary_relation(res, triplets[j + 1])
-            triplets[par_pair[0]] = self.block_modifiers[i].apply_unary_relation(res)
-
-        res = triplets[0]
-        for i in range(0, len(self.triplets_triplets_rel)):
-            if not is_in_parenthesis(i):
-                res = self.triplets_triplets_rel[i].apply_binary_relation(res, triplets[i + 1])
-
-        return res
-
     def solve(self):
         """
         :rtype: list
@@ -184,8 +149,9 @@ class Task:
         :return: True, if binary relation is reflexive
         """
         if self.results is None:
+            used_str = self.to_human_readable()
             for elem in self.elements:
-                if not self.solve_for_elements(elem, elem):
+                if not self.check_for_elements_human_readable(elem, elem, used_str[:]):
                     return False
             return True
         else:
@@ -201,8 +167,9 @@ class Task:
         :return: True, if the relation is antireflexive
         """
         if self.results is None:
+            used_str = self.to_human_readable()
             for elem in self.elements:
-                if self.solve_for_elements(elem, elem):
+                if self.check_for_elements_human_readable(elem, elem, used_str[:]):
                     return False
             return True
         else:
@@ -406,13 +373,13 @@ class Task:
                     return fmi
             return -1
 
-        def delete_element(ar, ind):
+        def delete_element(ar, dind):
             """
             :type ar: list
             """
-            ar.remove(ar[ind])
+            ar.remove(ar[dind])
             for dei in range(len(ar)):
-                ar[dei].remove(ar[dei][ind])
+                ar[dei].remove(ar[dei][dind])
             return ar
 
         while len(rel_array) > 0:
@@ -561,7 +528,7 @@ class Task:
         human_readable = self.to_human_readable()
         for elem in self.elements:
             for elem2 in self.elements:
-                if self.solve_for_elements(elem,elem2):
+                if self.check_for_elements_human_readable(elem, elem2, human_readable[:]):
                     #append_str = self.string_for_elements(human_readable, elem, elem2)
                     append_str = "\nВидим, что они состоят в отношении R. Отмечаем соответствующий элемент матрицы."
                 else:
@@ -685,14 +652,18 @@ class Task:
             return True
         return False
 
+    def check_for_elements_human_readable(self, e1, e2, string=None):
+        if string is None:
+            string = self.to_human_readable()
+        return eval(self.string_for_elements(string[:], e1, e2))
+
     def check_using_human_readable(self):
         strin = self.to_human_readable()
         result = []
         for elem1 in self.elements:
             row_result = []
             for elem2 in self.elements:
-                st = self.string_for_elements(strin, elem1, elem2)
-                row_result.append(eval(st))
+                row_result.append(self.check_for_elements_human_readable(elem1, elem2, strin))
             result.append(row_result)
         return result
 

@@ -1,11 +1,11 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
+
 from .views import views, control_views, training_views, demo_views, registration_login_views
 
 urlpatterns = [
     # Examples:
     url(r'^results/save/', views.teachers_view_save, name='results_table_save'),
     url(r'^results/', views.teachers_view, name='results_table'),
-
 
     url(r'^control/properties/check', control_views.check_properties, name='control_check_properties'),
     url(r'^control/properties', control_views.properties, name='control_properties'),
@@ -15,8 +15,6 @@ urlpatterns = [
     url(r'^control/warshall', control_views.warshalls, name='control_warshalls'),
     url(r'^control/topological_sort/check', control_views.check_topological, name='control_topological_sort_check'),
     url(r'^control/topological_sort', control_views.topological, name='control_topological_sort'),
-
-
 
     url(r'^demo/', demo_views.demo, name='demo'),
 
