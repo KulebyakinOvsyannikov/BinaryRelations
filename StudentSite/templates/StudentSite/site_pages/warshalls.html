@@ -3,6 +3,7 @@
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
     <h4>{{ task.warshalls_text }}</h4>
+
     {% include 'StudentSite/components/matrix.html' %}
     <script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
 {#    {% include 'StudentSite/components/graph.html' %}#}

@@ -378,24 +378,53 @@ class Task:
 
     def is_correct_topological_sort(self, sort, strict):
         """
-        :type sort: list [int]
+        :type sort: str
         :param sort: users sort attempt
         :return: true, is sort is a correct list of sorted indexes
         """
-        sort_tree = [[res, False] for res in self.results]
-        for i in range(0, len(sort_tree)):
-            for k in range(0, len(sort_tree[sort[i]][0])):
-                sort_tree[sort[i]][1] = True
-                if strict and i == k:
-                    print(sort_tree, i, k)
-                    print(sort)
-                    if sort_tree[sort[i]][0][sort[k]]:
-                        return i
-                    else:
-                        continue
-                if sort_tree[sort[i]][0][k] and not sort_tree[k][1]:
-                    return i
-        return -1
+
+        if self.results is None:
+            self.solve()
+
+        sort = sort.split(' ')
+        rel_array = []
+        for i in range(len(sort)):
+            rel_array.append([True if el=='1' else False for el in sort[i]])
+
+        for i in range(len(self.elements)):
+            for j in range(len(self.elements)):
+                if self.results[i][j] and not rel_array[i][j]:
+                    return False
+
+        def find_minimal(ar):
+            for fmi in range(len(ar)):
+                found = True
+                for fmj in range(len(ar)):
+                    if rel_array[fmi][fmj] and fmi != fmj:
+                        found = False
+                if found:
+                    return fmi
+            return -1
+
+        def delete_element(ar, ind):
+            """
+            :type ar: list
+            """
+            ar.remove(ar[ind])
+            for dei in range(len(ar)):
+                ar[dei].remove(ar[dei][ind])
+            return ar
+
+        while len(rel_array) > 0:
+            ind = find_minimal(rel_array)
+            if ind == -1:
+                return False
+            for i in range(len(rel_array)):
+                if not (rel_array[i][ind] or i == ind):
+                    return False
+            rel_array = delete_element(rel_array, ind)
+            print(rel_array)
+        return True
 
     def reflexivity_highlights(self):
         highlights = {}
@@ -515,6 +544,18 @@ class Task:
             strings.append(''.join(step_strings))
         return strings
 
+    def generate_topological_tips(self):
+        tips = []
+        solve = self.topological_sort()
+        if solve is not None:
+            for i in range(len(solve)):
+                tip = "<div style='display:block'>Находим, что {0} является минимальным элементом.</div> " \
+                      "<div style='display:block'>Выделяем строку и столбец данного элемента в матрице.</div>" \
+                      "<div style='display:block'>Отмечаем отношения от всех невычекнутых элементов к выделенному</div>" \
+                      "<div style='display:block'>Вычеркиваем элемент {0}.".format(self.elements[solve[i]])
+                tips.append(tip)
+        return tips
+
     def generate_demo_strings(self):
         res = []
         human_readable = self.to_human_readable()
@@ -577,10 +618,11 @@ class Task:
         for elem in self.warshalls_demo_strings():
             res.append(elem)
 
-        for item in self.elements:
-            res.append('topological sort %s' % item)
+        for item in self.generate_topological_tips():
+            res.append(item)
 
         return res, self.generate_highlights_for_demo()
+
 
     def task_text(self):
         """

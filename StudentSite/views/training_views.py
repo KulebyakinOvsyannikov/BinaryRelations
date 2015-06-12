@@ -167,6 +167,7 @@ def check_warshalls(request):
         st_task_rel.is_warshall_completed = True
         if task_obj.is_of_order() == OrderType.not_of_order:
             st_task_rel.isCompleted = True
+            st_task_rel.dateCompleted = timezone.now()
             st_task_rel.save()
             from .views import result
             return result(request)
@@ -192,17 +193,29 @@ def topological(request):
                "result": True if st_task_rel.is_topological_sort_completed else None,
                "task": Task.from_string(st_task_rel.task.str_repr),
                "is_control": False,
-               "partial_solve": json.dumps(st_task_rel.partial_solve_warshalls),
                "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
                }
 
-    return render(request, 'StudentSite/site_pages/warshalls.html', context)
+    if st_task_rel.partial_solve_topological_sort is not None:
+        context["partial_solve"] = json.dumps(st_task_rel.partial_solve_topological_sort)
+
+    return render(request, 'StudentSite/site_pages/topological.html', context)
 
 def check_topological(request):
     st_task_rel = StudentTaskRel.objects.get(pk=request.POST['relation_id'])
 
-    st_task_rel.partial_solve_topological_sort = request.POST['users_solve']
-    task_obj = Task.from_string(st_task_rel.partial_solve_topological_sort)
+    st_task_rel.partial_solve_topological_sort = request.POST['answers_string']
+    task_obj = Task.from_string(st_task_rel.task.str_repr)
+    st_task_rel.save()
+
+    if task_obj.is_correct_topological_sort(st_task_rel.partial_solve_topological_sort,
+                                            task_obj.is_of_order().is_strict()):
+        st_task_rel.is_topological_sort_completed = True
+        st_task_rel.isCompleted = True
+        st_task_rel.dateCompleted = timezone.now()
+        st_task_rel.save()
+        from .views import result
+        return result(request)
 
     context = {
         "relation_id": st_task_rel.id,

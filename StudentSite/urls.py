@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^training/warshalls/check', training_views.check_warshalls, name='training_check_warshalls'),
     url(r'^training/warshalls/', training_views.warshalls, name='training_warshalls'),
 
-    url(r'^training/topological_sort/check', training_views.check_topological, name='train_topological_sort_check'),
+    url(r'^training/topological_sort/check', training_views.check_topological, name='training_topological_sort_check'),
     url(r'^training/topological_sort', training_views.topological, name='training_topological'),
     url(r'^training/properties/check', training_views.check_properties, name='training_check_properties'),
     url(r'^training/properties', training_views.properties, name='training_properties'),

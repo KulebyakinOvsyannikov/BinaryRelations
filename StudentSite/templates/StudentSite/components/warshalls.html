@@ -1,11 +1,12 @@
+<div style="clear: both; overflow: hidden; display: block">
+    <p>Для того, чтобы осуществить транзитивное замыкание, Вам необходимо пройтись по каждому элементу и проверить, является ли он промежуточным между другими двумя. Если элемент является промежуточным, но между теми двумя нет прямого пути, нужно поставить единицу в клетке на пересечении этих элементов </p>
+</div>
 <div id="warshalls_primary_matrix">
 {% include 'StudentSite/components/matrix.html' %}
 </div>
+{% if relation_id %}
 {% include 'StudentSite/components/graph.html' %}
-<script>graphInitiate({{ task.elements }})</script>
-{# <script>matrixSetPrimaryMatrix("warshalls_primary_matrix")</script> #}
-<script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
-
+{% endif %}
 <table id="warhsalls_operated_matrix">
     <tr>
     <td>ab/cd</td>
@@ -31,16 +32,13 @@
     </tr>
     {% endfor %}
 </table>
-
-
-
 <br style="clear: both">
-
 <input type="button" id="warhsalls_prev_button" value="Предыдущий элемент" onclick="warshallsPreviousElement(this)" />
 <input type="button" id="warhsalls_next_button" value="Следующий элемент" onclick="warshallsNextElement(this)" />
 
-
 {% load staticfiles %}
+<script>graphInitiate({{ task.elements }})</script>
+<script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
 <script src="{% static 'StudentSite/scripts/warshalls_page_scripts.js' %}"></script>
 <link href="{% static 'StudentSite/stylesheets/components/warshalls_stylesheet.css' %}" type="text/css" rel="stylesheet">
 <script src="{% static 'StudentSite/scripts/components/warshalls_scripts.js' %}"></script>

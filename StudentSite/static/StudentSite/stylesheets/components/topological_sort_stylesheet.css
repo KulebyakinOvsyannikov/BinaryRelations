@@ -1,0 +1,9 @@
+.ts_element {
+    height: 20px;
+    width: 20px;
+    font-size: 17px;
+}
+
+#ts_table {
+    clear: both;
+}

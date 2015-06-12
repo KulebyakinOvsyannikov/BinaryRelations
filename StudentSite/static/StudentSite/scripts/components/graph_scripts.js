@@ -78,6 +78,17 @@ function graphRemoveRelation(relationName) {
     }
 }
 
+function graphRelationChangedTopological(element) {
+    switch (element.value) {
+        case '1':
+            graphAddRelation(element.name);
+            break;
+        case '0':
+            graphRemoveRelation(element.name);
+            break;
+    }
+}
+
 function graphRelationChanged(element) {
     switch (element.value) {
         case '1':

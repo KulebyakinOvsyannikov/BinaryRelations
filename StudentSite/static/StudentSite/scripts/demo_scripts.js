@@ -11,6 +11,7 @@ var demoTopologicalAnswers;
 var demoMatrixSteps = 0;
 var demoPropertiesSteps = 0;
 var demoWarshallsSteps = 0;
+var demoTopologicalSteps = 0;
 
 
 function demoInitiateScripts(jsonData) {
@@ -23,6 +24,10 @@ function demoInitiateScripts(jsonData) {
     demoPropertiesSteps = demoMatrixSteps + (demoPropertiesSolve[7].split('=')[1] == 'of-order' ? 10 : 8);
     demoWarshallsSteps = demoPropertiesSteps + demoMatrixSolve.length;
 
+    if (demoPropertiesSolve[7].split('=')[1] == 'of-order') {
+        demoTopologicalSteps = demoWarshallsSteps + demoMatrixSolve.length;
+    }
+
     demoTips = jsonData['tips'];
     demoHighlights = jsonData['tipsHighlights'];
 
@@ -30,8 +35,10 @@ function demoInitiateScripts(jsonData) {
     console.log(demoWarshallAnswers);
 
     demoTopologicalAnswers = jsonData['topologicalAnswers'];
+    console.log(demoTopologicalAnswers);
 
     demoTipsContainer = document.getElementById('tips_container');
+    document.getElementById("ts_cross_button").style.display="none";
 }
 
 function demoNextStep() {
@@ -39,6 +46,7 @@ function demoNextStep() {
         nextStepMatrix();
     } else if (demoStep < demoPropertiesSteps) {
         if (demoStep == demoMatrixSteps) {
+            matrixClearHighlights();
             propertiesChangeVisibility(true);
         }
         demoNextStepProperties();
@@ -48,6 +56,13 @@ function demoNextStep() {
             document.getElementById("warshalls_block").style.display = "block";
         }
         nextStepWarshalls()
+    } else if (demoStep < demoTopologicalSteps) {
+        if (demoStep == demoWarshallsSteps) {
+            matrixGraphHandle = undefined;
+            document.getElementById("topological_block").style.display = "block";
+            document.getElementById("warshalls_block").style.display = "none";
+        }
+        nextStepTopological();
     } else {
         demoStep--;
     }
@@ -57,7 +72,8 @@ function demoNextStep() {
 
 function demoPreviousStep() {
     var shouldNotGoForward = false;
-    for (var i = 0; i < 2; ++i) {
+    var topDone = false;
+    for (var i = 0; i < 2 && topDone != true; ++i) {
         if (demoStep > 0) {
             demoStep--;
             if (demoStep < demoMatrixSteps) {
@@ -66,6 +82,9 @@ function demoPreviousStep() {
                 demoPreviousStepProperties();
             } else if (demoStep < demoWarshallsSteps) {
                 demoPreviousStepWarshalls();
+            } else if (demoStep < demoTopologicalSteps) {
+                demoPreviousStepTopological();
+                topDone = true;
             }
         } else {
             shouldNotGoForward = true;
@@ -74,6 +93,12 @@ function demoPreviousStep() {
     if (demoStep < demoMatrixSteps) {
         propertiesChangeVisibility(false);
     }
+
+    if (demoStep < demoWarshallsSteps) {
+        document.getElementById("topological_block").style.display = "none";
+            document.getElementById("warshalls_block").style.display = "block";
+    }
+
     if (shouldNotGoForward) {
         demoStep = 0;
         demoTipsContainer.innerHTML = "";
@@ -119,10 +144,42 @@ function nextStepWarshalls() {
     warshallsRowFromAnswersString(step, demoWarshallAnswers[step]);
 }
 
+function nextStepTopological() {
+    var step = demoStep - demoWarshallsSteps;
+    tsSelectElement(demoTopologicalAnswers[step]);
+    for (var i = 0; i < demoMatrixSolve.length; ++i) {
+        if (i != step) {
+            var elem = tsGetElement(i, demoTopologicalAnswers[step]);
+            if (!elem.disabled && elem.value == '0') {
+                elem.click();
+            }
+        }
+    }
+    tsCrossElement();
+
+}
+
+function demoPreviousStepTopological() {
+    if (demoStep == demoWarshallsSteps) {
+        demoStep --;
+    } else {
+        demoStep = demoWarshallsSteps;
+    }
+
+    tsMatrixFromString(demoMatrixSolve.join(' '));
+    for (var i = 0; i < demoMatrixSolve.length; ++i) {
+        if (tsGetElement(i,i).disabled) {
+            tsSelectElement(i);
+            tsCrossElement();
+        }
+    }
+    tsSelectElement(-1);
+    demoNextStep();
+}
+
 function demoPreviousStepWarshalls(){
     if (demoStep == demoPropertiesSteps) {
         matrixElement = document.getElementById("matrix_table");
         document.getElementById("warshalls_block").style.display = "none";
     }
-
 }

@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+{% extends 'StudentSite/index.html' %}
+{% block title %}<title>Топологическая сортировка</title>{% endblock %}
+{% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
+{% block body %}
+    {{ task.topological_text }}
+    {% include 'StudentSite/components/matrix.html' %}
+    {% include 'StudentSite/components/graph.html' %}
+    <script>graphInitiate({{ task.elements|safe }})</script>
+    {% load staticfiles %}
+    <script src="{% static 'StudentSite/scripts/topological_page_scripts.js' %}"></script>
+    <script>matrixGraphHandle = undefined</script>
+    <script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
+    <script>matrixDeactivate()</script>
+    {% include 'StudentSite/components/topological_sort.html' %}
+    {% if partial_solve %}
+        <script>tsMatrixFromString({{ partial_solve|safe }})</script>
+    {% else %}
+        <script>tsMatrixFromString({{ matrix_solve|safe }})</script>
+    {% endif %}
+        <form {% if is_control == True %}
+                action="{% url 'student_site:control_topological_sort_check' %}"
+                {% elif is_control == False %}
+                action="{% url 'student_site:training_topological_sort_check' %}"
+                {% endif %}
+                onsubmit="return tsPageGetReadyToSubmit(this)"
+                method="post">
+            {% csrf_token %}
+            <input type="hidden" name="answers_string" value="" />
+            <input type="hidden" name="relation_id" value="{{ relation_id }}" />
+            <input type="submit" value="Проверить" />
+        </form>
+        {% if result == False %}
+            <h3>Решено с ошибками</h3>
+        {% endif %}
+    {% load staticfiles %}
+    <script src="{% static 'StudentSite/scripts/topological_page_scripts.js' %}"></script>
 
-</body>
-</html>
+
+{% endblock %}
+
+
+
