@@ -61,6 +61,7 @@ function demoNextStep() {
             matrixGraphHandle = undefined;
             document.getElementById("topological_block").style.display = "block";
             document.getElementById("warshalls_block").style.display = "none";
+            tsMatrixFromString(demoMatrixSolve.join(' '));
         }
         nextStepTopological();
     } else {
@@ -148,7 +149,7 @@ function nextStepTopological() {
     var step = demoStep - demoWarshallsSteps;
     tsSelectElement(demoTopologicalAnswers[step]);
     for (var i = 0; i < demoMatrixSolve.length; ++i) {
-        if (i != step) {
+        if (i != demoTopologicalAnswers[step]) {
             var elem = tsGetElement(i, demoTopologicalAnswers[step]);
             if (!elem.disabled && elem.value == '0') {
                 elem.click();
@@ -161,9 +162,9 @@ function nextStepTopological() {
 
 function demoPreviousStepTopological() {
     if (demoStep == demoWarshallsSteps) {
-        demoStep --;
+        demoStep--;
     } else {
-        demoStep = demoWarshallsSteps;
+        demoStep = demoWarshallsSteps - 1;
     }
 
     tsMatrixFromString(demoMatrixSolve.join(' '));

@@ -19,10 +19,12 @@ function tsSelectElement(index) {
             tsGetElement(i, j).style.outline = (i == index || j == index ? '1px dashed green' : "");
         }
     }
-    if (tsGetElement(index, index).disabled) {
-        tsCrossButton.value = "Включить элемент"
-    } else{
-        tsCrossButton.value = "Исключить элемент"
+    if (index != -1) {
+        if (tsGetElement(index, index).disabled) {
+            tsCrossButton.value = "Включить элемент"
+        } else {
+            tsCrossButton.value = "Исключить элемент"
+        }
     }
 }
 
