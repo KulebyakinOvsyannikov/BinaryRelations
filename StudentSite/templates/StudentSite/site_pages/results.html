@@ -3,7 +3,7 @@
 {% block header %}{% include 'StudentSite/header_base.html' %}{% endblock %}
 {% block body %}
     <h4>Задание выполнено!</h4>
-    <h5>В начали выполнять задание {{ task_rel.dateStarted|date:"D d M Y" }} {{ task_rel.dateStarted|time:"H:i" }}</h5>
+    <h5>Вы начали выполнять задание {{ task_rel.dateStarted|date:"D d M Y" }} {{ task_rel.dateStarted|time:"H:i" }}</h5>
     <h5>Во время выполнения задания вы отправили неверное решене {{ task_rel.numberOfAttempts }} раз</h5>
     {% if is_control == False %}
         <a href="{% url 'student_site:control' %}">Пройти контроль</a>

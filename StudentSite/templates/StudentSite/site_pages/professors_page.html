@@ -25,7 +25,7 @@
             <td><a href="{{ result.student.website }}">Ссылка</a></td>
             <td>{{ result.dateStarted|date:"D d M Y" }} {{ result.dateStarted|time:"H:i" }}</td>
             <td>{{ result.numberOfAttempts }}</td>
-            <td>{{ result.dateStarted|date:"D d M Y" }} {{ result.dateStarted|time:"H:i" }}</td>
+            <td>{{ result.dateCompleted|date:"D d M Y" }} {{ result.dateCompleted|time:"H:i" }}</td>
         </tr>
     {% endfor %}
     </table>
