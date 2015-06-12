@@ -23,7 +23,6 @@ class RelationTriplet:
     def __repr__(self):
         return self.__str__()
 
-
     def convert_triplet_to_human_readable(self):
         """
         :rtype: str

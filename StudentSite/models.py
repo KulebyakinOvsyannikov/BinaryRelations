@@ -5,9 +5,6 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-
-
 class TaskModel(models.Model):
     # В скобках после типа поля указываеются различные ограничения и свойства поля
     # max_length - ограничение максимальной длины поля типа CharField
