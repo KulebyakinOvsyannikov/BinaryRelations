@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+
 from django.utils import timezone
 
 from StudentSite.models import TaskModel, StudentTaskRel
@@ -136,6 +137,7 @@ def check_warshalls(request):
         st_task_rel.save()
         if task_obj.is_of_order() == OrderType.not_of_order:
             st_task_rel.isCompleted = True
+            st_task_rel.dateCompleted = timezone.now()
             st_task_rel.save()
             from .views import result
             return result(request)
