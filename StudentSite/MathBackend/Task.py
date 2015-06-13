@@ -377,9 +377,9 @@ class Task:
             """
             :type ar: list
             """
-            ar.remove(ar[dind])
+            a = ar[:dind] + ar[dind + 1:]
             for dei in range(len(ar)):
-                ar[dei].remove(ar[dei][dind])
+                ar[dei] = ar[dei][dind:] + ar[dei][dind + 1:]
             return ar
 
         while len(rel_array) > 0:
