@@ -377,9 +377,9 @@ class Task:
             """
             :type ar: list
             """
-            a = ar[:dind] + ar[dind + 1:]
+            ar = ar[:dind] + ar[dind + 1:]
             for dei in range(len(ar)):
-                ar[dei] = ar[dei][dind:] + ar[dei][dind + 1:]
+                ar[dei] = ar[dei][:dind] + ar[dei][dind + 1:]
             return ar
 
         while len(rel_array) > 0:
