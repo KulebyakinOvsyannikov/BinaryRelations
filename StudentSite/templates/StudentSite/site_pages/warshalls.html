@@ -32,7 +32,7 @@
         </form>
     {% else %}
         <form {% if is_control == True %}
-                action="{% url 'student_site:control_check_warshalls' %}"
+            action="{% url 'student_site:control_warshalls_check' %}"
                 {% elif is_control == False %}
                 action="{% url 'student_site:training_check_warshalls' %}"
                 {% endif %}
