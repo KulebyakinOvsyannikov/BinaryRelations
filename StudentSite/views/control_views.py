@@ -1,10 +1,13 @@
+import json
+
 from django.shortcuts import render
-from StudentSite.models import TaskModel, StudentTaskRel
-from StudentSite.MathBackend.Task import Task
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+
+from StudentSite.models import TaskModel, StudentTaskRel
+from StudentSite.MathBackend.Task import Task
 from StudentSite.MathBackend.OrderType import OrderType
-import json
+
 
 @login_required(login_url="student_site:login_registration")
 def matrix(request):
@@ -67,7 +70,7 @@ def properties(request):
     context = {"relation_id": st_task_rel.id,
                "result": True if st_task_rel.properties_completed else None,
                "task": Task.from_string(st_task_rel.task.str_repr),
-               "is_control": False,
+               "is_control": True,
                "partial_solve": json.dumps(st_task_rel.partial_solve_properties),
                "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
                }
