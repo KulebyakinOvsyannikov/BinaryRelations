@@ -14,8 +14,9 @@
     </div>
     <div id="demo_tips_control_block" style="clear: both">
         <div id="tips_container"></div>
-        <input type="button" value="Назад" onclick="demoPreviousStep()">
-        <input type="button" value="Дальше" onclick="demoNextStep()">
+        <input type="button" id="demo_previous_button" style="visibility: hidden" value="Назад"
+               onclick="demoPreviousStep()">
+        <input type="button" id="demo_next_button" value="Дальше" onclick="demoNextStep()">
     </div>
     {% load staticfiles %}
     <script src="{% static 'StudentSite/scripts/demo_scripts.js' %}"></script>
