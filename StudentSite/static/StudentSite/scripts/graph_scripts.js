@@ -82,12 +82,10 @@ function removeRelation(fromElement, toElement) {
 
     try {
         graph.graph.dropEdge(String(fromElement) + '->' + String(toElement));
-        console.log(graph);
         if (noRefresh == false) {
             graph.refresh();
         }
     } catch(except) {
-        console.log("wrong delete");
     }
 }
 
@@ -104,7 +102,6 @@ function addRelation(fromElement, toElement) {
             graph.refresh();
         }
     } catch (except) {
-        console.log("duplicate append");
     }
 }
 

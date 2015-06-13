@@ -31,7 +31,6 @@ function propertiesChangeVisibility(setVisible) {
 }
 
 function propertiesSetValue(valueString) {
-    console.log("setting" + valueString);
     //valueString содержит имя свойтсва и значение. Пример: reflexivity=reflexive
     //Необходимо установить соответсвтующее значение у блока с этим свойством.
     var inputs =  propertiesBlock.getElementsByTagName("input");
@@ -50,7 +49,6 @@ function propertiesSetValue(valueString) {
 }
 
 function propertiesUnsetValue(valueString) {
-    console.log("unsetting" + valueString);
     valueString=valueString.split("=");
     var inputs = propertiesBlock.getElementsByTagName("input");
     if (valueString[0] == "order") {
@@ -65,12 +63,10 @@ function propertiesUnsetValue(valueString) {
 }
 
 function propertiesHighlightErrors(correctSolve) {
-    console.log("correct:" + correctSolve);
     correctSolve = correctSolve.split(" ");
     var propParts,userProps;
     for (var i=0;i<correctSolve.length;++i){
         propParts=correctSolve[i].split("=");
-        console.log(propParts);
         userProps=document.getElementById("properties-"+propParts[0]);
         for (var j=0;j<userProps.childElementCount;++j){
             if (userProps.children[j].children[0].checked && userProps.children[j].children[0].value!=propParts[1]){
@@ -81,13 +77,11 @@ function propertiesHighlightErrors(correctSolve) {
 }
 
 function propertiesFromAnswersString(partialSolve) {
-    console.log("partial:" + partialSolve);
     partialSolve = partialSolve.split(" ");
     var propParts, propToChange;
     for (var i=0;i<partialSolve.length;++i){
         propParts = partialSolve[i].split("=");
         propToChange = document.getElementById("properties-"+propParts[0]);
-        console.log(propToChange);
         for (var j=0;j<propToChange.childElementCount;++j){
             if (propToChange.children[j].children[0].value==propParts[1]){
                 if (i == 7 && j == 0) {
@@ -125,6 +119,5 @@ function propertiesToAnswersString() {
         else {return undefined}
         propNames[i] = propNames[i].join("=");
     }
-    console.log(propNames);
     return propNames.join(" ");
 }

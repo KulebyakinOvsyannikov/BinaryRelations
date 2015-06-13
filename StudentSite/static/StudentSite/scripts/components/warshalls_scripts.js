@@ -23,8 +23,6 @@ function warshallsInitiateScripts(elements, initialSolve) {
     warshallsElements = elements;
 
     warshallAnswerStrings = [];
-    //initialSolve = initialSolve.split(' ');
-    //console.log(initialSolve);
     if (typeof(initialSolve) != "undefined") {
         for (var i = 0; i < warshallsElements.length; ++i) {
             warshallAnswerStrings.push(("" + initialSolve).split(' '));
@@ -70,12 +68,10 @@ function warshallsElementClicked(element) {
     var i = parseInt(element.id.substr(1,1));
     var j = parseInt(element.id.substr(3,1));
     //warshallAnswerStrings[warshallsStep][i][j] = element.value;
-    console.log(warshallsStep);
     for (var w = warshallsStep; w < warshallsElements.length; ++w) {
-        var str  = warshallAnswerStrings[w][i];
-        warshallAnswerStrings[w][i] = str.slice(0, j) + element.value + str.slice(j+1,str.length);
+        var str = warshallAnswerStrings[w][i];
+        warshallAnswerStrings[w][i] = str.slice(0, j) + element.value + str.slice(j + 1, str.length);
     }
-    console.log(warshallAnswerStrings);
 }
 
 function warshallsNextElement(button){
@@ -109,13 +105,11 @@ function warshallsFromAnswersString(answers) {
 }
 
 function warshallsPrepareForDemo() {
-    console.log("executing");
     document.getElementById("warhsalls_prev_button").style.display="none";
     document.getElementById("warhsalls_next_button").style.display="none";
 }
 
 function warshallsRowFromAnswersString(row, answers) {
-    console.log(answers);
     warshallAnswerStrings[row] = answers.split(' ');
     warshallsStep = row;
     warshallsRowSelected(row);
@@ -127,5 +121,4 @@ function warshallsHighlightErrors(correctSolve) {
     for (var i = 0; i < warshallsCorrectAnswers.length; ++i) {
         warshallsCorrectAnswers[i] = warshallsCorrectAnswers[i].split(' ');
     }
-    console.log(warshallsCorrectAnswers);
 }

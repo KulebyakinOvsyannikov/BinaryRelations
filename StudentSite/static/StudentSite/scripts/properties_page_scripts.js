@@ -9,6 +9,5 @@ function propertiesPageIsReadyToSubmit(form) {
         return false;
     }
     document.getElementById("properties_to_server").value=answer_str;
-    console.log(answer_str);
     return true;
 }

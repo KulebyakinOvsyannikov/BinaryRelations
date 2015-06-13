@@ -530,7 +530,7 @@ class Task:
             for elem2 in self.elements:
                 if self.check_for_elements_human_readable(elem, elem2, human_readable[:]):
                     #append_str = self.string_for_elements(human_readable, elem, elem2)
-                    append_str = "\nВидим, что они состоят в отношении R. Отмечаем соответствующий элемент матрицы."
+                    append_str = "\nВидим, что они состоят в отношении R. Ставим единицу в соответствующий элемент матрицы."
                 else:
                     #append_str = self.string_for_elements(human_readable, elem, elem2)
                     append_str = "\nВидим, что они не состоят в отношении R. Оставляем соответствующий элемент " \

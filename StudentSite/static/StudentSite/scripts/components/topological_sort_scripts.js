@@ -35,7 +35,6 @@ function tsInitiateScripts(elements) {
 }
 
 function tsMatrixFromString(solveString) {
-    console.log(solveString);
     solveString = solveString.split(' ');
     for (var i = 0; i < solveString.length; ++i) {
         for (var j = 0; j < solveString[i].length; ++j) {

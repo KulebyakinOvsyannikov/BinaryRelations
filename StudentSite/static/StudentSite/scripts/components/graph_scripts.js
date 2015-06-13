@@ -63,8 +63,9 @@ function graphAddRelation(relationName) {
     try {
         graphHandle.graph.addEdge(edge);
     } catch (except) {
-        console.log(except);
+
     }
+
 
     graphHandle.refresh();
 }
@@ -74,7 +75,6 @@ function graphRemoveRelation(relationName) {
         graphHandle.graph.dropEdge(relationName);
         graphHandle.refresh();
     } catch (except) {
-        console.log(except);
     }
 }
 

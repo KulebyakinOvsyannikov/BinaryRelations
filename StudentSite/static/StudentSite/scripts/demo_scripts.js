@@ -15,7 +15,6 @@ var demoTopologicalSteps = 0;
 
 
 function demoInitiateScripts(jsonData) {
-    console.log(jsonData);
     demoMatrixSolve = jsonData['matrixAnswers'].split(' ');
     warshallsInitialAnswers = demoMatrixSolve;
     demoPropertiesSolve = jsonData['propertiesAnswers'].split(' ');
@@ -32,10 +31,8 @@ function demoInitiateScripts(jsonData) {
     demoHighlights = jsonData['tipsHighlights'];
 
     demoWarshallAnswers = jsonData['warshallAnswers'].split('@');
-    console.log(demoWarshallAnswers);
 
     demoTopologicalAnswers = jsonData['topologicalAnswers'];
-    console.log(demoTopologicalAnswers);
 
     demoTipsContainer = document.getElementById('tips_container');
     document.getElementById("ts_cross_button").style.display="none";
@@ -46,12 +43,12 @@ function demoNextStep() {
         nextStepMatrix();
     } else if (demoStep < demoPropertiesSteps) {
         if (demoStep == demoMatrixSteps) {
-            matrixClearHighlights();
             propertiesChangeVisibility(true);
         }
         demoNextStepProperties();
     } else if (demoStep < demoWarshallsSteps ) {
         if (demoStep == demoPropertiesSteps) {
+            matrixClearHighlights();
             matrixSetPrimaryMatrix("warshalls_primary_matrix");
             document.getElementById("warshalls_block").style.display = "block";
         }
@@ -68,6 +65,9 @@ function demoNextStep() {
         demoStep--;
     }
     demoTipsContainer.innerHTML = demoTips[demoStep];
+    if (demoStep < demoPropertiesSteps) {
+        document.getElementById("warshalls_block").style.display = "none";
+    }
     demoStep++;
 }
 
@@ -95,9 +95,13 @@ function demoPreviousStep() {
         propertiesChangeVisibility(false);
     }
 
+    if (demoStep < demoPropertiesSteps) {
+        document.getElementById("warshalls_block").style.display = "none";
+    }
+
     if (demoStep < demoWarshallsSteps) {
         document.getElementById("topological_block").style.display = "none";
-            document.getElementById("warshalls_block").style.display = "block";
+        document.getElementById("warshalls_block").style.display = "block";
     }
 
     if (shouldNotGoForward) {
@@ -140,8 +144,6 @@ function demoNextStepProperties() {
 
 function nextStepWarshalls() {
     var step = demoStep - demoPropertiesSteps;
-    console.log(step);
-    console.log(demoWarshallAnswers);
     warshallsRowFromAnswersString(step, demoWarshallAnswers[step]);
 }
 
