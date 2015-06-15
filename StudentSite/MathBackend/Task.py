@@ -388,10 +388,13 @@ class Task:
                     rel_array[i][mei] = True
                 ignore.append(mei)
             else:
-                real_min = find_minimal_element_index(users_solve, ignore)
+                real_min = find_minimal_element_index(self.results, ignore)
                 print('real minimal ' + str(real_min))
                 for i in range(len(rel_array)):
+                    if i in ignore:
+                        continue
                     rel_array[i][real_min] = True if real_min != i else rel_array[i][real_min]
+                    rel_array[real_min][i] = self.results[real_min][i]
                 ignore.append(real_min)
 
         for i in range(len(rel_array)):
