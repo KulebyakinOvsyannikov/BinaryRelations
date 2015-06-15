@@ -187,6 +187,9 @@ def check_topological(request):
         st_task_rel.save()
         from .views import result
         return result(request)
+    else:
+        st_task_rel.numberOfAttempts += 1
+        st_task_rel.save()
 
     context = {
         "relation_id": st_task_rel.id,
