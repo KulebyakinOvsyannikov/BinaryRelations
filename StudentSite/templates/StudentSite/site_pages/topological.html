@@ -12,11 +12,17 @@
     <script>matrixFromAnswersString({{ matrix_solve|safe }})</script>
     <script>matrixDeactivate()</script>
     {% include 'StudentSite/components/topological_sort.html' %}
+
     {% if partial_solve %}
         <script>tsMatrixFromString({{ partial_solve|safe }})</script>
     {% else %}
         <script>tsMatrixFromString({{ matrix_solve|safe }})</script>
     {% endif %}
+
+    {% if correct_topological %}
+        <script>tsHighlightErrors({{ correct_topological|safe }})</script>
+    {% endif %}
+
         <form {% if is_control == True %}
                 action="{% url 'student_site:control_topological_sort_check' %}"
                 {% elif is_control == False %}

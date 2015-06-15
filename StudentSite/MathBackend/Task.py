@@ -2,6 +2,7 @@ from .RelationTriplet import RelationTriplet
 from .UnaryRelation import UnaryRelation
 from .BinaryRelation import BinaryRelation
 from.OrderType import OrderType
+from .supporting_functions import find_minimal_element_index, delete_element
 
 
 class Task:
@@ -343,6 +344,62 @@ class Task:
                 return None
         return stack
 
+    def has_loops(self):
+        if self.results is None:
+            self.solve()
+
+        used_ar = self.results[:]
+        for i in range(len(used_ar)):
+            used_ar[i] = used_ar[i][:]
+
+        while len(used_ar) > 0:
+            min_ind = find_minimal_element_index(used_ar)
+            if min_ind == -1:
+                return True
+            used_ar = delete_element(used_ar, min_ind)
+        return False
+
+    def correct_topological_from_users(self, users_solve):
+        if self.results is None:
+            self.solve()
+
+        used_ar = self.results[:]
+        for i in range(len(used_ar)):
+            used_ar[i] = used_ar[i][:]
+
+        users_solve = users_solve.split(' ')
+        rel_array = []
+        for i in range(len(users_solve)):
+            rel_array.append([True if el == '1' else False for el in users_solve[i]])
+
+        for i in range(len(self.elements)):
+            for j in range(len(self.elements)):
+                if self.results[i][j] and not rel_array[i][j]:
+                    rel_array[i][j] = True
+
+        ignore = []
+        while len(rel_array) > len(ignore):
+            mei = find_minimal_element_index(rel_array, ignore)
+            print('users minimal ' + str(mei))
+            if mei >= 0:
+                for i in range(len(rel_array)):
+                    if i in ignore or i == mei:
+                        continue
+                    rel_array[i][mei] = True
+                ignore.append(mei)
+            else:
+                real_min = find_minimal_element_index(users_solve, ignore)
+                print('real minimal ' + str(real_min))
+                for i in range(len(rel_array)):
+                    rel_array[i][real_min] = True if real_min != i else rel_array[i][real_min]
+                ignore.append(real_min)
+
+        for i in range(len(rel_array)):
+            rel_array[i] = ''.join(["1" if elem else "0" for elem in rel_array[i]])
+
+        return ' '.join(rel_array)
+
+
     def is_correct_topological_sort(self, sort, strict):
         """
         :type sort: str
@@ -363,27 +420,8 @@ class Task:
                 if self.results[i][j] and not rel_array[i][j]:
                     return False
 
-        def find_minimal(ar):
-            for fmi in range(len(ar)):
-                found = True
-                for fmj in range(len(ar)):
-                    if rel_array[fmi][fmj] and fmi != fmj:
-                        found = False
-                if found:
-                    return fmi
-            return -1
-
-        def delete_element(ar, dind):
-            """
-            :type ar: list
-            """
-            ar = ar[:dind] + ar[dind + 1:]
-            for dei in range(len(ar)):
-                ar[dei] = ar[dei][:dind] + ar[dei][dind + 1:]
-            return ar
-
         while len(rel_array) > 0:
-            ind = find_minimal(rel_array)
+            ind = find_minimal_element_index(rel_array)
             if ind == -1:
                 return False
             for i in range(len(rel_array)):

@@ -135,7 +135,7 @@ def check_warshalls(request):
     if st_task_rel.task.answer_warshalls == st_task_rel.partial_solve_warshalls:
         st_task_rel.is_warshall_completed = True
         st_task_rel.save()
-        if task_obj.is_of_order() == OrderType.not_of_order:
+        if task_obj.has_loops():
             st_task_rel.isCompleted = True
             st_task_rel.dateCompleted = timezone.now()
             st_task_rel.save()
@@ -178,9 +178,9 @@ def check_topological(request):
     st_task_rel.partial_solve_topological_sort = request.POST['answers_string']
     task_obj = Task.from_string(st_task_rel.task.str_repr)
     st_task_rel.save()
+    correct = task_obj.correct_topological_from_users(st_task_rel.partial_solve_topological_sort)
 
-    if task_obj.is_correct_topological_sort(st_task_rel.partial_solve_topological_sort,
-                                            task_obj.is_of_order().is_strict()):
+    if correct == st_task_rel.partial_solve_topological_sort:
         st_task_rel.is_topological_sort_completed = True
         st_task_rel.isCompleted = True
         st_task_rel.dateCompleted = timezone.now()

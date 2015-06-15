@@ -165,7 +165,7 @@ def check_warshalls(request):
 
     if result:
         st_task_rel.is_warshall_completed = True
-        if task_obj.is_of_order() == OrderType.not_of_order:
+        if task_obj.has_loops():
             st_task_rel.isCompleted = True
             st_task_rel.dateCompleted = timezone.now()
             st_task_rel.save()
@@ -208,8 +208,9 @@ def check_topological(request):
     task_obj = Task.from_string(st_task_rel.task.str_repr)
     st_task_rel.save()
 
-    if task_obj.is_correct_topological_sort(st_task_rel.partial_solve_topological_sort,
-                                            task_obj.is_of_order().is_strict()):
+    correct = task_obj.correct_topological_from_users(st_task_rel.partial_solve_topological_sort)
+
+    if correct == st_task_rel.partial_solve_topological_sort:
         st_task_rel.is_topological_sort_completed = True
         st_task_rel.isCompleted = True
         st_task_rel.dateCompleted = timezone.now()
@@ -223,7 +224,8 @@ def check_topological(request):
         "task": task_obj,
         "is_control": False,
         "partial_solve": json.dumps(st_task_rel.partial_solve_topological_sort),
-        "matrix_solve": json.dumps(st_task_rel.task.answer_matrix)
+        "matrix_solve": json.dumps(st_task_rel.task.answer_matrix),
+        "correct_topological": json.dumps(correct)
     }
 
     return render(request, 'StudentSite/site_pages/topological.html', context)

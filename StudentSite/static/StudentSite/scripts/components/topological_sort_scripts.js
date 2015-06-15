@@ -71,3 +71,15 @@ function tsComposeAnswersString() {
     }
     return resStr.join(' ');
 }
+
+function tsHighlightErrors(correct) {
+    correct = correct.split(' ');
+    for (var i = 0; i < correct.length; ++i) {
+        for (var j = 0; j < correct[i].length; ++j) {
+            var elem = tsGetElement(i, j);
+            if (elem.value != correct[i][j]) {
+                elem.style.backgroundColor = "red";
+            }
+        }
+    }
+}
