@@ -1,7 +1,10 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 <html>
 <head lang="ru">
     <meta charset="UTF-8">
+    <link href="{% static "bootstrap/dist/css/bootstrap.css" %}" rel="stylesheet">
+    <script src="{% static "bootstrap/dist/js/bootstrap.js" %}"></script>
     {# Данный заголовок можно будет заменить в дочернем шаблоне #}
     {% block title %}<title>Бинарные отношения</title>{% endblock %}
 </head>
